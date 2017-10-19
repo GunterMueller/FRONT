@@ -1,0 +1,83 @@
+/*
+ * Copyright (C) 2000-2005 Philips Electronics N.V.
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * 
+ */
+USE grammar, GenLalr
+
+Lalr ::= "GRAMMAR" NL NL
+         grammar : { Production } NL
+         "STATES" NL NL
+	 states : { LR_state } ;
+
+Production ::= lhs : OVERLOADING Ident SP "->" rhs : ProdRhs SP ";" NL 
+               SP SP "empty:" SP empty : Emptiness NL 
+	       SP SP "first:" SP first : TermSet   NL
+	       prod_rule : ProdRule = NULL
+	       num : Int = 0
+	       ;
+
+ProdRhs     = syms : [ LR_Symbols ] ;
+
+LR_Symbol MEMO ::= id : Ident
+                   prods : APPLIED Production FIELD id
+		   make_empty : [ "?" ]
+		   fields : List_field = NULL
+		   first : List_Ident = NULL
+		   empty : Bool       = TRUE
+		   first_eval : EvalState = UnEval
+		   empty_eval : EvalState = UnEval
+		   start : Bool = FALSE
+		   hole  : Ident = NULL %% Type of hole
+		   start_state : LR_state = NULL
+		   num : Int = 0
+		   hole_num : Int = 0
+		;
+
+LR_Symbols MEMO ::= SP data : LR_Symbol next : LR_Symbols
+                    num : Int = New_rhs_num() ;
+
+Emptiness ::= < "NON_EMPTY" | "EMPTY" > ;
+
+/**********/
+
+LR_state ::= "state" SP num : Int NL 
+             SP SP items: { Item NL }+ 
+	     "transitions" NL
+	     transitions : { SP SP Transition NL }
+	     NL NL
+	     start_state : LR_Symbol = NULL ;
+
+Item ::= lhs : Ident SP SP "->" SP rhs1 : { SP LR_Symbol } SP "." rhs2 : LR_Symbols
+         followers : [ TAB "followers:" SP TermSet ]
+	 production : Production = NULL
+	 predecessors : List_Item = NULL
+	 start_item : Bool = FALSE 
+         conflict : Bool = FALSE ;
+
+TermSet = { Ident " " }+ ;
+
+Transition ::= symbol : LR_Symbol SP "=>" SP "state" SP num : Int
+	       target : LR_state = NULL
+               conflict : Bool = FALSE ;
+
+/*********/
+
+NL  = \"\n" ;
+TAB = \"\t" ;
+SP  = \" " ;
+
+Dummy = r : List(LR_Symbols) = NULL ;

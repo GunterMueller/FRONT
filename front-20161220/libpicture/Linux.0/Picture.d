@@ -1,0 +1,22 @@
+Picture.d \
+Picture.o: \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/libpicture/Picture.c \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/Linux/include/front/print_support.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/Linux/include/front/support.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/Linux/include/front/scan_support.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/Linux/include/front/basic_types.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/Linux/include/front/hash.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/Linux/include/front/front_list.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/Linux/include/front/SymTab.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/Linux/include/front/error.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/Linux/include/front/old_error.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/libpicture/Fonts.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/libpicture/Picture.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/libpicture/Linux.0/Pictures.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/Linux/include/front/basic_types.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/Linux/include/front/scan_support.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/Linux/include/front/SymTab.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/libpicture/Linux.0/Pictures_parse.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/libpicture/Linux.0/Pictures.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/libpicture/Linux.0/Pictures_defs.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/libpicture/Linux.0/PicturesPrint.h

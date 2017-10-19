@@ -1,0 +1,91 @@
+/*
+ * Copyright (C) 2000-2005 Philips Electronics N.V.
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * 
+ */
+/* This file models lex tokens and yacc production rules
+*/
+USE front, Types
+
+grammar ::= scanner : Scanner 
+            parser : Parser ;
+
+%% Lex tokens
+Scanner ::= tokens : { Token } ;
+
+%% Lex token
+Token ::= re : RegExpr SP "{" NL
+          actions : { ScanAction ";" NL }
+          "}" NL NL
+	  id : Ident = NULL
+	  type : Ident = NULL ;
+	  
+%% Lex regular expressions
+RegExpr ::= < ChoiceRE > ;
+
+ChoiceRE < RegExpr ::= head : SeqRE tail : [ "|" RegExpr ] ;
+
+SeqRE < RegExpr ::= head : PostRE tail : [SeqRE] ;
+
+PostRE < RegExpr ::= < OptRE   ::= re : BasicRE "?"
+		     | PlusRE  ::= re : BasicRE "+"
+		     | TimesRE ::= re : BasicRE "*"
+		     | BasicRE
+		     > ;
+		     
+BasicRE < RegExpr ::= < StringRE ::= s : String 
+                      | SOLRE ::= "^"
+		      | EOLRE ::= "$"
+		      | IdRE  ::= "{" id : Ident "}"
+		      | ParRE ::= "(" re : RegExpr ")"
+		      | AnyRE ::= "."
+		      > ;
+
+%% Actions to be executed after token recognition
+ScanAction = SP SP action : String ;
+
+/*********/
+
+%% Yacc production rules
+Parser ::= rules : { ProdRule } ;
+
+%% Yacc production rule
+ProdRule ::= lhs : Ident SP
+             fields : List_field = NULL
+             < NT_Rule ::=		
+	        "nonterminal" %% Rule for non-terminal or Alternative
+		nt  : NonTerminal = NULL
+		alt : Alternative = NULL
+		rhs : List_Symbol = NULL
+		fields : List_Field = NULL
+             | Import_Rule ::=
+                "import"
+                type: Ident = NULL
+                grammar: Ident = NULL
+                imp : ImportedNonTerminal = NULL
+             | Extra_Rule ::=
+	        "extra" %% Extra rule for a symbol, such as an opt or sequence
+	     	sym : Symbol = NULL
+	     > NL ;
+	     
+SCAN TYPE String
+String  ::= 		"\"" { NOT_DQ_BS_CR | Bs Esc | Bs ReChar } "\"" ;
+
+/*********/
+
+NL  = \"\n" ;
+SP  = \" " ;
+

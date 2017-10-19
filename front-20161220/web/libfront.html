@@ -1,0 +1,653 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=ISO-8859-1"
+   http-equiv="content-type">
+  <title>libfront reference manual</title>
+  <meta content="Wim Yedema" name="author">
+  <link rel="stylesheet" href="style.css" type="text/css">
+
+</head>
+
+<body id="thebody">
+<!------------------------------------------------------------------->
+<!-- BODY                                                          -->
+<!------------------------------------------------------------------->
+<span class="title">
+Libfront reference manual
+</span>
+<p>
+<span class="content">
+See also:<ul>
+    The <a href="index.html">front home page</a>.<br>
+</ul>
+
+</span>
+
+<!------------------------------------------------------------------->
+<!-- CHAPTER 1                                                     -->
+<!------------------------------------------------------------------->
+<p>
+<a name="Book"></a>
+<h1>Book</h1>
+<span class="content">
+
+A book is an advanced string type. What book offers over your regular
+strings is the ability to automatically indent, align, and to select
+parts of the string that can be written to later, so called
+sections. It also includes a very powerful
+<a href="#fe_book_printf">printf</a>-like  function that supports all
+of these constructions.
+<p>
+Sections:
+<ul>
+<a href="#book_construction">Construction and Destruction</a><br>
+<a href="#book_adding_text">Writing in a book</a><br>
+<a href="#book_indentation">Indentation</a><br>
+<a href="#book_alignment">Alignment</a><br>
+<a href="#book_retrieval">Retrieving the text</a><br>
+<a href="#book_misc">Miscellaneous</a><br>
+</ul>
+
+<a name="book_construction"></a>
+<h2>Construction and Destruction</h2>
+
+<!------------------------------------------------------------------->
+<a name="fe_book_start"></a>
+<h3>fe_book_start</h3>
+
+<code>
+#include &lt;front/book.h&gt;<br>
+<br>
+fe_book_t *<b>fe_book_start</b> (void);
+</code>
+
+Create a new, empty book.
+
+<h4>See also:</h4>
+<a href="#fe_book_add_section">fe_book_add_section</a>,
+<a href="#fe_book_free">fe_book_free</a>
+
+
+<!------------------------------------------------------------------->
+<a name="fe_book_add_section"></a>
+<h3>fe_book_add_section</h3>
+
+<code>
+#include &lt;front/book.h&gt;<br>
+<br>
+book_t *<b>fe_book_add_section</b> (fe_book_t *<b>book</b>);
+</code>
+
+Add a new, empty section at the end of <b>book</b>. This section
+is in itself another book that can be written to, sub-sectioned,
+even converted to a string. All settings, like
+<a href="#book_indentation">indentation</a> and
+<a href="#book_alignment">alignment</a>, applied to the section 
+ are local, they do not change the settings of the "master" book. 
+
+<h4>See also:</h4>
+<a href="#fe_book_start">fe_book_start</a>,
+<a href="#fe_book_free">fe_book_free</a>,
+<a href="#fe_book_flattened">fe_book_flattened</a>
+
+
+<!------------------------------------------------------------------->
+<a name="fe_book_free"></a>
+<h3>fe_book_free</h3>
+
+<code>
+#include &lt;front/book.h&gt;<br>
+<br>
+void <b>fe_book_free</b> (fe_book_t *<b>book</b>);
+</code>
+
+Free all memory occupied by <b>book</b>.
+
+<h4>See also:</h4>
+<a href="#fe_book_start">fe_book_start</a>,
+<a href="#fe_book_add_section">fe_book_add_section</a>
+
+<!------------------------------------------------------------------->
+<a name="book_adding_text"></a>
+<h2>Writing in a book</h2>
+
+<!------------------------------------------------------------------->
+<a name="fe_book_putc"></a>
+<h3>fe_book_putc</h3>
+
+<code>
+#include &lt;front/book.h&gt;<br>
+<br>
+void <b>fe_book_putc</b> (fe_book_t *<b>book</b>, char <b>c</b>);
+</code>
+
+Write character <b>c</b> at the end of <b>book</b>.
+
+<h4>See also:</h4>
+<a href="#fe_book_putnc">fe_book_putnc</a>,
+<a href="#fe_book_puts">fe_book_puts</a>,
+<a href="#fe_book_putns">fe_book_putns</a>
+
+
+<!------------------------------------------------------------------->
+<a name="fe_book_putnc"></a>
+<h3>fe_book_putnc</h3>
+
+<code>
+#include &lt;front/book.h&gt;<br>
+<br>
+void <b>fe_book_putnc</b> (fe_book_t *<b>book</b>, int <b>n</b>, char <b>c</b>);
+</code>
+
+Write <b>n</b> times the character <b>c</b> at the end of <b>book</b>.
+
+<h4>See also:</h4>
+<a href="#fe_book_putc">fe_book_putc</a>,
+<a href="#fe_book_puts">fe_book_puts</a>,
+<a href="#fe_book_putns">fe_book_putns</a>
+
+<!------------------------------------------------------------------->
+<a name="fe_book_puts"></a>
+<h3>fe_book_puts</h3>
+
+<code>
+#include &lt;front/book.h&gt;<br>
+<br>
+void <b>fe_book_puts</b> (fe_book_t *<b>book</b>, const char *<b>s</b>);
+</code>
+
+Write string <b>s</b> at the end of <b>book</b>.
+
+<h4>See also:</h4>
+<a href="#fe_book_putc">fe_book_putc</a>,
+<a href="#fe_book_putnc">fe_book_putnc</a>,
+<a href="#fe_book_putns">fe_book_putns</a>,
+<a href="#fe_book_printf">fe_book_printf</a>
+
+
+<!------------------------------------------------------------------->
+<a name="fe_book_putns"></a>
+<h3>fe_book_putns</h3>
+
+<code>
+#include &lt;front/book.h&gt;<br>
+<br>
+void <b>fe_book_putns</b> (fe_book_t *<b>book</b>, int <b>n</b>, const char *<b>s</b>);
+</code>
+
+Write at most <b>n</b> characters of string <b>s</b> at the end of <b>book</b>.
+
+<h4>See also:</h4>
+<a href="#fe_book_putc">fe_book_putc</a>,
+<a href="#fe_book_putnc">fe_book_putnc</a>,
+<a href="#fe_book_puts">fe_book_puts</a>
+
+
+<!------------------------------------------------------------------->
+<a name="fe_book_printf"></a>
+<a name="fe_book_vprintf"></a>
+<h3>fe_book_printf</h3>
+
+<code>
+#include &lt;front/book.h&gt;<br>
+<br>
+void <b>fe_book_printf</b> (fe_book_t *<b>book</b>, char *<b>fmt</b>, ...);<br>
+va_list <b>fe_book_vprintf</b> (fe_book_t *<b>book</b>, char *<b>fmt</b>, va_list args);<br>
+</code>
+
+A printf function that writes the resulting string at the end of
+<b>book</b>. <b>fe_book_vprintf</b> returns an argument list
+containing the remaining, unread arguments. Beside the normal printf
+conversions, this function also recognizes the following:
+<table>
+  <tbody>
+    <tr>
+      <td>%&amp;<br>%+&amp;</td>
+      <td>Add a section at the place of the conversion. The argument has
+      to have type <tt>fe_book_t **</tt> in which the section pointer
+      will be stored.
+      <p>
+      With the + flag the section will be indented using
+      <a href="#fe_book_indent">fe_book_indent</a>.
+      </td>
+    </tr>
+    <tr>
+      <td>%=<br>%#=<br>%+=<br>%-=</td>
+      <td>Change the indentation. Without a flag the indentation is
+      set to the current column, using
+      <a href="#fe_book_indent_here">fe_book_indent_here</a>. The
+      old indentation is written to the argument, which must have
+      type <tt>int *</tt>.
+      <p>
+      With the # flag, set the indentation to the column specified by
+      the argument, of type <tt>int *</tt>, using
+      <a href="#fe_book_set_indent">fe_book_set_indent</a>. The
+      old indentation is written to the argument.
+      <p>
+      With the + flag, the indentation is increased, using
+      <a href="#fe_book_indent">fe_book_indent</a>. No argument is
+      consumed.
+      <p>
+      With the - flag, the indentation is decreased, using
+      <a href="#fe_book_undent">fe_book_undent</a>. No argument is
+      consumed.
+      </td>
+    </tr>
+    <tr>
+      <td>%|</td>
+      <td>Set an alignment specification, using
+      <a href="#fe_book_align">fe_book_align</a>. The width field can
+      be used to specify an alignment specification number, the
+      default is 0.
+      </td>
+    </tr>
+    <tr>
+      <td><tt>%n<br>%#n</tt></td>
+      <td>The argument supplied, which must have type <tt>char *</tt>,
+      contains another format string, arguments required by this format
+      string are taken from the remaining arguments. By default a
+      new-line will be added before the formatted string, to disable
+      this behaviour add the # flag.
+      <p>
+      If a width is specified in the conversion, the new-line will
+      only be added if the current column is greater than the specified
+      width.
+      </td>
+    </tr>
+    <tr>
+      <td><tt>%B</tt></td>
+      <td>Add the string of the book specified by the argument, which
+      must has type <tt>fe_book_t *</tt>. This conversion recognizes the
+      same flags as %s</td>
+    </tr>
+  </tbody>
+</table>
+<ul>
+</ul>
+<h4>Example</h4>
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;front/book.h&gt;
+
+<b>void</b>
+main(<b>void</b>)
+{
+  <b>fe_book_t *</b>book = fe_book_start ();
+  <b>fe_book_t *</b>body = NULL;
+  <b>int</b> ind;
+  fe_book_printf (book,
+                  <i>"void%n"</i>,
+                  <i>"main(%=int arg1, %70n"</i>, &ind,
+                  <i>"int arg2, %70n"</i>,
+                  <i>"int arg3, %70n"</i>,
+                  <i>"int arg4, %70n"</i>,
+                  <i>"int arg5, %70n"</i>,
+                  <i>"int arg6, %70n"</i>,
+                  <i>"int arg7, %70n"</i>,
+                  <i>"int arg8, %70n"</i>,
+                  <i>"int arg9, %70n"</i>,
+                  <i>"int arg10, %70n"</i>,
+                  <i>"int arg11, %70n"</i>,
+                  <i>"int arg12, %70n"</i>,
+                  <i>"int arg13, %70n"</i>,
+                  <i>"int arg14)%#=%n"</i>, &ind,
+                  <i>"{\n"</i>
+                  <i>"%+&"</i>
+                  <i>"}\n"</i>,&body);
+  
+  fe_book_printf (body, <i>"printf (\"Hello, world\\n\");\n"</i>);
+  printf (<i>"%s"</i>, fe_book_to_string (book));
+}</code></pre>
+This program will print the following text:
+<pre><code>void
+main(int arg1, int arg2, int arg3, int arg4, int arg5, int arg6, int arg7, 
+     int arg8, int arg9, int arg10, int arg11, int arg12, int arg13, int arg14)
+{
+  printf ("Hello, world\n");
+}</code></pre>
+<h4>See also:</h4>
+<a href="#fe_book_puts">fe_book_puts</a>
+
+<!------------------------------------------------------------------->
+<a name="fe_book_register_conversion"></a>
+<h3>fe_book_register_conversion</h3>
+
+<code>
+#include &lt;front/book.h&gt;<br>
+<br>
+void <b>fe_book_register_conversion</b> (char <b>c</b>, fe_conversion_function <b>f</b>);
+</code>
+
+Add the conversion <b>c</b> to the fe_book_printf function.  When
+this conversion occurs in a format string the function <b>f</b> is
+called.
+
+The type <b>fe_conversion_function</b> is defined as follows:
+<code>
+typedef struct {<br>
+  int flag_alternate : 1;<br>
+  int flag_zero : 1;<br>
+  int flag_minus : 1;<br>
+  int flag_blank : 1;<br>
+  int flag_plus : 1;<br>
+  int width;<br>
+  int precision;<br>
+  enum {<br>
+    fe_mod_hh,<br>
+    fe_mod_h,<br>
+    fe_mod_none,<br>
+    fe_mod_l,<br>
+    fe_mod_ll,<br>
+    fe_mod_L<br>
+  } modifier;<br>
+  char conversion;<br>
+} fe_conversion_spec_t;<br>
+<br>
+typedef va_list (*fe_conversion_function)(fe_book_t *, fe_conversion_spec_t *, va_list);
+</code>
+
+A format conversion has the following format<ul>
+<tt>%{flags}{width}{.precision}{modifier}{conversion}</tt>
+</ul>
+Known <b>flags</b> are
+<table>
+  <tbody>
+    <tr>
+      <td>#</td><td>flag_alternate</td><td>Print an alternate form</td>
+   </tr>
+    <tr>
+      <td>0</td><td>flag_zero</td>
+      <td>When the field is right justified, pas with the '0' character</td>
+   </tr>
+   <tr>
+      <td>-</td><td>flag_minus</td>
+      <td>Left justify the field</td>
+   </tr>
+   <tr>
+      <td> </td><td>flag_blank</td>
+      <td>Pad the field with spaces ' '</td>
+   </tr>
+   <tr>
+      <td>+</td><td>flag_plus</td>
+      <td>Always print the sign</td>
+   </tr>
+  </tbody>
+</table>
+All flags are optional.
+<p>
+The <b>width</b> specifies the minimum width of the field. If the
+conversion is smaller the field is justified and padded according
+to the flags, default is blank padded right justified. If the
+width has not been specified, the width will be 0.
+<p>
+When the width was specified using a '*' the width will have been
+read from the arguments. If this value was negative, the - flag
+will be enabled, and the width will contain the absolute value.
+<p>
+The <b>precision</b> is specified by a '.' followed by either a
+number or a '*' character.  The meaning varies between conversions.
+If the precision has not been specified, it will be negative.
+<p>
+The <b>modifier</b> is optional and can be one of the following:
+<tt>hh</tt>, <tt>h</tt>, <tt>l</tt>, <tt>ll</tt>, and <tt>L</tt>.
+The corresponding values of <b>modifier</b> are obvious.
+<p>
+The <b>conversion</b> is the character that identifies the actual
+conversion.
+
+<!------------------------------------------------------------------->
+<a name="book_indentation"></a>
+<h2>Indentation</h2>
+
+<!------------------------------------------------------------------->
+<a name="fe_book_set_indent_size"></a>
+<h3>fe_book_set_indent_size</h3>
+
+<code>
+#include &lt;front/book.h&gt;<br>
+<br>
+void <b>fe_book_set_indent_size</b> (fe_book_t *<b>book</b>, int <b>size</b>);
+</code>
+
+Use <b>size</b> spaces for indentation in <b>book</b>, the default is 2.
+
+<!------------------------------------------------------------------->
+<a name="fe_book_indent"></a>
+<h3>fe_book_indent</h3>
+
+<code>
+#include &lt;front/book.h&gt;<br>
+<br>
+void <b>fe_book_indent</b> (fe_book_t *<b>book</b>);
+</code>
+
+Increase the indentation. Indentation occurs just before the first
+character of a line is written, so changing the indentation after
+writing a new-line character affects the same line. By default this
+ function indents with 2 spaces. This can be changed using
+ <a href="#fe_book_set_indent_size">fe_book_set_indent_size</a>.
+
+<h4>See also:</h4>
+ <a href="#fe_book_undent">fe_book_undent</a>,
+ <a href="#fe_book_set_indent_size">fe_book_set_indent_size</a>
+
+<!------------------------------------------------------------------->
+<a name="fe_book_undent"></a>
+<h3>fe_book_undent</h3>
+
+<code>
+#include &lt;front/book.h&gt;<br>
+<br>
+void <b>fe_book_undent</b> (fe_book_t *<b>book</b>);
+</code>
+
+Decrease the indentation. Indentation occurs just before the first
+character of a line is written, so changing the indentation after
+writing a new-line character affects the same line. By default this
+function indents with 2 spaces. This can be changed using
+ <a href="#fe_book_set_indent_size">fe_book_set_indent_size</a>.
+
+<h4>See also:</h4>
+ <a href="#fe_book_indent">fe_book_indent</a>,
+ <a href="#fe_book_set_indent_size">fe_book_set_indent_size</a>
+
+<!------------------------------------------------------------------->
+<a name="fe_book_set_indent"></a>
+<h3>fe_book_set_indent</h3>
+
+<code>
+#include &lt;front/book.h&gt;<br>
+<br>
+int <b>fe_book_set_indent</b> (fe_book_t *<b>book</b>, int <b>column</b>);
+</code>
+
+Set the indentation to <b>column</b>. Indentation occurs just
+before the first character of a line is written, so changing the
+indentation after writing a new-line character affects the same
+line. 
+
+<h4>Result</h4>
+This function returns the old indentation column.
+
+<h4>See also:</h4>
+ <a href="#fe_book_indent">fe_book_indent</a>,
+ <a href="#fe_book_set_indent_size">fe_book_set_indent_size</a>
+
+<!------------------------------------------------------------------->
+<a name="fe_book_indent_here"></a>
+<h3>fe_book_indent_here</h3>
+
+<code>
+#include &lt;front/book.h&gt;<br>
+<br>
+int <b>fe_book_indent_here</b> (fe_book_t *<b>book</b>);
+</code>
+
+Set the indentation to the current <b>column</b> of <b>book</b>.
+Indentation occurs just before the first character of a line is
+written, so changing the indentation after writing a new-line
+character affects the same line. 
+
+<h4>Result</h4>
+This function returns the old indentation column.
+
+<h4>See also:</h4>
+ <a href="#fe_book_indent">fe_book_indent</a>,
+ <a href="#fe_book_column">fe_book_column</a>,
+ <a href="#fe_book_set_indent_size">fe_book_set_indent_size</a>
+
+<!------------------------------------------------------------------->
+<a name="book_alignment"></a>
+<h2>Alignment</h2>
+
+<!------------------------------------------------------------------->
+<a name="fe_book_set_indent"></a>
+<h3>fe_book_set_indent</h3>
+
+<code>
+#include &lt;front/book.h&gt;<br>
+<br>
+int <b>fe_book_align</b> (fe_book_t *<b>book</b>, int <b>number</b>);
+</code>
+
+Add an alignment specification identified by <b>number</b>. All
+alignment specification with this number will be aligned to the same
+column.
+
+<!------------------------------------------------------------------->
+<a name="book_retrieval"></a>
+<h2>Retrieving the text</h2>
+
+<!------------------------------------------------------------------->
+<a name="fe_book_to_string"></a>
+<h3>fe_book_to_string</h3>
+
+<code>
+#include &lt;front/book.h&gt;<br>
+<br>
+char *<b>fe_book_to_string</b> (const fe_book_t *<b>book</b>);
+</code>
+
+Create a string containing the entire text of <b>book</b>. This
+function does not change <b>book</b> in any way. The caller must
+make sure that the string is freed afterwards.
+
+<h4>See also:</h4>
+<a href="#fe_book_to_file">fe_book_to_string</a>,
+<a href="#fe_book_flattened">fe_book_flattened</a>
+
+<!------------------------------------------------------------------->
+<a name="fe_book_to_file"></a>
+<h3>fe_book_to_file</h3>
+
+<code>
+#include &lt;front/book.h&gt;<br>
+<br>
+void <b>fe_book_to_file</b> (const fe_book_t *<b>book</b>, FILE *<b>fs</b>);
+</code>
+
+Write the entire text of <b>book</b> to the file stream <b>fs</b>. This
+function does not change <b>book</b> in any way. 
+
+<h4>See also:</h4>
+<a href="#fe_book_to_string">fe_book_to_string</a>,
+<a href="#fe_book_flattened">fe_book_flattened</a>
+
+<!------------------------------------------------------------------->
+<a name="fe_book_flattened"></a>
+<h3>fe_book_flattened</h3>
+
+<code>
+#include &lt;front/book.h&gt;<br>
+<br>
+book_t *<b>fe_book_flattened</b> (const fe_book_t *<b>book</b>);
+</code>
+
+Create a new book containing the entire text of <b>book</b> in one
+section . This function does not change <b>book</b> in any way.
+The caller must make sure that the new book is freed afterwards.
+
+<h4>See also:</h4>
+<a href="#fe_book_to_string">fe_book_to_string</a>
+
+<!------------------------------------------------------------------->
+<a name="book_misc"></a>
+<h2>Miscellaneous</h2>
+
+<!------------------------------------------------------------------->
+<a name="fe_book_column"></a>
+<h3>fe_book_column</h3>
+
+<code>
+#include &lt;front/book.h&gt;<br>
+<br>
+int <b>fe_book_column</b> (const fe_book_t *<b>book</b>);
+</code>
+
+Get the current column of <b>book</b>.  Lines start at column 0.
+The current column is the column where the next character will
+be written.
+
+<!------------------------------------------------------------------->
+<a name="fe_book_position"></a>
+<h3>fe_book_position</h3>
+
+<code>
+#include &lt;front/book.h&gt;<br>
+<br>
+char *<b>fe_book_position</b> (const fe_book_t *<b>book</b>);
+</code>
+
+Get a pointer to where the next character will be written in
+<b>book</b>. This pointer may be invalid after the next time
+something is written to the <b>book</b>.
+
+
+
+<!------------------------------------------------------------------->
+</span>
+</body>
+
+<!------------------------------------------------------------------->
+<!-- MENU                                                          -->
+<!------------------------------------------------------------------->
+<div id="menulayer" class="menu">
+<span class="menutitle">Content</span>
+<span class="menuentry"><a href="libfront.html">Top</a></span>
+<span class="menuentry"><a href="#Book">Book</a></span>
+</div>
+
+<script language="JavaScript">
+  meny_y = window.pageYOffset + 20;
+  prev_y = 0;
+  inmenu = 0;
+  delay = 0;
+  org_width = document.getElementById('menulayer').offsetWidth;
+  org_height = document.getElementById('menulayer').offsetHeight;
+
+  function mousein()  { inmenu = 1; delay=5; }
+  function mouseout() { inmenu = 0; }
+  
+  function scroll_menu()
+  {
+    dy = window.pageYOffset - prev_y;
+    prev_y = window.pageYOffset;
+
+    if (dy==0) {
+      document.getElementById('menulayer').style.top = window.pageYOffset + 20;
+    }
+    if (inmenu || delay!=0) {
+      delay = delay - 1;
+      document.getElementById('menulayer').style.width = org_width;
+      document.getElementById('menulayer').style.height = org_height;
+    } else {
+      document.getElementById('menulayer').style.width = 10;
+      document.getElementById('menulayer').style.height = 20;
+    }
+    setTimeout('scroll_menu()',200);
+  }
+  document.getElementById('menulayer').onmouseover = mousein;
+  document.getElementById('thebody').onmouseout = mouseout;
+  scroll_menu ();
+</script>
+</html>

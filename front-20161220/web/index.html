@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=ISO-8859-1"
+ http-equiv="content-type">
+  <title>Front</title>
+  <style type="text/css">
+  h1 { border: 1px solid rgb(51, 204, 0);
+    font-family: Arial,Helvetica,sans-serif;
+    text-align: center;
+    font-weight: bold;
+    color: rgb(255, 255, 255);
+    background-color: rgb(0, 153, 0);
+    }
+
+  body { font-family: Arial,Helvetica,sans-serif;
+    }
+
+
+  </style>
+</head>
+
+<body>
+<h1>Front</h1>
+<center><b> The Compiler Front-end Generation Suite</b></center>
+
+<p>
+Front provides several tools and libraries that greatly ease the
+development of a compiler front-end, or any other tool that reads a
+computer language. The suites main tool is <b>Front</b> which, given
+an EBNF style input file, generates the scanner, parser, AST data
+structures, AST traversals, symbol table handling, and pretty printer.
+</p>
+
+<p>
+The generated code uses the <b>libfront</b> library, which also
+provides a lot of other functionality for the programmer, such as a
+command line parser, string manipulation routines, several abstract
+types, and more. 
+</p>
+
+<p>
+Error messaging is greatly eased through the use of the error message
+generator generator, <b>egg</b>. And you can add C preprocessing
+support to your front-end with the use of <b>libcpp</b>.
+</p>
+
+<p>
+Finally you can write simple AST transformations in <b>doggy</b>, the
+DAG Optimizer Generator, which will generate an AST rewriter from its
+input.
+</p>
+
+<h2>History</h2>
+
+Front was developed in Philips Research by Lex Augusteijn as part of
+the Elegant project, and has been used there since 1998(?). Around 2000
+Front broke free of Elegant, and since then many people within Philips
+Research have contributed to the tools and libraries. Many parsers have
+been generated using Front, including itself and a complete ANSI(89) C
+front-end.
+
+<h2>Releases</h2>
+
+<p>There is no release yet. If you wish, you can download CFront from the
+SourceForge git server using:</p>
+
+<big>
+<code>
+git clone git://git.code.sf.net/p/front/front
+</code>
+</big>
+
+<h2>Documentation</h2>
+
+<ul>
+<li><a href="libfront.html">libfront manual (not finished)</a></li>
+<li>cpp manual</li>
+<li>doggy manual</li>
+<li>egg manual</li>
+<li>Front manual</li>
+</ul>
+
+<h2>Links</h2>
+
+<ul>
+<li>The SourceForge <a href="http://sf.net/projects/front">project page</a></li>
+</ul>
+
+</body>
+</html>

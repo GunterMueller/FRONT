@@ -1,0 +1,22 @@
+2016-06-27 Erwin Waterlander <waterlan@xs4all.nl>
+	* front, libfront: Added some missing copyright texts.
+
+2016-06-21 Erwin Waterlander <waterlan@xs4all.nl>
+	* Bring GPL text in line with
+	  https://www.gnu.org/licenses/old-licenses/gpl-2.0.html#SEC4
+	* Bring LGPL text in line with
+	  https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
+
+2016-06-13 Erwin Waterlander <waterlan@xs4all.nl>
+	* *.c, *.h: Fixed compile errors related to va_list.
+	* *.mk: Force compilation for 32 bit by adding -m32 to
+	  CFLAGS and LDFLAGS. This requires installation of package
+	  glibc-devel.i686 if you are on a 64 bit Linux.
+	  Code is not fit for 64 bit. 64 bit Front crashes with segmentation
+	  fault.
+	* web/index.html: Refer to new git repository.
+	* .gitignore: New file.
+
+2016-06-12 Erwin Waterlander <waterlan@xs4all.nl>
+	* Moved cvs repository to git. To clone type:
+	  git clone git://git.code.sf.net/p/front/front

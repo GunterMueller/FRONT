@@ -1,0 +1,8 @@
+#include "front/Basic.types"
+
+Pictures_Pictures	"Pictures_Pictures"	"Pictures"	"NULL"
+Pictures_Picture	"Pictures_Picture"	"Picture"	"NULL"
+Pictures_Scope	"Pictures_Scope"	"Scope"	"NULL"
+List_Pictures_Direction	"List_Pictures_Direction"	"List_Direction"	"NULL"
+List_Pictures_Picture	"List_Pictures_Picture"	"List_Picture"	"NULL"
+Pictures_Direction	"Pictures_Direction"	"Direction"	"Pictures_Left"

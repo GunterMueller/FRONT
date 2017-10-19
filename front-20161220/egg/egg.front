@@ -1,0 +1,71 @@
+/*
+ * Copyright (C) 2000-2005 Philips Electronics N.V.
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * 
+ */
+egg                 ::= uses: Uses { groups: Group };
+
+Uses                ::= "uses" uses: Strings ";" NL;
+Strings               = String // ",";
+
+
+Declarations          = decls: { Declaration };
+
+Declaration         ::= kind: MessageKind SP
+                        "=" SP exprs: { Expression }+ ";" NL
+                        group: Statement = NULL;
+
+Expression          ::= < StringExpr ::= s: String
+                        | CallExpr   ::= id: Ident "(" params : Params ")"
+                        | IdExpr     ::= id: Ident
+                        > ;
+Params                = Expression // ",";
+
+Statements              = stats: { Statement };
+
+Statement           ::= < Message
+                        | Group
+                        > NL
+                        parent : Statement = NULL;
+
+MessageKind         ::= < ErrorMsg    ::= "error"
+                        | WarningMsg  ::= "warning"
+                        | DisabledMsg ::= "disabled"
+                        | KeyMsg      ::= "key"
+                        | PostMsg     ::= "post"
+                        >;
+
+Message < Statement ::= fatal: ["fatal" SP] 
+                        id: Ident SP
+                        msgs: SubMessages ";" ;
+
+SubMessages           = SubMessage // ",";
+
+SubMessage          ::= kind: MessageKind SP msg: String ;
+
+Group < Statement   ::= SCOPE NL
+                        fatal: ["fatal" SP]
+                        id: Ident SP
+                        [ "(" type: Ident ")" SP ]
+                        group: ["group" SP] 
+                        "{" NL SP SP
+                        decls: Declarations
+                        Statements 
+                        "}" ;
+
+SCAN COMMENT comment ::= "/" "*" { Any } "*" "/" ;
+SP = \" ";
+NL = \"\n";

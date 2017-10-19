@@ -1,0 +1,218 @@
+                                libcpp
+
+    libcpp is an ANSI-C 1989 compliant C preprocessor, with optional
+support for ANSI-C 1999 comments.  It provides an easy interface
+towards lex scanners, and can provide Front parsers with improved
+location tracking.
+
+REQUIRES
+
+  libfront.a
+  libct.a
+
+PROVIDES
+
+  libcpp.a
+  cpp.h
+  cpp
+
+1. USAGE
+
+1.1 INITIALIZATION
+
+Before using any other libcpp function `CPP_initialize' should be
+called.  You might want to call `CPP_c99' here (you probably never
+want to call CPP_trigraph by default).  This is also where you will
+want to do any `CPP_predefine's you might have.  You can use
+`CPP_predefines' to add the standard C defines.  To make Front parsers 
+use the libcpp locations add the following line:
+
+  find_location = CPP_find_location;
+
+Be sure to #include <cpp.h> somewhere in that file.
+
+
+1.2 COMMAND LINE INTERFACE
+
+If you provide your own command line parser, you can use
+`CPP_include_path' to add directories to the include path, and
+`CPP_cli_define' to support command line defines.
+
+If you are using the libct command line parser, and want to use the
+default options, you can simply do the following:
+
+  fe_register_flags(num_libcpp_flags, libcpp_flags);
+  fe_flags_use_regexp ();
+
+The first call adds the options to the command line parser.  The
+second makes sure the command line parser uses regular expressions,
+which are required for the libcpp command line arguments.
+
+After parsing the command line options you may want to add the
+standard C include directories to the include path.
+`CPP_std_include_path'  will do just that.  The standard include
+directories are "/usr/include" and  "/usr/local/include".
+
+GNU cpp also has the directories "/<gcc-dir>/include", and
+"/<gcc-dir>/lib/gcc-lib/<host-id>/<version>/include", this function
+does NOT add those directories.
+
+1.3 PREPROCESSING
+
+The preprocessing itself is performed by `CPP_preprocess'.  The
+preprocessed file is kept internally and can be accessed using the
+function `CPP_output', or can be written to file using `CPP_emit'.
+
+To make sure the libcpp location numbers and the front location
+numbers do not clash, add the following code, after CPP_preprocess:
+
+  CPP_set_location (input_size);
+
+
+1.4 PARSING THE PREPROCESSED FILE
+
+To use the preprocessed file in a lex generated scanner it is enough
+to include "cpp.h".  In a Front parser you can achieve this by adding
+"cpp" to the USE clause.  WARNING! If you use `yy_switch_to_buffer' be 
+sure to call `yy_delete_buffer' after you are done, this will make
+sure the internal buffer lex has will be large enough.
+
+The preprocessor is enabled by setting yyin to NULL using the
+following code:
+
+  yyin = NULL;
+  yyrestart (yyin);
+
+and disabled using
+
+  yyin = some_kind_of_file;
+  yyrestart (yyin);
+
+The call to `yyrestart' is necessary because without `yylex' resorts
+to stdin when yyin is NULL. 
+
+1.5 RESETTING THE PREPROCESSOR
+
+When using the preprocessor in an interactive environment, it can be 
+usefull to reset the environment. This includes resetting (or cleaning) 
+the defines and the include paths.
+In cpp.h, there is the CPP_finish(void) function that does exactly this. 
+After this has been called, CPP_std_include_path would have to be called 
+again (if it was called in the beginning). 
+After this, fe_parse_flags can be called with the new preprocessor 
+arguments.
+
+  char ** newargs = new_args;
+  int nr_new_args = nr;
+  CPP_finish();  
+  fe_parse_flags(nr_new_args, argv);
+
+2. REFERENCE
+
+  extern  fe_cli_flag  libcpp_flags[];
+  extern  const int    num_libcpp_flags;
+
+This fe_flags option array, implements the -D, -I, -cpp-c99,
+-cpp-trigraph options.
+
+
+  void CPP_initialize(int gnu)
+
+Initialize libcpp.  This function should be called before any other
+libcpp function.
+
+
+  void CPP_predefines(int gnu)
+
+This function will predefine the macros __STDC__ and __STRICT_ANSI__.
+If GNU is non-zero also predefines some macros defined by the GNU
+cpp. 
+
+
+  void CPP_c99(void)
+
+Enable c99 compatability.
+
+
+  void CPP_trigraphs(void)
+
+Enable trigraph translation. Trigraphs are an ancient relic, you
+probably don't want to enable this unless you're testing for ANSI-C
+complience.  The trigraph translation is done before preprocessing (so 
+it's also done in strings), and will perform the following
+translation: 
+
+??= to #
+??( to [
+??/ to \
+??) to ]
+??' to ^
+??< to {
+??! to |
+??> to }
+??- to ~
+
+
+  void CPP_include_path(const char *dir)
+
+Add DIR to the include path.  The include path is used in the search
+for files included using the #include directive.  Directories added
+this way are searched in order.
+
+
+  void CPP_std_include_path(void)
+
+Add the standard include directories.  Call this function after the
+command line options have been parsed.
+
+
+  void CPP_predefine(char *alias, char *repl)
+
+Predefine a macro.  This is equivalent to `#define alias repl'.
+
+
+  int CPP_cli_define(char *def)
+
+Parse a command line define option (usually -D).  DEF should be the
+string excluding the option itself. So if the option is "-Dfoo=bar",
+DEF should be the string "foo=bar".
+
+
+  int CPP_preprocess(const char *filename)
+
+Preprocesses FILENAME.  Usually after this function `CPP_emit' or
+`CPP_output' is called.  CPP_preprocess returns non-zero on success.
+
+
+  void CPP_set_location(int loc)
+
+Set the current location.  This function is for use with Front
+parsers.  Front internally keeps track of the locations for every
+parsed non-terminal.  This is done by giving each non-terminal a
+unique location number.  If your application parses a file without
+using the preprocessor, or uses the parse functions, libcpp cannot
+keep track of the location numbers.  This function should be used to
+adjust the location number used by libcpp.
+
+
+  void CPP_emit(FILE *out)
+
+Write the preprocessed file to OUT.  This should be called after
+CPP_preprocess.
+
+
+  int CPP_output(char *buf, int max)
+
+Write upto MAX characters of the preprocessed file into BUF. MAX
+should be at least the size of the largest token including preceding
+white space. Returns the number of characters actually written.
+
+
+  void CPP_find_location(int loc, int *line, int *column, identifier *file)
+
+Translate the location number LOC into a FILE:LINE:COLUMN tripple.
+If the location cannot be found this function will revert to the Front 
+find_location.
+
+
+

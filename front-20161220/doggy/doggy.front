@@ -1,0 +1,451 @@
+/* 
+ * Copyright (C) 2000-2005 Philips Electronics N.V.
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * 
+ */
+USE Checks, Types, GenCode, flags
+
+NAMESPACE TypeNameSpace
+
+doggy			::= types : [Typedefs NL ]
+			    source : machine_description NL
+			    target : [ machine_description NL ]
+			    funcs : [ externals ]
+			    { sections : Section }
+			    functions : List(Func) = NULL
+			    rules : List(Rule) = NULL 
+			    xxx : VOID = Store_md (me)
+			    CHECKS
+			      IF init_types() THEN "" ;
+
+Typedefs		=   "TYPES" NL NL
+			    types : { Typedef } NL ;
+
+Typedef			::= id : DEFINING Ident NAMESPACE TypeNameSpace
+		   	    [ SP
+			      name : String SP
+			      short_hand : String SP
+			      value : String SP
+			    ] 
+			    TAB attrs : [ SP "ATTRIBUTES" SP "{" Attributes "}" ]
+			    NL ;
+
+externals		=   "EXTERNAL" NL NL
+			    funcs : { FunctionDef } NL ;
+
+FunctionDef		::= "extern" SP
+			    result : Type TAB
+			    id : DEFINING Ident SP
+			    < ExtFunc ::= args : ArgTypes
+			    | ExtVar  ::=
+			    >  ";" NL ;
+			    
+machine_description	::= SCOPE
+			    "MACHINE" SP "DESCRIPTION" SP
+                            id : DEFINING Ident NL NL
+		      	    defs : {Operation_def}
+                            supports : ["SUPPORTS" {Applied_formal}];
+
+Operation_def		::= id : DEFINING Ident SCOPE NULL SP
+                            "(" types : [Types] ")"
+			    result : [ SP ":" SP Type ]
+			    TAB actual_id : Ident 
+			    TAB descr : [ SP "ATTRIBUTES" SP "{" Attributes "}" ]
+			    TAB props : {Property SP}
+			    NL
+			    type : Type = Create_OprType (make_src_info(-1), Operation_def_types(me))
+			    src : Bool = FALSE
+			    tgt : Bool = FALSE
+                            supported : Bool = FALSE
+			    mop : ActualOp = NULL
+			    value : VALUE = NoValue()
+			    CHECKS
+			      IF Comm_conflict (me)
+			         THEN "Operator " 
+				      IDENT_STRING(Operation_def_id(me))
+				      " can not be commutative"
+			    ;
+
+Attributes		::= [ ids : Attrs [ "," tail : Attributes ] ];
+
+Attrs		          = ids : {Attribute SP}+ ;
+
+Attribute		::= < IdAttr  ::= id : Ident 
+			    | OpAttr  ::= op : "OPR" 
+			    | IntAttr ::= i : Int 
+			    >  ;
+
+%%---------------------------
+
+Section			::= < FuncSection ::= funcs : Funcs 
+			    | RuleSection ::= rules : Rules
+			    > ;
+
+Rules			  = "RULES" [ SP ":" SP rules_id : Ident ]
+                            NL NL rules : { Rule NL } NL ;
+
+Rule			::= SCOPE
+			    rules_id : Ident = NULL
+			    lhs : Lhs NL
+			    SP SP rhs : Rhs
+			    supported : Bool = TRUE
+			    rhs_supported : Bool = TRUE ";" NL ;
+
+Lhs			::= < LabeledLhs ::= id : Ident ":" NL
+			    | UnLabeledLhs ::=
+			    >
+			    pat : UnTypedPattern ;
+
+%%---------------------------
+
+Funcs			  = "FUNCTIONS" NL NL funcs : { Func NL } ;
+
+Func			::= ext : [ "extern" SP ] 
+			    type : Type SP
+			    id : DEFINING Ident NL
+			    SP SP rules : FuncRules ";" NL
+			    args : List(Type) = NULL %% initialized by Func_conflict
+			    CHECKS
+			      IF Func_conflict(me)
+			         THEN "Inconsistent rules for function "
+				      IDENT_STRING(Func_id(me)) ;
+
+FuncRules		  = FuncRule NL // "," ;
+
+FuncRule		::= SCOPE
+			    "(" args : [Arguments] ")" NL
+			    rhs : Rhs
+			    supported : Bool = TRUE ;
+
+Arguments		  = Argument // "," ;
+
+Argument		::= < TypedArg ::= type : Type SP
+			    | UnTypedArg ::=
+			    >
+			    id : DEFINING Ident
+			    pat : ArgPat2
+			    value : VALUE = NoValue()
+			    CHECKS
+			      IF Arg_conflict (me)
+				 THEN "Incorrect argument "
+				      IDENT_STRING(Argument_id(me)) ;
+
+ArgPat                  ::= < PatArg ::= pat : Pattern > ;
+ArgPat2 : ArgPat        ::= < PatArg1 | ParArg | SetArg > ;
+
+PatArg1 : ArgPat        ::= [ "=" pat : UnTypedPattern ] ;
+ParArg  : ArgPat        ::= ParPattern ;
+SetArg  < ArgPat        ::= "=" set : OpSet ;
+
+%%---------------------------
+
+Pattern			::= < UnTypedPattern
+			    | TypedPattern ::= btype : BasicType SP
+			    		       pat : UnTypedPattern
+			    >
+			    type  : Type = NULL
+			    _swap : Int = 0
+			    swap  : Int = 0
+			    _types : Int = 0
+			    types  : Int = 0
+			    value : VALUE = NoValue()
+			    CHECKS
+			      IF Pattern_conflict (me)
+			        THEN "Incorrect pattern" ;
+			    
+UnTypedPattern : Pattern ::= < SimplePattern
+			     | ConsPattern
+			     > ;
+
+ConsPattern < Pattern    ::= lhs : SimplePattern cons rhs : UnTypedPattern ; %% Right associative
+			    
+SimplePattern : Pattern  ::= < IdentPattern
+                             | SingleDefPattern
+                             | DefPattern
+	  	             | IdParPattern
+			     | BinPattern
+			     > ;
+DefPattern < Pattern    ::= "{" ids: IdentPatterns "}"
+                            "=" arg : BinPattern
+                            x: VOID = init_ident_patterns (DefPattern_ids (me), me)
+                            use_cnt : Int = 0;
+IdentPattern < Pattern	::= id : DEFINING Ident
+                            def : Pattern = NULL
+                            use_cnt : Int = 0;
+IdentPatterns		  = ids: IdentPattern // ",";
+
+SingleDefPattern : Pattern
+                           ::= id : Ident "=" arg : BinPattern ;
+
+IdParPattern : Pattern  ::= id : Ident ParPattern ;
+
+BinPattern : Pattern	::= lhs : BasicPattern [ op : IdOp rhs : SimplePattern] ;
+
+BasicPattern < Pattern	::= < OpPattern ::= 
+				op : Applied_operation 
+		           	args : "(" [Patterns] ")" 
+			    | ConstPattern ::= cnst : Int
+			    | NullPattern  ::= "NULL"
+			    | DontCarePattern ::= "_"  [ "=" expr : SimpleExpr ]
+		            %%| ExprPattern ::= "=" expr : Expr
+			    > ;
+
+ParPattern : Pattern    ::= "=" "(" Pattern ")" ;
+
+Rhs			::= < PlainRhs   ::= { guards : Guard NL }+ 
+			    | BlockRhs   ::= "{" SP rhs : Rhs "}" 
+			                     where : [ NL SP SP Wherepart ] NL
+			    > ;
+
+Guard			::= < RhsGuard  ::=  SCOPE
+			                     "|" SP conds : Condition NL
+			    		     "{" SP rhs : Rhs "}"
+			    | ExprGuard ::=  SCOPE
+			                     [ "|" SP conds : Condition NL ]
+			    		     "->" NAME arrow SP
+			    		     exprs : ExprSeq
+/*
+					     CHECKS
+					       IF NonDepType(me)
+					          THEN "Expression should have dep type"
+*/
+			    >
+			    where : [ NL SP SP Wherepart ] ;
+
+ExprSeq			::= < OneExpr ::= expr : Expr
+			    | MoreExprs ::= "{" exprs : Exprs "}"
+			    > ;
+			    
+Wherepart		::= "WHERE" 
+			    SP SP defs : { NL SP SP Definition} ;
+
+Applied_operation	::= < AnyOp ::= "ANY"
+			    | OpSet
+			    | AppliedOp ::= SCOPE
+			    		    op : Applied_formal
+			    > ;
+
+OpSet < Applied_operation ::= SCOPE
+			      "[" ops : Applied_formals "]" ;
+			      %%CHECKS 
+				%%IF Pattern_set_conflict(OpSet_ops(me))
+				%%   THEN "Inconsistent operators in set"
+
+Applied_formals		= 	 ops : Applied_formal // "," ;
+Applied_formal		::= 	 id : Ident 
+				 ap : APPLIED Operation_def FIELD id 
+				 CHECKS
+				   IF SetSupported(Applied_formal_ap(me), Applied_formal_scope(me), TRUE) THEN ""
+				   IF allow_undeclared_ops==FALSE && Applied_formal_ap(me) == NULL
+				   THEN "Identifier '" IDENT_NAME(Applied_formal_id(me)) "' not declared"
+				 ;
+   
+%%---------------------------
+
+Expr			::= warned : Bool = FALSE
+			    < %% We use a flat list, so that we can do precendence analysis later
+			      BinExpr	::= args : SimpleExpr // ops : Operator 
+			    | IdOpExpr 
+			    | ConsExpr 
+			    > 
+			    CHECKS
+			      IF Oper_conflict(me)
+			         THEN "Incorrect typing of operator arguments"
+			    ;
+
+IdOpExpr : Expr		::= lhs : SimpleExpr op : IdOp rhs : Expr ;
+ConsExpr < Expr		::= lhs : SimpleExpr cons rhs : Expr ;
+
+cons 			  = "::" NAME CONS ;
+
+SimpleExpr < Expr	::= < IdentExpr	::= id : Ident
+					    operator   : APPLIED Operation_def FIELD id
+					    pattern    : APPLIED IdentPattern  FIELD id
+					    ext        : APPLIED FunctionDef   FIELD id
+					    def        : APPLIED Definition    FIELD id
+					    arg        : APPLIED Argument      FIELD id
+					    use_cnt    : Int = 0
+					    CHECKS 
+					      IF IdentExpr_operator(me) == NULL && 
+					         IdentExpr_pattern(me) == NULL &&
+						 IdentExpr_ext(me) == NULL &&
+						 IdentExpr_def(me) == NULL &&
+						 IdentExpr_arg(me) == NULL
+					      THEN "Identifier '" IDENT_NAME(IdentExpr_id(me)) "' not declared"
+					      IF SetSupported(IdentExpr_operator(me), Expr_scope(me), FALSE) THEN ""
+			    | IfExpr	::= "IF" SP cond : Condition SP
+			    		    "THEN" SP thn : Expr SP
+					    { "ELSIF" SP conds : Condition SP
+					      "THEN" SP thens : Expr SP
+					    }
+					    "ELSE" SP els : Expr SP
+					    "FI"
+					    CHECKS
+					      IF If_conflict(me)
+					         THEN "Incorrect types for if-branches"
+			    | ConstExpr	::= cnst : Constant
+			    | Operation	::= id : Ident SP
+			    		    "(" args : [Exprs] ")" 				    
+					    operator : APPLIED Operation_def FIELD id
+					    defi     : APPLIED Definition    FIELD id
+					    ext      : APPLIED FunctionDef   FIELD id
+					    func     : APPLIED Func          FIELD id
+					    CHECKS
+					      IF Operation_operator(me) == NULL && 
+					         Operation_ext(me)  == NULL &&
+					         Operation_func(me) == NULL &&
+						 Operation_defi(me) == NULL
+					      THEN "Operation '" IDENT_NAME(IdentExpr_id(me)) "' not declared"
+					      IF Call_conflict(me)
+					         THEN "Incorrect arguments for operator "
+				                      IDENT_STRING(Operation_id(me))
+					      IF SetSupported(Operation_operator(me), Expr_scope(me), FALSE) THEN ""
+			    | ParExpr	::= "(" expr : Expr ")"
+			    | MonExpr	::= op : MonOp arg : SimpleExpr
+			    > ;
+
+Condition		  = Expr ;
+
+Constant		::= < IntConst ::= i : Int 
+			    | BoolConst ::= b : Bool
+                            | StringConst ::= s : String
+                            | NullConst ::= "NULL"
+			    > ;
+		    
+%%---------------------------
+
+Definition		::= type : Type SP id : DEFINING Ident 
+			    SP "=" SP expr : Expr 
+			    value : VALUE = NoValue()
+			    order  : Int  = -1	%% Evaluation order 
+			    use_cnt : Int = 0
+			    CHECKS
+			      IF Def_conflict (me)
+			        THEN "Type conflict for definition of "
+				       IDENT_STRING(Definition_id(me));
+
+Operator		::= SP
+			    < CandOp 	::= "&&" NAME cand
+			    | CorOp 	::= "||" NAME cor
+			    | XorOp 	::= "^" 
+			    | EqOp 	::= "==" NAME eq
+			    | NeqOp 	::= "!=" NAME neq
+			    | LEOp 	::= "<=" NAME le
+			    | GEOp 	::= ">=" NAME ge
+			    | LTOp 	::= "<" 
+			    | GTOp 	::= ">" 
+			    | SLOp 	::= "<<" NAME shl
+			    | SROp 	::= ">>" NAME shr
+			    | DivOp 	::= "/" 
+			    | ModOp 	::= "%" 
+			    | MulOp 	::= "*" 
+			    | AndOp	::= "&" 
+			    %%| OrOp	::= "|" 
+			    | AddOp	::= "+" 
+			    | SubOp	::= "-" 
+			    >
+			    SP ;
+
+IdOp			  = "`" id : Ident ;
+
+MonOp			::= < NotOp	::= "!" 
+			    | NegOp	::= "~" 
+			    | AddrOp	::= "&" 
+			    | DerefOp	::= "*" 
+			    | PlusOp	::= "+" 
+			    | MinOp	::= "-" 
+			    >
+			    SP ;
+
+%%---------------------------
+
+
+Type			::= < EdgeType  ::= types : BasicType // "|"
+                            | TupleType ::= "{" types : [Types] "}"
+                            > ;
+
+BasicType < Type	::= < IdentType   ::= type : APPLIED Typedef NAME Ident
+			    | OprType     ::= op : "OPR" [ args : ArgTypes ]
+			    | PointerType ::= base : BasicType "*"
+			    | RangeType   ::= "[" lo : Num ".." hi : Num [ "STEP" step : Num ] "]"
+			    | FRangeType   ::= "[" f : Ident "(" ")" "]"
+			    > ;
+
+%%---------------------------
+
+Property		::= "COMMUTATIVE" ;
+
+%%---------------------------
+
+ArgTypes		=   "(" args : [Types] ")" ;
+
+Patterns		  = args : Pattern // "," ;
+Exprs			  = e : Expr // "," ;
+Types			  = t : Type // "," ;
+Idents			  = id : Ident // "," ;
+Ints			  = i : Num // "," ;
+
+Num			::= neg : ["-"] i : Int
+			    negate : VOID = num_negate(me) ;
+
+IdInt			::= < IsId ::= id : Ident
+			    | IsInt ::= i : Int
+			    > ;
+
+%%---------------------------
+
+SCAN COMMENT comment1 	::= "/" "*" { Any } "*" "/" ;
+SCAN COMMENT comment2 	::= "/" "/" { Any } "\n" NAME Feed ;
+
+SCAN TYPE Bool
+Bool ::=		(("TRUE"|"FALSE")) ;
+
+SCAN TYPE Ident
+Ident ::=		{Alphanum} Non_digit {Alphanum} ;
+
+%%---------------------------
+
+SP			= \" " ;
+TAB			= \"\t" ;
+NL			= \"\n" ;
+
+Path			::= data  : Int
+			    type  : Type
+			    next  : Path ;
+
+ActualOp		::= location : Int
+			    id : Ident
+			    formals : {Operation_def}
+			    overloaded : Bool = FALSE 
+			    src : Bool = FALSE
+			    tgt : Bool = FALSE
+			    ;
+
+TypePair		::= t1 : Type
+			    t2 : Type ;
+
+Opat MEMO		::= args : {Type} COMPARE compare_types
+			    result : Type
+			    num : Int = 0 ;
+
+Format MEMO		::= args : {Type} COMPARE compare_types
+			    result : Type
+			    swap : Bool
+			    num : Int = 0 ;
+
+dummy_type ::= a : {Ident} { x : List(Type) = NULL } y : {ActualOp} 
+               z : { TypePair } { b : List(TypePair) = NULL } ;
+

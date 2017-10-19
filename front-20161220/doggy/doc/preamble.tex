@@ -1,0 +1,53 @@
+\input{macros}
+\input{hyphenation}
+\input{bnf}
+
+% \yacc{Elegant}{C}
+\newcommand{\yacc}[2]
+{ #2 }
+
+\newcommand{\nf}{\tt}
+\newcommand{\nnf}{\\ \nf}
+\newcommand{\tab}{& \nf}
+
+\newcommand{\oc}{\mbox{\tt\symbol{123}}}
+\newcommand{\cc}{\mbox{\tt\symbol{125}}}
+\newcommand{\obr}{{\tt{[}}}
+\newcommand{\cbr}{{\tt{]}}}
+
+\newcommand{\nil}{{\tt \yacc{NIL}{NULL}}}
+
+\newenvironment{formula}%
+{\begin{list}{}{}\item
+ \(
+\renewcommand{\=}{\ =\ } 
+\tt
+}%
+{\)
+\end{list}
+\vspace*{-1ex}}
+ 
+\newenvironment{block}%
+{\begin{array}[t]{@{}l@{}}\tt}%
+{\end{array}}
+
+\newcommand{\BB}{\begin{block}}
+\newcommand{\EB}{\end{block}}
+
+\newenvironment{dblock}%
+{\begin{array}[t]{@{}ll@{}}\tt}%
+{\end{array}}
+
+\newcommand{\Mean}[1]{[\![#1]\!]}
+
+
+\setlength{\parindent}{0cm}
+\setlength{\parskip}{0ex}
+
+\newcommand{\SecInput}[1]
+{\subsection{#1} \Input{#1}}
+
+\raggedbottom
+
+
+\makeindex

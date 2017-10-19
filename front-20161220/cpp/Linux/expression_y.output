@@ -1,0 +1,1023 @@
+Grammar
+
+    0 $accept: expression $end
+
+    1 expression: logical_or_expr
+    2           | logical_or_expr '?' expression ':' expression
+
+    3 logical_or_expr: logical_and_expr
+    4                | logical_or_expr logical_or logical_and_expr
+
+    5 logical_and_expr: inclusive_or_expr
+    6                 | logical_and_expr logical_and inclusive_or_expr
+
+    7 inclusive_or_expr: exclusive_or_expr
+    8                  | inclusive_or_expr '|' exclusive_or_expr
+
+    9 exclusive_or_expr: and_expr
+   10                  | exclusive_or_expr '^' and_expr
+
+   11 and_expr: equality_expr
+   12         | and_expr '&' equality_expr
+
+   13 equality_expr: relational_expr
+   14              | equality_expr equality relational_expr
+   15              | equality_expr inequality relational_expr
+
+   16 relational_expr: shift_expr
+   17                | relational_expr '<' shift_expr
+   18                | relational_expr '>' shift_expr
+   19                | relational_expr atmost shift_expr
+   20                | relational_expr atleast shift_expr
+
+   21 shift_expr: additive_expr
+   22           | shift_expr shift_left additive_expr
+   23           | shift_expr shift_right additive_expr
+
+   24 additive_expr: multiplicative_expr
+   25              | additive_expr '+' multiplicative_expr
+   26              | additive_expr '-' multiplicative_expr
+
+   27 multiplicative_expr: unary_expr
+   28                    | multiplicative_expr '*' unary_expr
+   29                    | multiplicative_expr '/' unary_expr
+   30                    | multiplicative_expr '%' unary_expr
+
+   31 unary_expr: '(' expression ')'
+   32           | '+' unary_expr
+   33           | '-' unary_expr
+   34           | '~' unary_expr
+   35           | '!' unary_expr
+   36           | constant
+   37           | ident
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'!' (33) 35
+'%' (37) 30
+'&' (38) 12
+'(' (40) 31
+')' (41) 31
+'*' (42) 28
+'+' (43) 25 32
+'-' (45) 26 33
+'/' (47) 29
+':' (58) 2
+'<' (60) 17
+'>' (62) 18
+'?' (63) 2
+'^' (94) 10
+'|' (124) 8
+'~' (126) 34
+error (256)
+ident (258) 37
+constant (259) 36
+logical_or (260) 4
+logical_and (261) 6
+equality (262) 14
+inequality (263) 15
+atmost (264) 19
+atleast (265) 20
+shift_right (266) 23
+shift_left (267) 22
+
+
+Nonterminals, with rules where they appear
+
+$accept (29)
+    on left: 0
+expression (30)
+    on left: 1 2, on right: 0 2 31
+logical_or_expr (31)
+    on left: 3 4, on right: 1 2 4
+logical_and_expr (32)
+    on left: 5 6, on right: 3 4 6
+inclusive_or_expr (33)
+    on left: 7 8, on right: 5 6 8
+exclusive_or_expr (34)
+    on left: 9 10, on right: 7 8 10
+and_expr (35)
+    on left: 11 12, on right: 9 10 12
+equality_expr (36)
+    on left: 13 14 15, on right: 11 12 14 15
+relational_expr (37)
+    on left: 16 17 18 19 20, on right: 13 14 15 17 18 19 20
+shift_expr (38)
+    on left: 21 22 23, on right: 16 17 18 19 20 22 23
+additive_expr (39)
+    on left: 24 25 26, on right: 21 22 23 25 26
+multiplicative_expr (40)
+    on left: 27 28 29 30, on right: 24 25 26 28 29 30
+unary_expr (41)
+    on left: 31 32 33 34 35 36 37, on right: 27 28 29 30 32 33 34 35
+
+
+State 0
+
+    0 $accept: . expression $end
+
+    ident     shift, and go to state 1
+    constant  shift, and go to state 2
+    '+'       shift, and go to state 3
+    '-'       shift, and go to state 4
+    '('       shift, and go to state 5
+    '~'       shift, and go to state 6
+    '!'       shift, and go to state 7
+
+    expression           go to state 8
+    logical_or_expr      go to state 9
+    logical_and_expr     go to state 10
+    inclusive_or_expr    go to state 11
+    exclusive_or_expr    go to state 12
+    and_expr             go to state 13
+    equality_expr        go to state 14
+    relational_expr      go to state 15
+    shift_expr           go to state 16
+    additive_expr        go to state 17
+    multiplicative_expr  go to state 18
+    unary_expr           go to state 19
+
+
+State 1
+
+   37 unary_expr: ident .
+
+    $default  reduce using rule 37 (unary_expr)
+
+
+State 2
+
+   36 unary_expr: constant .
+
+    $default  reduce using rule 36 (unary_expr)
+
+
+State 3
+
+   32 unary_expr: '+' . unary_expr
+
+    ident     shift, and go to state 1
+    constant  shift, and go to state 2
+    '+'       shift, and go to state 3
+    '-'       shift, and go to state 4
+    '('       shift, and go to state 5
+    '~'       shift, and go to state 6
+    '!'       shift, and go to state 7
+
+    unary_expr  go to state 20
+
+
+State 4
+
+   33 unary_expr: '-' . unary_expr
+
+    ident     shift, and go to state 1
+    constant  shift, and go to state 2
+    '+'       shift, and go to state 3
+    '-'       shift, and go to state 4
+    '('       shift, and go to state 5
+    '~'       shift, and go to state 6
+    '!'       shift, and go to state 7
+
+    unary_expr  go to state 21
+
+
+State 5
+
+   31 unary_expr: '(' . expression ')'
+
+    ident     shift, and go to state 1
+    constant  shift, and go to state 2
+    '+'       shift, and go to state 3
+    '-'       shift, and go to state 4
+    '('       shift, and go to state 5
+    '~'       shift, and go to state 6
+    '!'       shift, and go to state 7
+
+    expression           go to state 22
+    logical_or_expr      go to state 9
+    logical_and_expr     go to state 10
+    inclusive_or_expr    go to state 11
+    exclusive_or_expr    go to state 12
+    and_expr             go to state 13
+    equality_expr        go to state 14
+    relational_expr      go to state 15
+    shift_expr           go to state 16
+    additive_expr        go to state 17
+    multiplicative_expr  go to state 18
+    unary_expr           go to state 19
+
+
+State 6
+
+   34 unary_expr: '~' . unary_expr
+
+    ident     shift, and go to state 1
+    constant  shift, and go to state 2
+    '+'       shift, and go to state 3
+    '-'       shift, and go to state 4
+    '('       shift, and go to state 5
+    '~'       shift, and go to state 6
+    '!'       shift, and go to state 7
+
+    unary_expr  go to state 23
+
+
+State 7
+
+   35 unary_expr: '!' . unary_expr
+
+    ident     shift, and go to state 1
+    constant  shift, and go to state 2
+    '+'       shift, and go to state 3
+    '-'       shift, and go to state 4
+    '('       shift, and go to state 5
+    '~'       shift, and go to state 6
+    '!'       shift, and go to state 7
+
+    unary_expr  go to state 24
+
+
+State 8
+
+    0 $accept: expression . $end
+
+    $end  shift, and go to state 25
+
+
+State 9
+
+    1 expression: logical_or_expr .
+    2           | logical_or_expr . '?' expression ':' expression
+    4 logical_or_expr: logical_or_expr . logical_or logical_and_expr
+
+    logical_or  shift, and go to state 26
+    '?'         shift, and go to state 27
+
+    $default  reduce using rule 1 (expression)
+
+
+State 10
+
+    3 logical_or_expr: logical_and_expr .
+    6 logical_and_expr: logical_and_expr . logical_and inclusive_or_expr
+
+    logical_and  shift, and go to state 28
+
+    $default  reduce using rule 3 (logical_or_expr)
+
+
+State 11
+
+    5 logical_and_expr: inclusive_or_expr .
+    8 inclusive_or_expr: inclusive_or_expr . '|' exclusive_or_expr
+
+    '|'  shift, and go to state 29
+
+    $default  reduce using rule 5 (logical_and_expr)
+
+
+State 12
+
+    7 inclusive_or_expr: exclusive_or_expr .
+   10 exclusive_or_expr: exclusive_or_expr . '^' and_expr
+
+    '^'  shift, and go to state 30
+
+    $default  reduce using rule 7 (inclusive_or_expr)
+
+
+State 13
+
+    9 exclusive_or_expr: and_expr .
+   12 and_expr: and_expr . '&' equality_expr
+
+    '&'  shift, and go to state 31
+
+    $default  reduce using rule 9 (exclusive_or_expr)
+
+
+State 14
+
+   11 and_expr: equality_expr .
+   14 equality_expr: equality_expr . equality relational_expr
+   15              | equality_expr . inequality relational_expr
+
+    equality    shift, and go to state 32
+    inequality  shift, and go to state 33
+
+    $default  reduce using rule 11 (and_expr)
+
+
+State 15
+
+   13 equality_expr: relational_expr .
+   17 relational_expr: relational_expr . '<' shift_expr
+   18                | relational_expr . '>' shift_expr
+   19                | relational_expr . atmost shift_expr
+   20                | relational_expr . atleast shift_expr
+
+    atmost   shift, and go to state 34
+    atleast  shift, and go to state 35
+    '<'      shift, and go to state 36
+    '>'      shift, and go to state 37
+
+    $default  reduce using rule 13 (equality_expr)
+
+
+State 16
+
+   16 relational_expr: shift_expr .
+   22 shift_expr: shift_expr . shift_left additive_expr
+   23           | shift_expr . shift_right additive_expr
+
+    shift_right  shift, and go to state 38
+    shift_left   shift, and go to state 39
+
+    $default  reduce using rule 16 (relational_expr)
+
+
+State 17
+
+   21 shift_expr: additive_expr .
+   25 additive_expr: additive_expr . '+' multiplicative_expr
+   26              | additive_expr . '-' multiplicative_expr
+
+    '+'  shift, and go to state 40
+    '-'  shift, and go to state 41
+
+    $default  reduce using rule 21 (shift_expr)
+
+
+State 18
+
+   24 additive_expr: multiplicative_expr .
+   28 multiplicative_expr: multiplicative_expr . '*' unary_expr
+   29                    | multiplicative_expr . '/' unary_expr
+   30                    | multiplicative_expr . '%' unary_expr
+
+    '*'  shift, and go to state 42
+    '/'  shift, and go to state 43
+    '%'  shift, and go to state 44
+
+    $default  reduce using rule 24 (additive_expr)
+
+
+State 19
+
+   27 multiplicative_expr: unary_expr .
+
+    $default  reduce using rule 27 (multiplicative_expr)
+
+
+State 20
+
+   32 unary_expr: '+' unary_expr .
+
+    $default  reduce using rule 32 (unary_expr)
+
+
+State 21
+
+   33 unary_expr: '-' unary_expr .
+
+    $default  reduce using rule 33 (unary_expr)
+
+
+State 22
+
+   31 unary_expr: '(' expression . ')'
+
+    ')'  shift, and go to state 45
+
+
+State 23
+
+   34 unary_expr: '~' unary_expr .
+
+    $default  reduce using rule 34 (unary_expr)
+
+
+State 24
+
+   35 unary_expr: '!' unary_expr .
+
+    $default  reduce using rule 35 (unary_expr)
+
+
+State 25
+
+    0 $accept: expression $end .
+
+    $default  accept
+
+
+State 26
+
+    4 logical_or_expr: logical_or_expr logical_or . logical_and_expr
+
+    ident     shift, and go to state 1
+    constant  shift, and go to state 2
+    '+'       shift, and go to state 3
+    '-'       shift, and go to state 4
+    '('       shift, and go to state 5
+    '~'       shift, and go to state 6
+    '!'       shift, and go to state 7
+
+    logical_and_expr     go to state 46
+    inclusive_or_expr    go to state 11
+    exclusive_or_expr    go to state 12
+    and_expr             go to state 13
+    equality_expr        go to state 14
+    relational_expr      go to state 15
+    shift_expr           go to state 16
+    additive_expr        go to state 17
+    multiplicative_expr  go to state 18
+    unary_expr           go to state 19
+
+
+State 27
+
+    2 expression: logical_or_expr '?' . expression ':' expression
+
+    ident     shift, and go to state 1
+    constant  shift, and go to state 2
+    '+'       shift, and go to state 3
+    '-'       shift, and go to state 4
+    '('       shift, and go to state 5
+    '~'       shift, and go to state 6
+    '!'       shift, and go to state 7
+
+    expression           go to state 47
+    logical_or_expr      go to state 9
+    logical_and_expr     go to state 10
+    inclusive_or_expr    go to state 11
+    exclusive_or_expr    go to state 12
+    and_expr             go to state 13
+    equality_expr        go to state 14
+    relational_expr      go to state 15
+    shift_expr           go to state 16
+    additive_expr        go to state 17
+    multiplicative_expr  go to state 18
+    unary_expr           go to state 19
+
+
+State 28
+
+    6 logical_and_expr: logical_and_expr logical_and . inclusive_or_expr
+
+    ident     shift, and go to state 1
+    constant  shift, and go to state 2
+    '+'       shift, and go to state 3
+    '-'       shift, and go to state 4
+    '('       shift, and go to state 5
+    '~'       shift, and go to state 6
+    '!'       shift, and go to state 7
+
+    inclusive_or_expr    go to state 48
+    exclusive_or_expr    go to state 12
+    and_expr             go to state 13
+    equality_expr        go to state 14
+    relational_expr      go to state 15
+    shift_expr           go to state 16
+    additive_expr        go to state 17
+    multiplicative_expr  go to state 18
+    unary_expr           go to state 19
+
+
+State 29
+
+    8 inclusive_or_expr: inclusive_or_expr '|' . exclusive_or_expr
+
+    ident     shift, and go to state 1
+    constant  shift, and go to state 2
+    '+'       shift, and go to state 3
+    '-'       shift, and go to state 4
+    '('       shift, and go to state 5
+    '~'       shift, and go to state 6
+    '!'       shift, and go to state 7
+
+    exclusive_or_expr    go to state 49
+    and_expr             go to state 13
+    equality_expr        go to state 14
+    relational_expr      go to state 15
+    shift_expr           go to state 16
+    additive_expr        go to state 17
+    multiplicative_expr  go to state 18
+    unary_expr           go to state 19
+
+
+State 30
+
+   10 exclusive_or_expr: exclusive_or_expr '^' . and_expr
+
+    ident     shift, and go to state 1
+    constant  shift, and go to state 2
+    '+'       shift, and go to state 3
+    '-'       shift, and go to state 4
+    '('       shift, and go to state 5
+    '~'       shift, and go to state 6
+    '!'       shift, and go to state 7
+
+    and_expr             go to state 50
+    equality_expr        go to state 14
+    relational_expr      go to state 15
+    shift_expr           go to state 16
+    additive_expr        go to state 17
+    multiplicative_expr  go to state 18
+    unary_expr           go to state 19
+
+
+State 31
+
+   12 and_expr: and_expr '&' . equality_expr
+
+    ident     shift, and go to state 1
+    constant  shift, and go to state 2
+    '+'       shift, and go to state 3
+    '-'       shift, and go to state 4
+    '('       shift, and go to state 5
+    '~'       shift, and go to state 6
+    '!'       shift, and go to state 7
+
+    equality_expr        go to state 51
+    relational_expr      go to state 15
+    shift_expr           go to state 16
+    additive_expr        go to state 17
+    multiplicative_expr  go to state 18
+    unary_expr           go to state 19
+
+
+State 32
+
+   14 equality_expr: equality_expr equality . relational_expr
+
+    ident     shift, and go to state 1
+    constant  shift, and go to state 2
+    '+'       shift, and go to state 3
+    '-'       shift, and go to state 4
+    '('       shift, and go to state 5
+    '~'       shift, and go to state 6
+    '!'       shift, and go to state 7
+
+    relational_expr      go to state 52
+    shift_expr           go to state 16
+    additive_expr        go to state 17
+    multiplicative_expr  go to state 18
+    unary_expr           go to state 19
+
+
+State 33
+
+   15 equality_expr: equality_expr inequality . relational_expr
+
+    ident     shift, and go to state 1
+    constant  shift, and go to state 2
+    '+'       shift, and go to state 3
+    '-'       shift, and go to state 4
+    '('       shift, and go to state 5
+    '~'       shift, and go to state 6
+    '!'       shift, and go to state 7
+
+    relational_expr      go to state 53
+    shift_expr           go to state 16
+    additive_expr        go to state 17
+    multiplicative_expr  go to state 18
+    unary_expr           go to state 19
+
+
+State 34
+
+   19 relational_expr: relational_expr atmost . shift_expr
+
+    ident     shift, and go to state 1
+    constant  shift, and go to state 2
+    '+'       shift, and go to state 3
+    '-'       shift, and go to state 4
+    '('       shift, and go to state 5
+    '~'       shift, and go to state 6
+    '!'       shift, and go to state 7
+
+    shift_expr           go to state 54
+    additive_expr        go to state 17
+    multiplicative_expr  go to state 18
+    unary_expr           go to state 19
+
+
+State 35
+
+   20 relational_expr: relational_expr atleast . shift_expr
+
+    ident     shift, and go to state 1
+    constant  shift, and go to state 2
+    '+'       shift, and go to state 3
+    '-'       shift, and go to state 4
+    '('       shift, and go to state 5
+    '~'       shift, and go to state 6
+    '!'       shift, and go to state 7
+
+    shift_expr           go to state 55
+    additive_expr        go to state 17
+    multiplicative_expr  go to state 18
+    unary_expr           go to state 19
+
+
+State 36
+
+   17 relational_expr: relational_expr '<' . shift_expr
+
+    ident     shift, and go to state 1
+    constant  shift, and go to state 2
+    '+'       shift, and go to state 3
+    '-'       shift, and go to state 4
+    '('       shift, and go to state 5
+    '~'       shift, and go to state 6
+    '!'       shift, and go to state 7
+
+    shift_expr           go to state 56
+    additive_expr        go to state 17
+    multiplicative_expr  go to state 18
+    unary_expr           go to state 19
+
+
+State 37
+
+   18 relational_expr: relational_expr '>' . shift_expr
+
+    ident     shift, and go to state 1
+    constant  shift, and go to state 2
+    '+'       shift, and go to state 3
+    '-'       shift, and go to state 4
+    '('       shift, and go to state 5
+    '~'       shift, and go to state 6
+    '!'       shift, and go to state 7
+
+    shift_expr           go to state 57
+    additive_expr        go to state 17
+    multiplicative_expr  go to state 18
+    unary_expr           go to state 19
+
+
+State 38
+
+   23 shift_expr: shift_expr shift_right . additive_expr
+
+    ident     shift, and go to state 1
+    constant  shift, and go to state 2
+    '+'       shift, and go to state 3
+    '-'       shift, and go to state 4
+    '('       shift, and go to state 5
+    '~'       shift, and go to state 6
+    '!'       shift, and go to state 7
+
+    additive_expr        go to state 58
+    multiplicative_expr  go to state 18
+    unary_expr           go to state 19
+
+
+State 39
+
+   22 shift_expr: shift_expr shift_left . additive_expr
+
+    ident     shift, and go to state 1
+    constant  shift, and go to state 2
+    '+'       shift, and go to state 3
+    '-'       shift, and go to state 4
+    '('       shift, and go to state 5
+    '~'       shift, and go to state 6
+    '!'       shift, and go to state 7
+
+    additive_expr        go to state 59
+    multiplicative_expr  go to state 18
+    unary_expr           go to state 19
+
+
+State 40
+
+   25 additive_expr: additive_expr '+' . multiplicative_expr
+
+    ident     shift, and go to state 1
+    constant  shift, and go to state 2
+    '+'       shift, and go to state 3
+    '-'       shift, and go to state 4
+    '('       shift, and go to state 5
+    '~'       shift, and go to state 6
+    '!'       shift, and go to state 7
+
+    multiplicative_expr  go to state 60
+    unary_expr           go to state 19
+
+
+State 41
+
+   26 additive_expr: additive_expr '-' . multiplicative_expr
+
+    ident     shift, and go to state 1
+    constant  shift, and go to state 2
+    '+'       shift, and go to state 3
+    '-'       shift, and go to state 4
+    '('       shift, and go to state 5
+    '~'       shift, and go to state 6
+    '!'       shift, and go to state 7
+
+    multiplicative_expr  go to state 61
+    unary_expr           go to state 19
+
+
+State 42
+
+   28 multiplicative_expr: multiplicative_expr '*' . unary_expr
+
+    ident     shift, and go to state 1
+    constant  shift, and go to state 2
+    '+'       shift, and go to state 3
+    '-'       shift, and go to state 4
+    '('       shift, and go to state 5
+    '~'       shift, and go to state 6
+    '!'       shift, and go to state 7
+
+    unary_expr  go to state 62
+
+
+State 43
+
+   29 multiplicative_expr: multiplicative_expr '/' . unary_expr
+
+    ident     shift, and go to state 1
+    constant  shift, and go to state 2
+    '+'       shift, and go to state 3
+    '-'       shift, and go to state 4
+    '('       shift, and go to state 5
+    '~'       shift, and go to state 6
+    '!'       shift, and go to state 7
+
+    unary_expr  go to state 63
+
+
+State 44
+
+   30 multiplicative_expr: multiplicative_expr '%' . unary_expr
+
+    ident     shift, and go to state 1
+    constant  shift, and go to state 2
+    '+'       shift, and go to state 3
+    '-'       shift, and go to state 4
+    '('       shift, and go to state 5
+    '~'       shift, and go to state 6
+    '!'       shift, and go to state 7
+
+    unary_expr  go to state 64
+
+
+State 45
+
+   31 unary_expr: '(' expression ')' .
+
+    $default  reduce using rule 31 (unary_expr)
+
+
+State 46
+
+    4 logical_or_expr: logical_or_expr logical_or logical_and_expr .
+    6 logical_and_expr: logical_and_expr . logical_and inclusive_or_expr
+
+    logical_and  shift, and go to state 28
+
+    $default  reduce using rule 4 (logical_or_expr)
+
+
+State 47
+
+    2 expression: logical_or_expr '?' expression . ':' expression
+
+    ':'  shift, and go to state 65
+
+
+State 48
+
+    6 logical_and_expr: logical_and_expr logical_and inclusive_or_expr .
+    8 inclusive_or_expr: inclusive_or_expr . '|' exclusive_or_expr
+
+    '|'  shift, and go to state 29
+
+    $default  reduce using rule 6 (logical_and_expr)
+
+
+State 49
+
+    8 inclusive_or_expr: inclusive_or_expr '|' exclusive_or_expr .
+   10 exclusive_or_expr: exclusive_or_expr . '^' and_expr
+
+    '^'  shift, and go to state 30
+
+    $default  reduce using rule 8 (inclusive_or_expr)
+
+
+State 50
+
+   10 exclusive_or_expr: exclusive_or_expr '^' and_expr .
+   12 and_expr: and_expr . '&' equality_expr
+
+    '&'  shift, and go to state 31
+
+    $default  reduce using rule 10 (exclusive_or_expr)
+
+
+State 51
+
+   12 and_expr: and_expr '&' equality_expr .
+   14 equality_expr: equality_expr . equality relational_expr
+   15              | equality_expr . inequality relational_expr
+
+    equality    shift, and go to state 32
+    inequality  shift, and go to state 33
+
+    $default  reduce using rule 12 (and_expr)
+
+
+State 52
+
+   14 equality_expr: equality_expr equality relational_expr .
+   17 relational_expr: relational_expr . '<' shift_expr
+   18                | relational_expr . '>' shift_expr
+   19                | relational_expr . atmost shift_expr
+   20                | relational_expr . atleast shift_expr
+
+    atmost   shift, and go to state 34
+    atleast  shift, and go to state 35
+    '<'      shift, and go to state 36
+    '>'      shift, and go to state 37
+
+    $default  reduce using rule 14 (equality_expr)
+
+
+State 53
+
+   15 equality_expr: equality_expr inequality relational_expr .
+   17 relational_expr: relational_expr . '<' shift_expr
+   18                | relational_expr . '>' shift_expr
+   19                | relational_expr . atmost shift_expr
+   20                | relational_expr . atleast shift_expr
+
+    atmost   shift, and go to state 34
+    atleast  shift, and go to state 35
+    '<'      shift, and go to state 36
+    '>'      shift, and go to state 37
+
+    $default  reduce using rule 15 (equality_expr)
+
+
+State 54
+
+   19 relational_expr: relational_expr atmost shift_expr .
+   22 shift_expr: shift_expr . shift_left additive_expr
+   23           | shift_expr . shift_right additive_expr
+
+    shift_right  shift, and go to state 38
+    shift_left   shift, and go to state 39
+
+    $default  reduce using rule 19 (relational_expr)
+
+
+State 55
+
+   20 relational_expr: relational_expr atleast shift_expr .
+   22 shift_expr: shift_expr . shift_left additive_expr
+   23           | shift_expr . shift_right additive_expr
+
+    shift_right  shift, and go to state 38
+    shift_left   shift, and go to state 39
+
+    $default  reduce using rule 20 (relational_expr)
+
+
+State 56
+
+   17 relational_expr: relational_expr '<' shift_expr .
+   22 shift_expr: shift_expr . shift_left additive_expr
+   23           | shift_expr . shift_right additive_expr
+
+    shift_right  shift, and go to state 38
+    shift_left   shift, and go to state 39
+
+    $default  reduce using rule 17 (relational_expr)
+
+
+State 57
+
+   18 relational_expr: relational_expr '>' shift_expr .
+   22 shift_expr: shift_expr . shift_left additive_expr
+   23           | shift_expr . shift_right additive_expr
+
+    shift_right  shift, and go to state 38
+    shift_left   shift, and go to state 39
+
+    $default  reduce using rule 18 (relational_expr)
+
+
+State 58
+
+   23 shift_expr: shift_expr shift_right additive_expr .
+   25 additive_expr: additive_expr . '+' multiplicative_expr
+   26              | additive_expr . '-' multiplicative_expr
+
+    '+'  shift, and go to state 40
+    '-'  shift, and go to state 41
+
+    $default  reduce using rule 23 (shift_expr)
+
+
+State 59
+
+   22 shift_expr: shift_expr shift_left additive_expr .
+   25 additive_expr: additive_expr . '+' multiplicative_expr
+   26              | additive_expr . '-' multiplicative_expr
+
+    '+'  shift, and go to state 40
+    '-'  shift, and go to state 41
+
+    $default  reduce using rule 22 (shift_expr)
+
+
+State 60
+
+   25 additive_expr: additive_expr '+' multiplicative_expr .
+   28 multiplicative_expr: multiplicative_expr . '*' unary_expr
+   29                    | multiplicative_expr . '/' unary_expr
+   30                    | multiplicative_expr . '%' unary_expr
+
+    '*'  shift, and go to state 42
+    '/'  shift, and go to state 43
+    '%'  shift, and go to state 44
+
+    $default  reduce using rule 25 (additive_expr)
+
+
+State 61
+
+   26 additive_expr: additive_expr '-' multiplicative_expr .
+   28 multiplicative_expr: multiplicative_expr . '*' unary_expr
+   29                    | multiplicative_expr . '/' unary_expr
+   30                    | multiplicative_expr . '%' unary_expr
+
+    '*'  shift, and go to state 42
+    '/'  shift, and go to state 43
+    '%'  shift, and go to state 44
+
+    $default  reduce using rule 26 (additive_expr)
+
+
+State 62
+
+   28 multiplicative_expr: multiplicative_expr '*' unary_expr .
+
+    $default  reduce using rule 28 (multiplicative_expr)
+
+
+State 63
+
+   29 multiplicative_expr: multiplicative_expr '/' unary_expr .
+
+    $default  reduce using rule 29 (multiplicative_expr)
+
+
+State 64
+
+   30 multiplicative_expr: multiplicative_expr '%' unary_expr .
+
+    $default  reduce using rule 30 (multiplicative_expr)
+
+
+State 65
+
+    2 expression: logical_or_expr '?' expression ':' . expression
+
+    ident     shift, and go to state 1
+    constant  shift, and go to state 2
+    '+'       shift, and go to state 3
+    '-'       shift, and go to state 4
+    '('       shift, and go to state 5
+    '~'       shift, and go to state 6
+    '!'       shift, and go to state 7
+
+    expression           go to state 66
+    logical_or_expr      go to state 9
+    logical_and_expr     go to state 10
+    inclusive_or_expr    go to state 11
+    exclusive_or_expr    go to state 12
+    and_expr             go to state 13
+    equality_expr        go to state 14
+    relational_expr      go to state 15
+    shift_expr           go to state 16
+    additive_expr        go to state 17
+    multiplicative_expr  go to state 18
+    unary_expr           go to state 19
+
+
+State 66
+
+    2 expression: logical_or_expr '?' expression ':' expression .
+
+    $default  reduce using rule 2 (expression)

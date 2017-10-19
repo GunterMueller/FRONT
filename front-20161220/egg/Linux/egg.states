@@ -1,0 +1,949 @@
+GRAMMAR
+
+egg -> Uses OPTMORE_Group ;
+  empty: NON_EMPTY
+  first: hole_Uses usessym 
+Uses -> usessym Strings semicolonsym ;
+  empty: NON_EMPTY
+  first: usessym 
+Strings -> ALT_Stringsym_SEP_commasym ;
+  empty: NON_EMPTY
+  first: hole_ALT_Stringsym_SEP_commasym Stringsym 
+Declarations -> OPTMORE_Declaration ;
+  empty: EMPTY
+  first: hole_OPTMORE_Declaration hole_Declaration hole_MessageKind postsym keysym disabledsym warningsym errorsym 
+Declaration -> MessageKind equalssym MORE_Expression semicolonsym ;
+  empty: NON_EMPTY
+  first: hole_MessageKind postsym keysym disabledsym warningsym errorsym 
+Expression -> Stringsym ;
+  empty: NON_EMPTY
+  first: Stringsym 
+Expression -> Identsym openparsym Params closeparsym ;
+  empty: NON_EMPTY
+  first: Identsym 
+Expression -> Identsym ;
+  empty: NON_EMPTY
+  first: Identsym 
+Params -> ALT_Expression_SEP_commasym ;
+  empty: NON_EMPTY
+  first: hole_ALT_Expression_SEP_commasym hole_Expression Identsym Stringsym 
+Statements -> OPTMORE_Statement ;
+  empty: EMPTY
+  first: hole_OPTMORE_Statement hole_Statement hole_Group fatalsym Identsym hole_Message 
+Statement -> Message ;
+  empty: NON_EMPTY
+  first: hole_Message fatalsym Identsym 
+Statement -> Group ;
+  empty: NON_EMPTY
+  first: hole_Group fatalsym Identsym 
+MessageKind -> errorsym ;
+  empty: NON_EMPTY
+  first: errorsym 
+MessageKind -> warningsym ;
+  empty: NON_EMPTY
+  first: warningsym 
+MessageKind -> disabledsym ;
+  empty: NON_EMPTY
+  first: disabledsym 
+MessageKind -> keysym ;
+  empty: NON_EMPTY
+  first: keysym 
+MessageKind -> postsym ;
+  empty: NON_EMPTY
+  first: postsym 
+Message -> OPT_fatalsym Identsym SubMessages semicolonsym ;
+  empty: NON_EMPTY
+  first: fatalsym Identsym 
+SubMessages -> ALT_SubMessage_SEP_commasym ;
+  empty: NON_EMPTY
+  first: hole_ALT_SubMessage_SEP_commasym hole_SubMessage hole_MessageKind postsym keysym disabledsym warningsym errorsym 
+SubMessage -> MessageKind Stringsym ;
+  empty: NON_EMPTY
+  first: hole_MessageKind postsym keysym disabledsym warningsym errorsym 
+Group -> OPT_fatalsym Identsym OPT_openparsym_Identsym_closeparsym OPT_groupsym openchainsym Declarations Statements closechainsym ;
+  empty: NON_EMPTY
+  first: fatalsym Identsym 
+OPTMORE_Group -> ;
+  empty: EMPTY
+  first: 
+OPTMORE_Group -> Group OPTMORE_Group ;
+  empty: NON_EMPTY
+  first: hole_Group fatalsym Identsym 
+ALT_Stringsym_SEP_commasym -> Stringsym ;
+  empty: NON_EMPTY
+  first: Stringsym 
+ALT_Stringsym_SEP_commasym -> Stringsym commasym ALT_Stringsym_SEP_commasym ;
+  empty: NON_EMPTY
+  first: Stringsym 
+OPTMORE_Declaration -> ;
+  empty: EMPTY
+  first: 
+OPTMORE_Declaration -> Declaration OPTMORE_Declaration ;
+  empty: NON_EMPTY
+  first: hole_Declaration hole_MessageKind postsym keysym disabledsym warningsym errorsym 
+MORE_Expression -> Expression ;
+  empty: NON_EMPTY
+  first: hole_Expression Identsym Stringsym 
+MORE_Expression -> Expression MORE_Expression ;
+  empty: NON_EMPTY
+  first: hole_Expression Identsym Stringsym 
+ALT_Expression_SEP_commasym -> Expression ;
+  empty: NON_EMPTY
+  first: hole_Expression Identsym Stringsym 
+ALT_Expression_SEP_commasym -> Expression commasym ALT_Expression_SEP_commasym ;
+  empty: NON_EMPTY
+  first: hole_Expression Identsym Stringsym 
+OPTMORE_Statement -> ;
+  empty: EMPTY
+  first: 
+OPTMORE_Statement -> Statement OPTMORE_Statement ;
+  empty: NON_EMPTY
+  first: hole_Statement hole_Group fatalsym Identsym hole_Message 
+OPT_fatalsym -> ;
+  empty: EMPTY
+  first: 
+OPT_fatalsym -> fatalsym ;
+  empty: NON_EMPTY
+  first: fatalsym 
+ALT_SubMessage_SEP_commasym -> SubMessage ;
+  empty: NON_EMPTY
+  first: hole_SubMessage hole_MessageKind postsym keysym disabledsym warningsym errorsym 
+ALT_SubMessage_SEP_commasym -> SubMessage commasym ALT_SubMessage_SEP_commasym ;
+  empty: NON_EMPTY
+  first: hole_SubMessage hole_MessageKind postsym keysym disabledsym warningsym errorsym 
+OPT_openparsym_Identsym_closeparsym -> ;
+  empty: EMPTY
+  first: 
+OPT_openparsym_Identsym_closeparsym -> openparsym Identsym closeparsym ;
+  empty: NON_EMPTY
+  first: openparsym 
+OPT_groupsym -> ;
+  empty: EMPTY
+  first: 
+OPT_groupsym -> groupsym ;
+  empty: NON_EMPTY
+  first: groupsym 
+
+STATES
+
+state 0
+  Uses  ->  . usessym Strings semicolonsym      followers: egg_EOF 
+transitions
+  usessym => state 1
+
+
+state 1
+  Uses  ->  usessym . Strings semicolonsym      followers: hole_OPTMORE_Group hole_Group fatalsym Identsym egg_EOF 
+  Strings  ->  . ALT_Stringsym_SEP_commasym     followers: semicolonsym 
+  ALT_Stringsym_SEP_commasym  ->  . Stringsym commasym ALT_Stringsym_SEP_commasym       followers: semicolonsym 
+  ALT_Stringsym_SEP_commasym  ->  . Stringsym   followers: semicolonsym 
+transitions
+  Stringsym => state 2
+  ALT_Stringsym_SEP_commasym => state 5
+  Strings => state 6
+
+
+state 2
+  ALT_Stringsym_SEP_commasym  ->  Stringsym . commasym ALT_Stringsym_SEP_commasym       followers: semicolonsym egg_EOF 
+  ALT_Stringsym_SEP_commasym  ->  Stringsym .   followers: semicolonsym egg_EOF 
+transitions
+  commasym => state 3
+
+
+state 3
+  ALT_Stringsym_SEP_commasym  ->  Stringsym commasym . ALT_Stringsym_SEP_commasym       followers: semicolonsym egg_EOF 
+  ALT_Stringsym_SEP_commasym  ->  . Stringsym commasym ALT_Stringsym_SEP_commasym       followers: semicolonsym egg_EOF 
+  ALT_Stringsym_SEP_commasym  ->  . Stringsym   followers: semicolonsym egg_EOF 
+transitions
+  Stringsym => state 2
+  ALT_Stringsym_SEP_commasym => state 4
+
+
+state 4
+  ALT_Stringsym_SEP_commasym  ->  Stringsym commasym ALT_Stringsym_SEP_commasym .       followers: semicolonsym egg_EOF 
+transitions
+
+
+state 5
+  Strings  ->  ALT_Stringsym_SEP_commasym .     followers: semicolonsym egg_EOF 
+transitions
+
+
+state 6
+  Uses  ->  usessym Strings . semicolonsym      followers: hole_OPTMORE_Group hole_Group fatalsym Identsym egg_EOF 
+transitions
+  semicolonsym => state 7
+
+
+state 7
+  Uses  ->  usessym Strings semicolonsym .      followers: hole_OPTMORE_Group hole_Group fatalsym Identsym egg_EOF 
+transitions
+
+
+state 8
+  OPTMORE_Group  ->  . Group OPTMORE_Group      followers: egg_EOF 
+  OPTMORE_Group  ->  .  followers: egg_EOF 
+  Group  ->  . OPT_fatalsym Identsym OPT_openparsym_Identsym_closeparsym OPT_groupsym openchainsym Declarations Statements closechainsym        followers: hole_OPTMORE_Group hole_Group fatalsym Identsym egg_EOF 
+  OPT_fatalsym  ->  . fatalsym  followers: Identsym 
+  OPT_fatalsym  ->  .   followers: Identsym 
+transitions
+  fatalsym => state 9
+  OPT_fatalsym => state 10
+  Group => state 60
+
+
+state 9
+  OPT_fatalsym  ->  fatalsym .  followers: Identsym 
+transitions
+
+
+state 10
+  Group  ->  OPT_fatalsym . Identsym OPT_openparsym_Identsym_closeparsym OPT_groupsym openchainsym Declarations Statements closechainsym        followers: hole_OPTMORE_Group hole_Group fatalsym Identsym egg_EOF 
+transitions
+  Identsym => state 11
+
+
+state 11
+  Group  ->  OPT_fatalsym Identsym . OPT_openparsym_Identsym_closeparsym OPT_groupsym openchainsym Declarations Statements closechainsym        followers: hole_OPTMORE_Group hole_Group fatalsym Identsym egg_EOF 
+  OPT_openparsym_Identsym_closeparsym  ->  . openparsym Identsym closeparsym    followers: groupsym openchainsym 
+  OPT_openparsym_Identsym_closeparsym  ->  .    followers: groupsym openchainsym 
+transitions
+  openparsym => state 12
+  OPT_openparsym_Identsym_closeparsym => state 15
+
+
+state 12
+  OPT_openparsym_Identsym_closeparsym  ->  openparsym . Identsym closeparsym    followers: groupsym openchainsym 
+transitions
+  Identsym => state 13
+
+
+state 13
+  OPT_openparsym_Identsym_closeparsym  ->  openparsym Identsym . closeparsym    followers: groupsym openchainsym 
+transitions
+  closeparsym => state 14
+
+
+state 14
+  OPT_openparsym_Identsym_closeparsym  ->  openparsym Identsym closeparsym .    followers: groupsym openchainsym 
+transitions
+
+
+state 15
+  Group  ->  OPT_fatalsym Identsym OPT_openparsym_Identsym_closeparsym . OPT_groupsym openchainsym Declarations Statements closechainsym        followers: hole_OPTMORE_Group closechainsym hole_OPTMORE_Statement hole_Statement hole_Group fatalsym Identsym hole_Message egg_EOF 
+  OPT_groupsym  ->  . groupsym  followers: openchainsym 
+  OPT_groupsym  ->  .   followers: openchainsym 
+transitions
+  groupsym => state 16
+  OPT_groupsym => state 17
+
+
+state 16
+  OPT_groupsym  ->  groupsym .  followers: openchainsym 
+transitions
+
+
+state 17
+  Group  ->  OPT_fatalsym Identsym OPT_openparsym_Identsym_closeparsym OPT_groupsym . openchainsym Declarations Statements closechainsym        followers: hole_OPTMORE_Group closechainsym hole_OPTMORE_Statement hole_Statement hole_Group fatalsym Identsym hole_Message egg_EOF 
+transitions
+  openchainsym => state 18
+
+
+state 18
+  Group  ->  OPT_fatalsym Identsym OPT_openparsym_Identsym_closeparsym OPT_groupsym openchainsym . Declarations Statements closechainsym        followers: hole_OPTMORE_Group closechainsym hole_OPTMORE_Statement hole_Statement hole_Group fatalsym Identsym hole_Message egg_EOF 
+  Declarations  ->  . OPTMORE_Declaration       followers: hole_Statements hole_OPTMORE_Statement hole_Statement hole_Group fatalsym Identsym hole_Message closechainsym 
+  OPTMORE_Declaration  ->  . Declaration OPTMORE_Declaration    followers: hole_Statements hole_OPTMORE_Statement hole_Statement hole_Group fatalsym Identsym hole_Message closechainsym 
+  OPTMORE_Declaration  ->  .    followers: hole_Statements hole_OPTMORE_Statement hole_Statement hole_Group fatalsym Identsym hole_Message closechainsym 
+  Declaration  ->  . MessageKind equalssym MORE_Expression semicolonsym followers: hole_OPTMORE_Declaration hole_Declaration hole_MessageKind postsym keysym disabledsym warningsym errorsym hole_Statements hole_OPTMORE_Statement hole_Statement hole_Group fatalsym Identsym hole_Message closechainsym 
+  MessageKind  ->  . postsym    followers: equalssym 
+  MessageKind  ->  . keysym     followers: equalssym 
+  MessageKind  ->  . disabledsym        followers: equalssym 
+  MessageKind  ->  . warningsym followers: equalssym 
+  MessageKind  ->  . errorsym   followers: equalssym 
+transitions
+  errorsym => state 19
+  warningsym => state 20
+  disabledsym => state 21
+  keysym => state 22
+  postsym => state 23
+  MessageKind => state 24
+  Declaration => state 39
+  OPTMORE_Declaration => state 41
+  Declarations => state 42
+
+
+state 19
+  MessageKind  ->  errorsym .   followers: equalssym Stringsym egg_EOF 
+transitions
+
+
+state 20
+  MessageKind  ->  warningsym . followers: equalssym Stringsym egg_EOF 
+transitions
+
+
+state 21
+  MessageKind  ->  disabledsym .        followers: equalssym Stringsym egg_EOF 
+transitions
+
+
+state 22
+  MessageKind  ->  keysym .     followers: equalssym Stringsym egg_EOF 
+transitions
+
+
+state 23
+  MessageKind  ->  postsym .    followers: equalssym Stringsym egg_EOF 
+transitions
+
+
+state 24
+  Declaration  ->  MessageKind . equalssym MORE_Expression semicolonsym followers: hole_Statements hole_OPTMORE_Statement hole_Statement hole_Group fatalsym Identsym hole_Message closechainsym hole_OPTMORE_Declaration hole_Declaration hole_MessageKind postsym keysym disabledsym warningsym errorsym egg_EOF 
+transitions
+  equalssym => state 25
+
+
+state 25
+  Declaration  ->  MessageKind equalssym . MORE_Expression semicolonsym followers: hole_Statements hole_OPTMORE_Statement hole_Statement hole_Group fatalsym Identsym hole_Message closechainsym hole_OPTMORE_Declaration hole_Declaration hole_MessageKind postsym keysym disabledsym warningsym errorsym egg_EOF 
+  MORE_Expression  ->  . Expression MORE_Expression     followers: semicolonsym 
+  MORE_Expression  ->  . Expression     followers: semicolonsym 
+  Expression  ->  . Identsym    followers: hole_MORE_Expression hole_Expression Identsym Stringsym semicolonsym 
+  Expression  ->  . Identsym openparsym Params closeparsym      followers: hole_MORE_Expression hole_Expression Identsym Stringsym semicolonsym 
+  Expression  ->  . Stringsym   followers: hole_MORE_Expression hole_Expression Identsym Stringsym semicolonsym 
+transitions
+  Stringsym => state 26
+  Identsym => state 27
+  Expression => state 35
+  MORE_Expression => state 37
+
+
+state 26
+  Expression  ->  Stringsym .   followers: semicolonsym commasym closeparsym hole_MORE_Expression hole_Expression Identsym Stringsym egg_EOF 
+transitions
+
+
+state 27
+  Expression  ->  Identsym .    followers: semicolonsym commasym closeparsym hole_MORE_Expression hole_Expression Identsym Stringsym egg_EOF 
+  Expression  ->  Identsym . openparsym Params closeparsym      followers: semicolonsym commasym closeparsym hole_MORE_Expression hole_Expression Identsym Stringsym egg_EOF 
+transitions
+  openparsym => state 28
+
+
+state 28
+  Expression  ->  Identsym openparsym . Params closeparsym      followers: semicolonsym commasym closeparsym hole_MORE_Expression hole_Expression Identsym Stringsym egg_EOF 
+  Params  ->  . ALT_Expression_SEP_commasym     followers: closeparsym 
+  ALT_Expression_SEP_commasym  ->  . Expression commasym ALT_Expression_SEP_commasym    followers: closeparsym 
+  ALT_Expression_SEP_commasym  ->  . Expression followers: closeparsym 
+  Expression  ->  . Identsym    followers: commasym closeparsym 
+  Expression  ->  . Identsym openparsym Params closeparsym      followers: commasym closeparsym 
+  Expression  ->  . Stringsym   followers: commasym closeparsym 
+transitions
+  Stringsym => state 26
+  Identsym => state 27
+  Expression => state 29
+  ALT_Expression_SEP_commasym => state 32
+  Params => state 33
+
+
+state 29
+  ALT_Expression_SEP_commasym  ->  Expression . commasym ALT_Expression_SEP_commasym    followers: closeparsym egg_EOF 
+  ALT_Expression_SEP_commasym  ->  Expression . followers: closeparsym egg_EOF 
+transitions
+  commasym => state 30
+
+
+state 30
+  ALT_Expression_SEP_commasym  ->  Expression commasym . ALT_Expression_SEP_commasym    followers: closeparsym egg_EOF 
+  ALT_Expression_SEP_commasym  ->  . Expression commasym ALT_Expression_SEP_commasym    followers: closeparsym egg_EOF 
+  ALT_Expression_SEP_commasym  ->  . Expression followers: closeparsym egg_EOF 
+  Expression  ->  . Identsym    followers: commasym closeparsym egg_EOF 
+  Expression  ->  . Identsym openparsym Params closeparsym      followers: commasym closeparsym egg_EOF 
+  Expression  ->  . Stringsym   followers: commasym closeparsym egg_EOF 
+transitions
+  Stringsym => state 26
+  Identsym => state 27
+  Expression => state 29
+  ALT_Expression_SEP_commasym => state 31
+
+
+state 31
+  ALT_Expression_SEP_commasym  ->  Expression commasym ALT_Expression_SEP_commasym .    followers: closeparsym egg_EOF 
+transitions
+
+
+state 32
+  Params  ->  ALT_Expression_SEP_commasym .     followers: closeparsym egg_EOF 
+transitions
+
+
+state 33
+  Expression  ->  Identsym openparsym Params . closeparsym      followers: semicolonsym commasym closeparsym hole_MORE_Expression hole_Expression Identsym Stringsym egg_EOF 
+transitions
+  closeparsym => state 34
+
+
+state 34
+  Expression  ->  Identsym openparsym Params closeparsym .      followers: semicolonsym commasym closeparsym hole_MORE_Expression hole_Expression Identsym Stringsym egg_EOF 
+transitions
+
+
+state 35
+  MORE_Expression  ->  Expression . MORE_Expression     followers: semicolonsym egg_EOF 
+  MORE_Expression  ->  Expression .     followers: semicolonsym egg_EOF 
+  MORE_Expression  ->  . Expression MORE_Expression     followers: semicolonsym egg_EOF 
+  MORE_Expression  ->  . Expression     followers: semicolonsym egg_EOF 
+  Expression  ->  . Identsym    followers: hole_MORE_Expression hole_Expression Identsym Stringsym semicolonsym egg_EOF 
+  Expression  ->  . Identsym openparsym Params closeparsym      followers: hole_MORE_Expression hole_Expression Identsym Stringsym semicolonsym egg_EOF 
+  Expression  ->  . Stringsym   followers: hole_MORE_Expression hole_Expression Identsym Stringsym semicolonsym egg_EOF 
+transitions
+  Stringsym => state 26
+  Identsym => state 27
+  Expression => state 35
+  MORE_Expression => state 36
+
+
+state 36
+  MORE_Expression  ->  Expression MORE_Expression .     followers: semicolonsym egg_EOF 
+transitions
+
+
+state 37
+  Declaration  ->  MessageKind equalssym MORE_Expression . semicolonsym followers: hole_Statements hole_OPTMORE_Statement hole_Statement hole_Group fatalsym Identsym hole_Message closechainsym hole_OPTMORE_Declaration hole_Declaration hole_MessageKind postsym keysym disabledsym warningsym errorsym egg_EOF 
+transitions
+  semicolonsym => state 38
+
+
+state 38
+  Declaration  ->  MessageKind equalssym MORE_Expression semicolonsym . followers: hole_Statements hole_OPTMORE_Statement hole_Statement hole_Group fatalsym Identsym hole_Message closechainsym hole_OPTMORE_Declaration hole_Declaration hole_MessageKind postsym keysym disabledsym warningsym errorsym egg_EOF 
+transitions
+
+
+state 39
+  OPTMORE_Declaration  ->  Declaration . OPTMORE_Declaration    followers: hole_Statements hole_OPTMORE_Statement hole_Statement hole_Group fatalsym Identsym hole_Message closechainsym egg_EOF 
+  OPTMORE_Declaration  ->  . Declaration OPTMORE_Declaration    followers: hole_Statements hole_OPTMORE_Statement hole_Statement hole_Group fatalsym Identsym hole_Message closechainsym egg_EOF 
+  OPTMORE_Declaration  ->  .    followers: hole_Statements hole_OPTMORE_Statement hole_Statement hole_Group fatalsym Identsym hole_Message closechainsym egg_EOF 
+  Declaration  ->  . MessageKind equalssym MORE_Expression semicolonsym followers: hole_OPTMORE_Declaration hole_Declaration hole_MessageKind postsym keysym disabledsym warningsym errorsym hole_Statements hole_OPTMORE_Statement hole_Statement hole_Group fatalsym Identsym hole_Message closechainsym egg_EOF 
+  MessageKind  ->  . postsym    followers: equalssym 
+  MessageKind  ->  . keysym     followers: equalssym 
+  MessageKind  ->  . disabledsym        followers: equalssym 
+  MessageKind  ->  . warningsym followers: equalssym 
+  MessageKind  ->  . errorsym   followers: equalssym 
+transitions
+  errorsym => state 19
+  warningsym => state 20
+  disabledsym => state 21
+  keysym => state 22
+  postsym => state 23
+  MessageKind => state 24
+  Declaration => state 39
+  OPTMORE_Declaration => state 40
+
+
+state 40
+  OPTMORE_Declaration  ->  Declaration OPTMORE_Declaration .    followers: hole_Statements hole_OPTMORE_Statement hole_Statement hole_Group fatalsym Identsym hole_Message closechainsym egg_EOF 
+transitions
+
+
+state 41
+  Declarations  ->  OPTMORE_Declaration .       followers: hole_Statements hole_OPTMORE_Statement hole_Statement hole_Group fatalsym Identsym hole_Message closechainsym egg_EOF 
+transitions
+
+
+state 42
+  Group  ->  OPT_fatalsym Identsym OPT_openparsym_Identsym_closeparsym OPT_groupsym openchainsym Declarations . Statements closechainsym        followers: hole_OPTMORE_Group closechainsym hole_OPTMORE_Statement hole_Statement hole_Group fatalsym Identsym hole_Message egg_EOF 
+  Statements  ->  . OPTMORE_Statement   followers: closechainsym 
+  OPTMORE_Statement  ->  . Statement OPTMORE_Statement  followers: closechainsym 
+  OPTMORE_Statement  ->  .      followers: closechainsym 
+  Statement  ->  . Group        followers: hole_OPTMORE_Statement hole_Statement hole_Group fatalsym Identsym hole_Message closechainsym 
+  Statement  ->  . Message      followers: hole_OPTMORE_Statement hole_Statement hole_Group fatalsym Identsym hole_Message closechainsym 
+  Group  ->  . OPT_fatalsym Identsym OPT_openparsym_Identsym_closeparsym OPT_groupsym openchainsym Declarations Statements closechainsym        followers: hole_OPTMORE_Statement hole_Statement hole_Group fatalsym Identsym hole_Message closechainsym 
+  Message  ->  . OPT_fatalsym Identsym SubMessages semicolonsym followers: hole_OPTMORE_Statement hole_Statement hole_Group fatalsym Identsym hole_Message closechainsym 
+  OPT_fatalsym  ->  . fatalsym  followers: Identsym 
+  OPT_fatalsym  ->  .   followers: Identsym 
+transitions
+  fatalsym => state 9
+  OPT_fatalsym => state 43
+  Message => state 53
+  Group => state 54
+  Statement => state 55
+  OPTMORE_Statement => state 57
+  Statements => state 58
+
+
+state 43
+  Group  ->  OPT_fatalsym . Identsym OPT_openparsym_Identsym_closeparsym OPT_groupsym openchainsym Declarations Statements closechainsym        followers: closechainsym hole_OPTMORE_Statement hole_Statement hole_Group fatalsym Identsym hole_Message egg_EOF 
+  Message  ->  OPT_fatalsym . Identsym SubMessages semicolonsym followers: closechainsym hole_OPTMORE_Statement hole_Statement hole_Group fatalsym Identsym hole_Message egg_EOF 
+transitions
+  Identsym => state 44
+
+
+state 44
+  Group  ->  OPT_fatalsym Identsym . OPT_openparsym_Identsym_closeparsym OPT_groupsym openchainsym Declarations Statements closechainsym        followers: closechainsym hole_OPTMORE_Statement hole_Statement hole_Group fatalsym Identsym hole_Message egg_EOF 
+  Message  ->  OPT_fatalsym Identsym . SubMessages semicolonsym followers: closechainsym hole_OPTMORE_Statement hole_Statement hole_Group fatalsym Identsym hole_Message egg_EOF 
+  OPT_openparsym_Identsym_closeparsym  ->  . openparsym Identsym closeparsym    followers: groupsym openchainsym 
+  OPT_openparsym_Identsym_closeparsym  ->  .    followers: groupsym openchainsym 
+  SubMessages  ->  . ALT_SubMessage_SEP_commasym        followers: semicolonsym 
+  ALT_SubMessage_SEP_commasym  ->  . SubMessage commasym ALT_SubMessage_SEP_commasym    followers: semicolonsym 
+  ALT_SubMessage_SEP_commasym  ->  . SubMessage followers: semicolonsym 
+  SubMessage  ->  . MessageKind Stringsym       followers: commasym semicolonsym 
+  MessageKind  ->  . postsym    followers: Stringsym 
+  MessageKind  ->  . keysym     followers: Stringsym 
+  MessageKind  ->  . disabledsym        followers: Stringsym 
+  MessageKind  ->  . warningsym followers: Stringsym 
+  MessageKind  ->  . errorsym   followers: Stringsym 
+transitions
+  errorsym => state 19
+  warningsym => state 20
+  disabledsym => state 21
+  keysym => state 22
+  postsym => state 23
+  MessageKind => state 45
+  SubMessage => state 47
+  ALT_SubMessage_SEP_commasym => state 50
+  openparsym => state 12
+  SubMessages => state 51
+  OPT_openparsym_Identsym_closeparsym => state 15
+
+
+state 45
+  SubMessage  ->  MessageKind . Stringsym       followers: semicolonsym commasym egg_EOF 
+transitions
+  Stringsym => state 46
+
+
+state 46
+  SubMessage  ->  MessageKind Stringsym .       followers: semicolonsym commasym egg_EOF 
+transitions
+
+
+state 47
+  ALT_SubMessage_SEP_commasym  ->  SubMessage . commasym ALT_SubMessage_SEP_commasym    followers: semicolonsym egg_EOF 
+  ALT_SubMessage_SEP_commasym  ->  SubMessage . followers: semicolonsym egg_EOF 
+transitions
+  commasym => state 48
+
+
+state 48
+  ALT_SubMessage_SEP_commasym  ->  SubMessage commasym . ALT_SubMessage_SEP_commasym    followers: semicolonsym egg_EOF 
+  ALT_SubMessage_SEP_commasym  ->  . SubMessage commasym ALT_SubMessage_SEP_commasym    followers: semicolonsym egg_EOF 
+  ALT_SubMessage_SEP_commasym  ->  . SubMessage followers: semicolonsym egg_EOF 
+  SubMessage  ->  . MessageKind Stringsym       followers: commasym semicolonsym egg_EOF 
+  MessageKind  ->  . postsym    followers: Stringsym 
+  MessageKind  ->  . keysym     followers: Stringsym 
+  MessageKind  ->  . disabledsym        followers: Stringsym 
+  MessageKind  ->  . warningsym followers: Stringsym 
+  MessageKind  ->  . errorsym   followers: Stringsym 
+transitions
+  errorsym => state 19
+  warningsym => state 20
+  disabledsym => state 21
+  keysym => state 22
+  postsym => state 23
+  MessageKind => state 45
+  SubMessage => state 47
+  ALT_SubMessage_SEP_commasym => state 49
+
+
+state 49
+  ALT_SubMessage_SEP_commasym  ->  SubMessage commasym ALT_SubMessage_SEP_commasym .    followers: semicolonsym egg_EOF 
+transitions
+
+
+state 50
+  SubMessages  ->  ALT_SubMessage_SEP_commasym .        followers: semicolonsym egg_EOF 
+transitions
+
+
+state 51
+  Message  ->  OPT_fatalsym Identsym SubMessages . semicolonsym followers: closechainsym hole_OPTMORE_Statement hole_Statement hole_Group fatalsym Identsym hole_Message egg_EOF 
+transitions
+  semicolonsym => state 52
+
+
+state 52
+  Message  ->  OPT_fatalsym Identsym SubMessages semicolonsym . followers: closechainsym hole_OPTMORE_Statement hole_Statement hole_Group fatalsym Identsym hole_Message egg_EOF 
+transitions
+
+
+state 53
+  Statement  ->  Message .      followers: closechainsym hole_OPTMORE_Statement hole_Statement hole_Group fatalsym Identsym hole_Message egg_EOF 
+transitions
+
+
+state 54
+  Statement  ->  Group .        followers: closechainsym hole_OPTMORE_Statement hole_Statement hole_Group fatalsym Identsym hole_Message egg_EOF 
+transitions
+
+
+state 55
+  OPTMORE_Statement  ->  Statement . OPTMORE_Statement  followers: closechainsym egg_EOF 
+  OPTMORE_Statement  ->  . Statement OPTMORE_Statement  followers: closechainsym egg_EOF 
+  OPTMORE_Statement  ->  .      followers: closechainsym egg_EOF 
+  Statement  ->  . Group        followers: hole_OPTMORE_Statement hole_Statement hole_Group fatalsym Identsym hole_Message closechainsym egg_EOF 
+  Statement  ->  . Message      followers: hole_OPTMORE_Statement hole_Statement hole_Group fatalsym Identsym hole_Message closechainsym egg_EOF 
+  Group  ->  . OPT_fatalsym Identsym OPT_openparsym_Identsym_closeparsym OPT_groupsym openchainsym Declarations Statements closechainsym        followers: hole_OPTMORE_Statement hole_Statement hole_Group fatalsym Identsym hole_Message closechainsym egg_EOF 
+  Message  ->  . OPT_fatalsym Identsym SubMessages semicolonsym followers: hole_OPTMORE_Statement hole_Statement hole_Group fatalsym Identsym hole_Message closechainsym egg_EOF 
+  OPT_fatalsym  ->  . fatalsym  followers: Identsym 
+  OPT_fatalsym  ->  .   followers: Identsym 
+transitions
+  fatalsym => state 9
+  OPT_fatalsym => state 43
+  Message => state 53
+  Group => state 54
+  Statement => state 55
+  OPTMORE_Statement => state 56
+
+
+state 56
+  OPTMORE_Statement  ->  Statement OPTMORE_Statement .  followers: closechainsym egg_EOF 
+transitions
+
+
+state 57
+  Statements  ->  OPTMORE_Statement .   followers: closechainsym egg_EOF 
+transitions
+
+
+state 58
+  Group  ->  OPT_fatalsym Identsym OPT_openparsym_Identsym_closeparsym OPT_groupsym openchainsym Declarations Statements . closechainsym        followers: hole_OPTMORE_Group closechainsym hole_OPTMORE_Statement hole_Statement hole_Group fatalsym Identsym hole_Message egg_EOF 
+transitions
+  closechainsym => state 59
+
+
+state 59
+  Group  ->  OPT_fatalsym Identsym OPT_openparsym_Identsym_closeparsym OPT_groupsym openchainsym Declarations Statements closechainsym .        followers: hole_OPTMORE_Group closechainsym hole_OPTMORE_Statement hole_Statement hole_Group fatalsym Identsym hole_Message egg_EOF 
+transitions
+
+
+state 60
+  OPTMORE_Group  ->  Group . OPTMORE_Group      followers: egg_EOF 
+  OPTMORE_Group  ->  . Group OPTMORE_Group      followers: egg_EOF 
+  OPTMORE_Group  ->  .  followers: egg_EOF 
+  Group  ->  . OPT_fatalsym Identsym OPT_openparsym_Identsym_closeparsym OPT_groupsym openchainsym Declarations Statements closechainsym        followers: hole_OPTMORE_Group hole_Group fatalsym Identsym egg_EOF 
+  OPT_fatalsym  ->  . fatalsym  followers: Identsym 
+  OPT_fatalsym  ->  .   followers: Identsym 
+transitions
+  fatalsym => state 9
+  OPT_fatalsym => state 10
+  Group => state 60
+  OPTMORE_Group => state 61
+
+
+state 61
+  OPTMORE_Group  ->  Group OPTMORE_Group .      followers: egg_EOF 
+transitions
+
+
+state 62
+  egg  ->  . Uses OPTMORE_Group followers: egg_EOF 
+  Uses  ->  . usessym Strings semicolonsym      followers: hole_OPTMORE_Group hole_Group fatalsym Identsym egg_EOF 
+transitions
+  usessym => state 1
+  Uses => state 63
+
+
+state 63
+  egg  ->  Uses . OPTMORE_Group followers: egg_EOF 
+  OPTMORE_Group  ->  . Group OPTMORE_Group      followers: egg_EOF 
+  OPTMORE_Group  ->  .  followers: egg_EOF 
+  Group  ->  . OPT_fatalsym Identsym OPT_openparsym_Identsym_closeparsym OPT_groupsym openchainsym Declarations Statements closechainsym        followers: hole_OPTMORE_Group hole_Group fatalsym Identsym egg_EOF 
+  OPT_fatalsym  ->  . fatalsym  followers: Identsym 
+  OPT_fatalsym  ->  .   followers: Identsym 
+transitions
+  fatalsym => state 9
+  OPT_fatalsym => state 10
+  Group => state 60
+  OPTMORE_Group => state 64
+
+
+state 64
+  egg  ->  Uses OPTMORE_Group . followers: egg_EOF 
+transitions
+
+
+state 65
+  Strings  ->  . ALT_Stringsym_SEP_commasym     followers: egg_EOF 
+  ALT_Stringsym_SEP_commasym  ->  . Stringsym commasym ALT_Stringsym_SEP_commasym       followers: egg_EOF 
+  ALT_Stringsym_SEP_commasym  ->  . Stringsym   followers: egg_EOF 
+transitions
+  Stringsym => state 2
+  ALT_Stringsym_SEP_commasym => state 5
+
+
+state 66
+  ALT_Stringsym_SEP_commasym  ->  . Stringsym commasym ALT_Stringsym_SEP_commasym       followers: egg_EOF 
+  ALT_Stringsym_SEP_commasym  ->  . Stringsym   followers: egg_EOF 
+transitions
+  Stringsym => state 2
+
+
+state 67
+  OPTMORE_Declaration  ->  . Declaration OPTMORE_Declaration    followers: egg_EOF 
+  OPTMORE_Declaration  ->  .    followers: egg_EOF 
+  Declaration  ->  . MessageKind equalssym MORE_Expression semicolonsym followers: hole_OPTMORE_Declaration hole_Declaration hole_MessageKind postsym keysym disabledsym warningsym errorsym egg_EOF 
+  MessageKind  ->  . postsym    followers: equalssym 
+  MessageKind  ->  . keysym     followers: equalssym 
+  MessageKind  ->  . disabledsym        followers: equalssym 
+  MessageKind  ->  . warningsym followers: equalssym 
+  MessageKind  ->  . errorsym   followers: equalssym 
+transitions
+  errorsym => state 19
+  warningsym => state 20
+  disabledsym => state 21
+  keysym => state 22
+  postsym => state 23
+  MessageKind => state 24
+  Declaration => state 39
+
+
+state 68
+  Declarations  ->  . OPTMORE_Declaration       followers: egg_EOF 
+  OPTMORE_Declaration  ->  . Declaration OPTMORE_Declaration    followers: egg_EOF 
+  OPTMORE_Declaration  ->  .    followers: egg_EOF 
+  Declaration  ->  . MessageKind equalssym MORE_Expression semicolonsym followers: hole_OPTMORE_Declaration hole_Declaration hole_MessageKind postsym keysym disabledsym warningsym errorsym egg_EOF 
+  MessageKind  ->  . postsym    followers: equalssym 
+  MessageKind  ->  . keysym     followers: equalssym 
+  MessageKind  ->  . disabledsym        followers: equalssym 
+  MessageKind  ->  . warningsym followers: equalssym 
+  MessageKind  ->  . errorsym   followers: equalssym 
+transitions
+  errorsym => state 19
+  warningsym => state 20
+  disabledsym => state 21
+  keysym => state 22
+  postsym => state 23
+  MessageKind => state 24
+  Declaration => state 39
+  OPTMORE_Declaration => state 41
+
+
+state 69
+  MessageKind  ->  . postsym    followers: egg_EOF 
+  MessageKind  ->  . keysym     followers: egg_EOF 
+  MessageKind  ->  . disabledsym        followers: egg_EOF 
+  MessageKind  ->  . warningsym followers: egg_EOF 
+  MessageKind  ->  . errorsym   followers: egg_EOF 
+transitions
+  errorsym => state 19
+  warningsym => state 20
+  disabledsym => state 21
+  keysym => state 22
+  postsym => state 23
+
+
+state 70
+  MORE_Expression  ->  . Expression MORE_Expression     followers: egg_EOF 
+  MORE_Expression  ->  . Expression     followers: egg_EOF 
+  Expression  ->  . Identsym    followers: hole_MORE_Expression hole_Expression Identsym Stringsym egg_EOF 
+  Expression  ->  . Identsym openparsym Params closeparsym      followers: hole_MORE_Expression hole_Expression Identsym Stringsym egg_EOF 
+  Expression  ->  . Stringsym   followers: hole_MORE_Expression hole_Expression Identsym Stringsym egg_EOF 
+transitions
+  Stringsym => state 26
+  Identsym => state 27
+  Expression => state 35
+
+
+state 71
+  Declaration  ->  . MessageKind equalssym MORE_Expression semicolonsym followers: egg_EOF 
+  MessageKind  ->  . postsym    followers: equalssym 
+  MessageKind  ->  . keysym     followers: equalssym 
+  MessageKind  ->  . disabledsym        followers: equalssym 
+  MessageKind  ->  . warningsym followers: equalssym 
+  MessageKind  ->  . errorsym   followers: equalssym 
+transitions
+  errorsym => state 19
+  warningsym => state 20
+  disabledsym => state 21
+  keysym => state 22
+  postsym => state 23
+  MessageKind => state 24
+
+
+state 72
+  Expression  ->  . Identsym    followers: egg_EOF 
+  Expression  ->  . Identsym openparsym Params closeparsym      followers: egg_EOF 
+  Expression  ->  . Stringsym   followers: egg_EOF 
+transitions
+  Stringsym => state 26
+  Identsym => state 27
+
+
+state 73
+  Params  ->  . ALT_Expression_SEP_commasym     followers: egg_EOF 
+  ALT_Expression_SEP_commasym  ->  . Expression commasym ALT_Expression_SEP_commasym    followers: egg_EOF 
+  ALT_Expression_SEP_commasym  ->  . Expression followers: egg_EOF 
+  Expression  ->  . Identsym    followers: commasym egg_EOF 
+  Expression  ->  . Identsym openparsym Params closeparsym      followers: commasym egg_EOF 
+  Expression  ->  . Stringsym   followers: commasym egg_EOF 
+transitions
+  Stringsym => state 26
+  Identsym => state 27
+  Expression => state 29
+  ALT_Expression_SEP_commasym => state 32
+
+
+state 74
+  ALT_Expression_SEP_commasym  ->  . Expression commasym ALT_Expression_SEP_commasym    followers: egg_EOF 
+  ALT_Expression_SEP_commasym  ->  . Expression followers: egg_EOF 
+  Expression  ->  . Identsym    followers: commasym egg_EOF 
+  Expression  ->  . Identsym openparsym Params closeparsym      followers: commasym egg_EOF 
+  Expression  ->  . Stringsym   followers: commasym egg_EOF 
+transitions
+  Stringsym => state 26
+  Identsym => state 27
+  Expression => state 29
+
+
+state 75
+  OPTMORE_Statement  ->  . Statement OPTMORE_Statement  followers: egg_EOF 
+  OPTMORE_Statement  ->  .      followers: egg_EOF 
+  Statement  ->  . Group        followers: hole_OPTMORE_Statement hole_Statement hole_Group fatalsym Identsym hole_Message egg_EOF 
+  Statement  ->  . Message      followers: hole_OPTMORE_Statement hole_Statement hole_Group fatalsym Identsym hole_Message egg_EOF 
+  Group  ->  . OPT_fatalsym Identsym OPT_openparsym_Identsym_closeparsym OPT_groupsym openchainsym Declarations Statements closechainsym        followers: hole_OPTMORE_Statement hole_Statement hole_Group fatalsym Identsym hole_Message egg_EOF 
+  Message  ->  . OPT_fatalsym Identsym SubMessages semicolonsym followers: hole_OPTMORE_Statement hole_Statement hole_Group fatalsym Identsym hole_Message egg_EOF 
+  OPT_fatalsym  ->  . fatalsym  followers: Identsym 
+  OPT_fatalsym  ->  .   followers: Identsym 
+transitions
+  fatalsym => state 9
+  OPT_fatalsym => state 43
+  Message => state 53
+  Group => state 54
+  Statement => state 55
+
+
+state 76
+  Statements  ->  . OPTMORE_Statement   followers: egg_EOF 
+  OPTMORE_Statement  ->  . Statement OPTMORE_Statement  followers: egg_EOF 
+  OPTMORE_Statement  ->  .      followers: egg_EOF 
+  Statement  ->  . Group        followers: hole_OPTMORE_Statement hole_Statement hole_Group fatalsym Identsym hole_Message egg_EOF 
+  Statement  ->  . Message      followers: hole_OPTMORE_Statement hole_Statement hole_Group fatalsym Identsym hole_Message egg_EOF 
+  Group  ->  . OPT_fatalsym Identsym OPT_openparsym_Identsym_closeparsym OPT_groupsym openchainsym Declarations Statements closechainsym        followers: hole_OPTMORE_Statement hole_Statement hole_Group fatalsym Identsym hole_Message egg_EOF 
+  Message  ->  . OPT_fatalsym Identsym SubMessages semicolonsym followers: hole_OPTMORE_Statement hole_Statement hole_Group fatalsym Identsym hole_Message egg_EOF 
+  OPT_fatalsym  ->  . fatalsym  followers: Identsym 
+  OPT_fatalsym  ->  .   followers: Identsym 
+transitions
+  fatalsym => state 9
+  OPT_fatalsym => state 43
+  Message => state 53
+  Group => state 54
+  Statement => state 55
+  OPTMORE_Statement => state 57
+
+
+state 77
+  Message  ->  . OPT_fatalsym Identsym SubMessages semicolonsym followers: egg_EOF 
+  OPT_fatalsym  ->  . fatalsym  followers: Identsym 
+  OPT_fatalsym  ->  .   followers: Identsym 
+transitions
+  fatalsym => state 9
+  OPT_fatalsym => state 78
+
+
+state 78
+  Message  ->  OPT_fatalsym . Identsym SubMessages semicolonsym followers: egg_EOF 
+transitions
+  Identsym => state 79
+
+
+state 79
+  Message  ->  OPT_fatalsym Identsym . SubMessages semicolonsym followers: egg_EOF 
+  SubMessages  ->  . ALT_SubMessage_SEP_commasym        followers: semicolonsym 
+  ALT_SubMessage_SEP_commasym  ->  . SubMessage commasym ALT_SubMessage_SEP_commasym    followers: semicolonsym 
+  ALT_SubMessage_SEP_commasym  ->  . SubMessage followers: semicolonsym 
+  SubMessage  ->  . MessageKind Stringsym       followers: commasym semicolonsym 
+  MessageKind  ->  . postsym    followers: Stringsym 
+  MessageKind  ->  . keysym     followers: Stringsym 
+  MessageKind  ->  . disabledsym        followers: Stringsym 
+  MessageKind  ->  . warningsym followers: Stringsym 
+  MessageKind  ->  . errorsym   followers: Stringsym 
+transitions
+  errorsym => state 19
+  warningsym => state 20
+  disabledsym => state 21
+  keysym => state 22
+  postsym => state 23
+  MessageKind => state 45
+  SubMessage => state 47
+  ALT_SubMessage_SEP_commasym => state 50
+  SubMessages => state 51
+
+
+state 80
+  Statement  ->  . Group        followers: egg_EOF 
+  Statement  ->  . Message      followers: egg_EOF 
+  Group  ->  . OPT_fatalsym Identsym OPT_openparsym_Identsym_closeparsym OPT_groupsym openchainsym Declarations Statements closechainsym        followers: egg_EOF 
+  Message  ->  . OPT_fatalsym Identsym SubMessages semicolonsym followers: egg_EOF 
+  OPT_fatalsym  ->  . fatalsym  followers: Identsym 
+  OPT_fatalsym  ->  .   followers: Identsym 
+transitions
+  fatalsym => state 9
+  OPT_fatalsym => state 43
+  Message => state 53
+  Group => state 54
+
+
+state 81
+  Group  ->  . OPT_fatalsym Identsym OPT_openparsym_Identsym_closeparsym OPT_groupsym openchainsym Declarations Statements closechainsym        followers: egg_EOF 
+  OPT_fatalsym  ->  . fatalsym  followers: Identsym 
+  OPT_fatalsym  ->  .   followers: Identsym 
+transitions
+  fatalsym => state 9
+  OPT_fatalsym => state 10
+
+
+state 82
+  SubMessages  ->  . ALT_SubMessage_SEP_commasym        followers: egg_EOF 
+  ALT_SubMessage_SEP_commasym  ->  . SubMessage commasym ALT_SubMessage_SEP_commasym    followers: egg_EOF 
+  ALT_SubMessage_SEP_commasym  ->  . SubMessage followers: egg_EOF 
+  SubMessage  ->  . MessageKind Stringsym       followers: commasym egg_EOF 
+  MessageKind  ->  . postsym    followers: Stringsym 
+  MessageKind  ->  . keysym     followers: Stringsym 
+  MessageKind  ->  . disabledsym        followers: Stringsym 
+  MessageKind  ->  . warningsym followers: Stringsym 
+  MessageKind  ->  . errorsym   followers: Stringsym 
+transitions
+  errorsym => state 19
+  warningsym => state 20
+  disabledsym => state 21
+  keysym => state 22
+  postsym => state 23
+  MessageKind => state 45
+  SubMessage => state 47
+  ALT_SubMessage_SEP_commasym => state 50
+
+
+state 83
+  ALT_SubMessage_SEP_commasym  ->  . SubMessage commasym ALT_SubMessage_SEP_commasym    followers: egg_EOF 
+  ALT_SubMessage_SEP_commasym  ->  . SubMessage followers: egg_EOF 
+  SubMessage  ->  . MessageKind Stringsym       followers: commasym egg_EOF 
+  MessageKind  ->  . postsym    followers: Stringsym 
+  MessageKind  ->  . keysym     followers: Stringsym 
+  MessageKind  ->  . disabledsym        followers: Stringsym 
+  MessageKind  ->  . warningsym followers: Stringsym 
+  MessageKind  ->  . errorsym   followers: Stringsym 
+transitions
+  errorsym => state 19
+  warningsym => state 20
+  disabledsym => state 21
+  keysym => state 22
+  postsym => state 23
+  MessageKind => state 45
+  SubMessage => state 47
+
+
+state 84
+  SubMessage  ->  . MessageKind Stringsym       followers: egg_EOF 
+  MessageKind  ->  . postsym    followers: Stringsym 
+  MessageKind  ->  . keysym     followers: Stringsym 
+  MessageKind  ->  . disabledsym        followers: Stringsym 
+  MessageKind  ->  . warningsym followers: Stringsym 
+  MessageKind  ->  . errorsym   followers: Stringsym 
+transitions
+  errorsym => state 19
+  warningsym => state 20
+  disabledsym => state 21
+  keysym => state 22
+  postsym => state 23
+  MessageKind => state 45
+
+

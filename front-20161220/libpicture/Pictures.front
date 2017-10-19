@@ -1,0 +1,52 @@
+/*
+ * Copyright (C) 2000-2005 Philips Electronics N.V.
+ * 
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+Pictures ::= pics : { Picture } ;
+ 
+Direction ::= < Left ::= "L" | Right ::= "R" | Up ::= "U" | Down ::= "D" | Center ::= "C" > ;
+
+Picture ::= x : Float SP y : Float SP 	%% Position
+            w : Float SP h : Float SP 	%% Size
+	    d : Float = 0 		%% Entry height
+	    scale : Float = 1		%% Local scale
+	    phi : Float = 0		%% Rotation angle
+	    fill : Bool = FALSE
+	    dash : Int = 0
+	    with_color : Bool = FALSE
+            < Empty    ::=
+	    | Box      ::= SP "rectangle"
+	    | Circle   ::= SP "circle"
+	    | Arc      ::= SP "arc" 
+	                   phi_1 : Float 
+	                   phi_2 : Float
+	    | Curve    ::= SP "arctopop" 
+	                   d1 : Bool
+			   d2 : Bool
+	    | Line     ::= SP "line"
+	    | Arrow    ::= SP "triangle" SP "eofill"
+	    		   dir : Direction
+	    | Text     ::= "(" text : String ")"
+	                   font : Ident
+	    | OrBlock  ::= "OR "  sub : Picture // dirs : Direction "ENDOR" NL
+	    | AndBlock ::= "AND " sub : Picture // dirs : Direction "ENDAND" NL
+            | AltBlock ::= "ALT " a : Picture b : Picture turn_left : Bool "ENDALT" NL
+	    | Compound ::= sub : {Picture}+
+	    > NL ;
+
+
+SP = \" " ;
+NL = \"\n" ;

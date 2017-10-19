@@ -1,0 +1,4007 @@
+Nonterminals useless in grammar
+
+   ArgPat
+
+
+Terminals unused in grammar
+
+   NONSENSE
+   comment1sym
+   comment2sym
+
+
+Rules useless in grammar
+
+  210 ArgPat: Pattern
+
+
+Grammar
+
+    0 $accept: doggy $end
+
+    1 doggy: OPT_Typedefs machine_description OPT_machine_description OPT_externals OPTMORE_Section
+
+    2 Typedefs: TYPESsym OPTMORE_Typedef
+
+    3 Typedef: Identsym OPT_Stringsym_Stringsym_Stringsym OPT_ATTRIBUTESsym_openchainsym_Attributes_closechainsym
+
+    4 externals: EXTERNALsym OPTMORE_FunctionDef
+
+    5 FunctionDef: externsym Type Identsym ArgTypes semicolonsym
+    6            | externsym Type Identsym semicolonsym
+
+    7 machine_description: MACHINEsym DESCRIPTIONsym Identsym OPTMORE_Operation_def OPT_SUPPORTSsym_OPTMORE_Applied_formal
+
+    8 Operation_def: Identsym openparsym OPT_Types closeparsym OPT_colonsym_Type Identsym OPT_ATTRIBUTESsym_openchainsym_Attributes_closechainsym OPTMORE_Property
+
+    9 Attributes: OPT_Attrs_OPT_commasym_Attributes
+
+   10 Attrs: MORE_Attribute
+
+   11 Attribute: Identsym
+   12          | OPRsym
+   13          | Intsym
+
+   14 Section: Funcs
+   15        | Rules
+
+   16 Rules: RULESsym OPT_colonsym_Identsym OPTMORE_Rule
+
+   17 Rule: Lhs Rhs semicolonsym
+
+   18 Lhs: Identsym colonsym UnTypedPattern
+   19    | UnTypedPattern
+
+   20 Funcs: FUNCTIONSsym OPTMORE_Func
+
+   21 Func: OPT_externsym Type Identsym FuncRules semicolonsym
+
+   22 FuncRules: ALT_FuncRule_SEP_commasym
+
+   23 FuncRule: openparsym OPT_Arguments closeparsym Rhs
+
+   24 Arguments: ALT_Argument_SEP_commasym
+
+   25 Argument: Type Identsym ArgPat2
+   26         | Identsym ArgPat2
+
+   27 ArgPat2: PatArg1
+   28        | ParArg
+   29        | SetArg
+
+   30 PatArg1: OPT_equalssym_UnTypedPattern
+
+   31 ParArg: ParPattern
+
+   32 SetArg: equalssym OpSet
+
+   33 Pattern: UnTypedPattern
+   34        | BasicType UnTypedPattern
+
+   35 UnTypedPattern: SimplePattern
+   36               | ConsPattern
+
+   37 ConsPattern: SimplePattern cons UnTypedPattern
+
+   38 SimplePattern: IdentPattern
+   39              | SingleDefPattern
+   40              | DefPattern
+   41              | IdParPattern
+   42              | BinPattern
+
+   43 DefPattern: openchainsym IdentPatterns closechainsym equalssym BinPattern
+
+   44 IdentPattern: Identsym
+
+   45 IdentPatterns: ALT_IdentPattern_SEP_commasym
+
+   46 SingleDefPattern: Identsym equalssym BinPattern
+
+   47 IdParPattern: Identsym ParPattern
+
+   48 BinPattern: BasicPattern OPT_IdOp_SimplePattern
+
+   49 BasicPattern: Applied_operation openparsym OPT_Patterns closeparsym
+   50             | Intsym
+   51             | NULLsym
+   52             | _sym OPT_equalssym_SimpleExpr
+
+   53 ParPattern: equalssym openparsym Pattern closeparsym
+
+   54 Rhs: MORE_Guard
+   55    | openchainsym Rhs closechainsym OPT_Wherepart
+
+   56 Guard: verticalbarsym Condition openchainsym Rhs closechainsym OPT_Wherepart
+   57      | OPT_verticalbarsym_Condition arrowsym ExprSeq OPT_Wherepart
+
+   58 ExprSeq: Expr
+   59        | openchainsym Exprs closechainsym
+
+   60 Wherepart: WHEREsym OPTMORE_Definition
+
+   61 Applied_operation: ANYsym
+   62                  | OpSet
+   63                  | Applied_formal
+
+   64 OpSet: openbrksym Applied_formals closebrksym
+
+   65 Applied_formals: ALT_Applied_formal_SEP_commasym
+
+   66 Applied_formal: Identsym
+
+   67 Expr: ALT_SimpleExpr_SEP_Operator
+   68     | IdOpExpr
+   69     | ConsExpr
+
+   70 IdOpExpr: SimpleExpr IdOp Expr
+
+   71 ConsExpr: SimpleExpr cons Expr
+
+   72 cons: CONSsym
+
+   73 SimpleExpr: Identsym
+   74           | IFsym Condition THENsym Expr OPTMORE_ELSIFsym_Condition_THENsym_Expr ELSEsym Expr FIsym
+   75           | Constant
+   76           | Identsym openparsym OPT_Exprs closeparsym
+   77           | openparsym Expr closeparsym
+   78           | MonOp SimpleExpr
+
+   79 Condition: Expr
+
+   80 Constant: Intsym
+   81         | Boolsym
+   82         | Stringsym
+   83         | NULLsym
+
+   84 Definition: Type Identsym equalssym Expr
+
+   85 Operator: candsym
+   86         | corsym
+   87         | hatsym
+   88         | eqsym
+   89         | neqsym
+   90         | lesym
+   91         | gesym
+   92         | lessthansym
+   93         | greaterthansym
+   94         | shlsym
+   95         | shrsym
+   96         | slashsym
+   97         | percentsym
+   98         | starsym
+   99         | ampersandsym
+  100         | plussym
+  101         | minussym
+
+  102 IdOp: openquotesym Identsym
+
+  103 MonOp: exclaimsym
+  104      | tildasym
+  105      | ampersandsym
+  106      | starsym
+  107      | plussym
+  108      | minussym
+
+  109 Type: ALT_BasicType_SEP_verticalbarsym
+  110     | openchainsym OPT_Types closechainsym
+
+  111 BasicType: Identsym
+  112          | OPRsym OPT_ArgTypes
+  113          | BasicType starsym
+  114          | openbrksym Num dotdotsym Num OPT_STEPsym_Num closebrksym
+  115          | openbrksym Identsym openparsym closeparsym closebrksym
+
+  116 Property: COMMUTATIVEsym
+
+  117 ArgTypes: openparsym OPT_Types closeparsym
+
+  118 Patterns: ALT_Pattern_SEP_commasym
+
+  119 Exprs: ALT_Expr_SEP_commasym
+
+  120 Types: ALT_Type_SEP_commasym
+
+  121 Num: OPT_minussym Intsym
+
+  122 OPT_Typedefs: %empty
+  123             | Typedefs
+
+  124 OPT_machine_description: %empty
+  125                        | machine_description
+
+  126 OPT_externals: %empty
+  127              | externals
+
+  128 OPTMORE_Section: %empty
+  129                | Section OPTMORE_Section
+
+  130 OPTMORE_Typedef: %empty
+  131                | Typedef OPTMORE_Typedef
+
+  132 OPT_Stringsym_Stringsym_Stringsym: %empty
+  133                                  | Stringsym Stringsym Stringsym
+
+  134 OPT_ATTRIBUTESsym_openchainsym_Attributes_closechainsym: %empty
+  135                                                        | ATTRIBUTESsym openchainsym Attributes closechainsym
+
+  136 OPTMORE_FunctionDef: %empty
+  137                    | FunctionDef OPTMORE_FunctionDef
+
+  138 OPTMORE_Operation_def: %empty
+  139                      | Operation_def OPTMORE_Operation_def
+
+  140 OPT_SUPPORTSsym_OPTMORE_Applied_formal: %empty
+  141                                       | SUPPORTSsym OPTMORE_Applied_formal
+
+  142 OPTMORE_Applied_formal: %empty
+  143                       | Applied_formal OPTMORE_Applied_formal
+
+  144 OPT_Types: %empty
+  145          | Types
+
+  146 OPT_colonsym_Type: %empty
+  147                  | colonsym Type
+
+  148 OPTMORE_Property: %empty
+  149                 | Property OPTMORE_Property
+
+  150 OPT_Attrs_OPT_commasym_Attributes: %empty
+  151                                  | Attrs OPT_commasym_Attributes
+
+  152 OPT_commasym_Attributes: %empty
+  153                        | commasym Attributes
+
+  154 MORE_Attribute: Attribute
+  155               | Attribute MORE_Attribute
+
+  156 OPT_colonsym_Identsym: %empty
+  157                      | colonsym Identsym
+
+  158 OPTMORE_Rule: %empty
+  159             | Rule OPTMORE_Rule
+
+  160 OPTMORE_Func: %empty
+  161             | Func OPTMORE_Func
+
+  162 OPT_externsym: %empty
+  163              | externsym
+
+  164 ALT_FuncRule_SEP_commasym: FuncRule
+  165                          | FuncRule commasym ALT_FuncRule_SEP_commasym
+
+  166 OPT_Arguments: %empty
+  167              | Arguments
+
+  168 ALT_Argument_SEP_commasym: Argument
+  169                          | Argument commasym ALT_Argument_SEP_commasym
+
+  170 OPT_equalssym_UnTypedPattern: %empty
+  171                             | equalssym UnTypedPattern
+
+  172 ALT_IdentPattern_SEP_commasym: IdentPattern
+  173                              | IdentPattern commasym ALT_IdentPattern_SEP_commasym
+
+  174 OPT_IdOp_SimplePattern: %empty
+  175                       | IdOp SimplePattern
+
+  176 OPT_Patterns: %empty
+  177             | Patterns
+
+  178 OPT_equalssym_SimpleExpr: %empty
+  179                         | equalssym SimpleExpr
+
+  180 MORE_Guard: Guard
+  181           | Guard MORE_Guard
+
+  182 OPT_Wherepart: %empty
+  183              | Wherepart
+
+  184 OPT_verticalbarsym_Condition: %empty
+  185                             | verticalbarsym Condition
+
+  186 OPTMORE_Definition: %empty
+  187                   | Definition OPTMORE_Definition
+
+  188 ALT_Applied_formal_SEP_commasym: Applied_formal
+  189                                | Applied_formal commasym ALT_Applied_formal_SEP_commasym
+
+  190 ALT_SimpleExpr_SEP_Operator: SimpleExpr
+  191                            | SimpleExpr Operator ALT_SimpleExpr_SEP_Operator
+
+  192 OPTMORE_ELSIFsym_Condition_THENsym_Expr: %empty
+  193                                        | ELSIFsym Condition THENsym Expr OPTMORE_ELSIFsym_Condition_THENsym_Expr
+
+  194 OPT_Exprs: %empty
+  195          | Exprs
+
+  196 ALT_BasicType_SEP_verticalbarsym: BasicType
+  197                                 | BasicType verticalbarsym ALT_BasicType_SEP_verticalbarsym
+
+  198 OPT_ArgTypes: %empty
+  199             | ArgTypes
+
+  200 OPT_STEPsym_Num: %empty
+  201                | STEPsym Num
+
+  202 ALT_Pattern_SEP_commasym: Pattern
+  203                         | Pattern commasym ALT_Pattern_SEP_commasym
+
+  204 ALT_Expr_SEP_commasym: Expr
+  205                      | Expr commasym ALT_Expr_SEP_commasym
+
+  206 ALT_Type_SEP_commasym: Type
+  207                      | Type commasym ALT_Type_SEP_commasym
+
+  208 OPT_minussym: %empty
+  209             | minussym
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+NONSENSE (258)
+TYPESsym (259) 2
+ATTRIBUTESsym (260) 135
+openchainsym (261) 43 55 56 59 110 135
+OPRsym (262) 12 112
+commasym (263) 153 165 169 173 189 203 205 207
+closechainsym (264) 43 55 56 59 110 135
+MACHINEsym (265) 7
+DESCRIPTIONsym (266) 7
+openparsym (267) 8 23 49 53 76 77 115 117
+closeparsym (268) 8 23 49 53 76 77 115 117
+starsym (269) 98 106 113
+openbrksym (270) 64 114 115
+minussym (271) 101 108 209
+dotdotsym (272) 114
+STEPsym (273) 201
+closebrksym (274) 64 114 115
+verticalbarsym (275) 56 185 197
+colonsym (276) 18 147 157
+COMMUTATIVEsym (277) 116
+SUPPORTSsym (278) 141
+EXTERNALsym (279) 4
+externsym (280) 5 6 163
+semicolonsym (281) 5 6 17 21
+FUNCTIONSsym (282) 20
+equalssym (283) 32 43 46 53 84 171 179
+ANYsym (284) 61
+NULLsym (285) 51 83
+_sym (286) 52
+candsym (287) 85
+corsym (288) 86
+hatsym (289) 87
+eqsym (290) 88
+neqsym (291) 89
+lesym (292) 90
+gesym (293) 91
+lessthansym (294) 92
+greaterthansym (295) 93
+shlsym (296) 94
+shrsym (297) 95
+slashsym (298) 96
+percentsym (299) 97
+ampersandsym (300) 99 105
+plussym (301) 100 107
+openquotesym (302) 102
+CONSsym (303) 72
+IFsym (304) 74
+THENsym (305) 74 193
+ELSIFsym (306) 193
+ELSEsym (307) 74
+FIsym (308) 74
+exclaimsym (309) 103
+tildasym (310) 104
+arrowsym (311) 57
+WHEREsym (312) 60
+RULESsym (313) 16
+comment1sym (314)
+comment2sym (315)
+Boolsym (316) 81
+Identsym (317) 3 5 6 7 8 11 18 21 25 26 44 46 47 66 73 76 84 102 111
+    115 157
+Intsym (318) 13 50 80 121
+Stringsym (319) 82 133
+
+
+Nonterminals, with rules where they appear
+
+$accept (65)
+    on left: 0
+doggy (66)
+    on left: 1, on right: 0
+Typedefs (67)
+    on left: 2, on right: 123
+Typedef (68)
+    on left: 3, on right: 131
+externals (69)
+    on left: 4, on right: 127
+FunctionDef (70)
+    on left: 5 6, on right: 137
+machine_description (71)
+    on left: 7, on right: 1 125
+Operation_def (72)
+    on left: 8, on right: 139
+Attributes (73)
+    on left: 9, on right: 135 153
+Attrs (74)
+    on left: 10, on right: 151
+Attribute (75)
+    on left: 11 12 13, on right: 154 155
+Section (76)
+    on left: 14 15, on right: 129
+Rules (77)
+    on left: 16, on right: 15
+Rule (78)
+    on left: 17, on right: 159
+Lhs (79)
+    on left: 18 19, on right: 17
+Funcs (80)
+    on left: 20, on right: 14
+Func (81)
+    on left: 21, on right: 161
+FuncRules (82)
+    on left: 22, on right: 21
+FuncRule (83)
+    on left: 23, on right: 164 165
+Arguments (84)
+    on left: 24, on right: 167
+Argument (85)
+    on left: 25 26, on right: 168 169
+ArgPat2 (86)
+    on left: 27 28 29, on right: 25 26
+PatArg1 (87)
+    on left: 30, on right: 27
+ParArg (88)
+    on left: 31, on right: 28
+SetArg (89)
+    on left: 32, on right: 29
+Pattern (90)
+    on left: 33 34, on right: 53 202 203
+UnTypedPattern (91)
+    on left: 35 36, on right: 18 19 33 34 37 171
+ConsPattern (92)
+    on left: 37, on right: 36
+SimplePattern (93)
+    on left: 38 39 40 41 42, on right: 35 37 175
+DefPattern (94)
+    on left: 43, on right: 40
+IdentPattern (95)
+    on left: 44, on right: 38 172 173
+IdentPatterns (96)
+    on left: 45, on right: 43
+SingleDefPattern (97)
+    on left: 46, on right: 39
+IdParPattern (98)
+    on left: 47, on right: 41
+BinPattern (99)
+    on left: 48, on right: 42 43 46
+BasicPattern (100)
+    on left: 49 50 51 52, on right: 48
+ParPattern (101)
+    on left: 53, on right: 31 47
+Rhs (102)
+    on left: 54 55, on right: 17 23 55 56
+Guard (103)
+    on left: 56 57, on right: 180 181
+ExprSeq (104)
+    on left: 58 59, on right: 57
+Wherepart (105)
+    on left: 60, on right: 183
+Applied_operation (106)
+    on left: 61 62 63, on right: 49
+OpSet (107)
+    on left: 64, on right: 32 62
+Applied_formals (108)
+    on left: 65, on right: 64
+Applied_formal (109)
+    on left: 66, on right: 63 143 188 189
+Expr (110)
+    on left: 67 68 69, on right: 58 70 71 74 77 79 84 193 204 205
+IdOpExpr (111)
+    on left: 70, on right: 68
+ConsExpr (112)
+    on left: 71, on right: 69
+cons (113)
+    on left: 72, on right: 37 71
+SimpleExpr (114)
+    on left: 73 74 75 76 77 78, on right: 70 71 78 179 190 191
+Condition (115)
+    on left: 79, on right: 56 74 185 193
+Constant (116)
+    on left: 80 81 82 83, on right: 75
+Definition (117)
+    on left: 84, on right: 187
+Operator (118)
+    on left: 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101,
+    on right: 191
+IdOp (119)
+    on left: 102, on right: 70 175
+MonOp (120)
+    on left: 103 104 105 106 107 108, on right: 78
+Type (121)
+    on left: 109 110, on right: 5 6 21 25 84 147 206 207
+BasicType (122)
+    on left: 111 112 113 114 115, on right: 34 113 196 197
+Property (123)
+    on left: 116, on right: 149
+ArgTypes (124)
+    on left: 117, on right: 5 199
+Patterns (125)
+    on left: 118, on right: 177
+Exprs (126)
+    on left: 119, on right: 59 195
+Types (127)
+    on left: 120, on right: 145
+Num (128)
+    on left: 121, on right: 114 201
+OPT_Typedefs (129)
+    on left: 122 123, on right: 1
+OPT_machine_description (130)
+    on left: 124 125, on right: 1
+OPT_externals (131)
+    on left: 126 127, on right: 1
+OPTMORE_Section (132)
+    on left: 128 129, on right: 1 129
+OPTMORE_Typedef (133)
+    on left: 130 131, on right: 2 131
+OPT_Stringsym_Stringsym_Stringsym (134)
+    on left: 132 133, on right: 3
+OPT_ATTRIBUTESsym_openchainsym_Attributes_closechainsym (135)
+    on left: 134 135, on right: 3 8
+OPTMORE_FunctionDef (136)
+    on left: 136 137, on right: 4 137
+OPTMORE_Operation_def (137)
+    on left: 138 139, on right: 7 139
+OPT_SUPPORTSsym_OPTMORE_Applied_formal (138)
+    on left: 140 141, on right: 7
+OPTMORE_Applied_formal (139)
+    on left: 142 143, on right: 141 143
+OPT_Types (140)
+    on left: 144 145, on right: 8 110 117
+OPT_colonsym_Type (141)
+    on left: 146 147, on right: 8
+OPTMORE_Property (142)
+    on left: 148 149, on right: 8 149
+OPT_Attrs_OPT_commasym_Attributes (143)
+    on left: 150 151, on right: 9
+OPT_commasym_Attributes (144)
+    on left: 152 153, on right: 151
+MORE_Attribute (145)
+    on left: 154 155, on right: 10 155
+OPT_colonsym_Identsym (146)
+    on left: 156 157, on right: 16
+OPTMORE_Rule (147)
+    on left: 158 159, on right: 16 159
+OPTMORE_Func (148)
+    on left: 160 161, on right: 20 161
+OPT_externsym (149)
+    on left: 162 163, on right: 21
+ALT_FuncRule_SEP_commasym (150)
+    on left: 164 165, on right: 22 165
+OPT_Arguments (151)
+    on left: 166 167, on right: 23
+ALT_Argument_SEP_commasym (152)
+    on left: 168 169, on right: 24 169
+OPT_equalssym_UnTypedPattern (153)
+    on left: 170 171, on right: 30
+ALT_IdentPattern_SEP_commasym (154)
+    on left: 172 173, on right: 45 173
+OPT_IdOp_SimplePattern (155)
+    on left: 174 175, on right: 48
+OPT_Patterns (156)
+    on left: 176 177, on right: 49
+OPT_equalssym_SimpleExpr (157)
+    on left: 178 179, on right: 52
+MORE_Guard (158)
+    on left: 180 181, on right: 54 181
+OPT_Wherepart (159)
+    on left: 182 183, on right: 55 56 57
+OPT_verticalbarsym_Condition (160)
+    on left: 184 185, on right: 57
+OPTMORE_Definition (161)
+    on left: 186 187, on right: 60 187
+ALT_Applied_formal_SEP_commasym (162)
+    on left: 188 189, on right: 65 189
+ALT_SimpleExpr_SEP_Operator (163)
+    on left: 190 191, on right: 67 191
+OPTMORE_ELSIFsym_Condition_THENsym_Expr (164)
+    on left: 192 193, on right: 74 193
+OPT_Exprs (165)
+    on left: 194 195, on right: 76
+ALT_BasicType_SEP_verticalbarsym (166)
+    on left: 196 197, on right: 109 197
+OPT_ArgTypes (167)
+    on left: 198 199, on right: 112
+OPT_STEPsym_Num (168)
+    on left: 200 201, on right: 114
+ALT_Pattern_SEP_commasym (169)
+    on left: 202 203, on right: 118 203
+ALT_Expr_SEP_commasym (170)
+    on left: 204 205, on right: 119 205
+ALT_Type_SEP_commasym (171)
+    on left: 206 207, on right: 120 207
+OPT_minussym (172)
+    on left: 208 209, on right: 121
+
+
+State 0
+
+    0 $accept: . doggy $end
+
+    TYPESsym  shift, and go to state 1
+
+    $default  reduce using rule 122 (OPT_Typedefs)
+
+    doggy         go to state 2
+    Typedefs      go to state 3
+    OPT_Typedefs  go to state 4
+
+
+State 1
+
+    2 Typedefs: TYPESsym . OPTMORE_Typedef
+
+    Identsym  shift, and go to state 5
+
+    $default  reduce using rule 130 (OPTMORE_Typedef)
+
+    Typedef          go to state 6
+    OPTMORE_Typedef  go to state 7
+
+
+State 2
+
+    0 $accept: doggy . $end
+
+    $end  shift, and go to state 8
+
+
+State 3
+
+  123 OPT_Typedefs: Typedefs .
+
+    $default  reduce using rule 123 (OPT_Typedefs)
+
+
+State 4
+
+    1 doggy: OPT_Typedefs . machine_description OPT_machine_description OPT_externals OPTMORE_Section
+
+    MACHINEsym  shift, and go to state 9
+
+    machine_description  go to state 10
+
+
+State 5
+
+    3 Typedef: Identsym . OPT_Stringsym_Stringsym_Stringsym OPT_ATTRIBUTESsym_openchainsym_Attributes_closechainsym
+
+    Stringsym  shift, and go to state 11
+
+    $default  reduce using rule 132 (OPT_Stringsym_Stringsym_Stringsym)
+
+    OPT_Stringsym_Stringsym_Stringsym  go to state 12
+
+
+State 6
+
+  131 OPTMORE_Typedef: Typedef . OPTMORE_Typedef
+
+    Identsym  shift, and go to state 5
+
+    $default  reduce using rule 130 (OPTMORE_Typedef)
+
+    Typedef          go to state 6
+    OPTMORE_Typedef  go to state 13
+
+
+State 7
+
+    2 Typedefs: TYPESsym OPTMORE_Typedef .
+
+    $default  reduce using rule 2 (Typedefs)
+
+
+State 8
+
+    0 $accept: doggy $end .
+
+    $default  accept
+
+
+State 9
+
+    7 machine_description: MACHINEsym . DESCRIPTIONsym Identsym OPTMORE_Operation_def OPT_SUPPORTSsym_OPTMORE_Applied_formal
+
+    DESCRIPTIONsym  shift, and go to state 14
+
+
+State 10
+
+    1 doggy: OPT_Typedefs machine_description . OPT_machine_description OPT_externals OPTMORE_Section
+
+    MACHINEsym  shift, and go to state 9
+
+    $default  reduce using rule 124 (OPT_machine_description)
+
+    machine_description      go to state 15
+    OPT_machine_description  go to state 16
+
+
+State 11
+
+  133 OPT_Stringsym_Stringsym_Stringsym: Stringsym . Stringsym Stringsym
+
+    Stringsym  shift, and go to state 17
+
+
+State 12
+
+    3 Typedef: Identsym OPT_Stringsym_Stringsym_Stringsym . OPT_ATTRIBUTESsym_openchainsym_Attributes_closechainsym
+
+    ATTRIBUTESsym  shift, and go to state 18
+
+    $default  reduce using rule 134 (OPT_ATTRIBUTESsym_openchainsym_Attributes_closechainsym)
+
+    OPT_ATTRIBUTESsym_openchainsym_Attributes_closechainsym  go to state 19
+
+
+State 13
+
+  131 OPTMORE_Typedef: Typedef OPTMORE_Typedef .
+
+    $default  reduce using rule 131 (OPTMORE_Typedef)
+
+
+State 14
+
+    7 machine_description: MACHINEsym DESCRIPTIONsym . Identsym OPTMORE_Operation_def OPT_SUPPORTSsym_OPTMORE_Applied_formal
+
+    Identsym  shift, and go to state 20
+
+
+State 15
+
+  125 OPT_machine_description: machine_description .
+
+    $default  reduce using rule 125 (OPT_machine_description)
+
+
+State 16
+
+    1 doggy: OPT_Typedefs machine_description OPT_machine_description . OPT_externals OPTMORE_Section
+
+    EXTERNALsym  shift, and go to state 21
+
+    $default  reduce using rule 126 (OPT_externals)
+
+    externals      go to state 22
+    OPT_externals  go to state 23
+
+
+State 17
+
+  133 OPT_Stringsym_Stringsym_Stringsym: Stringsym Stringsym . Stringsym
+
+    Stringsym  shift, and go to state 24
+
+
+State 18
+
+  135 OPT_ATTRIBUTESsym_openchainsym_Attributes_closechainsym: ATTRIBUTESsym . openchainsym Attributes closechainsym
+
+    openchainsym  shift, and go to state 25
+
+
+State 19
+
+    3 Typedef: Identsym OPT_Stringsym_Stringsym_Stringsym OPT_ATTRIBUTESsym_openchainsym_Attributes_closechainsym .
+
+    $default  reduce using rule 3 (Typedef)
+
+
+State 20
+
+    7 machine_description: MACHINEsym DESCRIPTIONsym Identsym . OPTMORE_Operation_def OPT_SUPPORTSsym_OPTMORE_Applied_formal
+
+    Identsym  shift, and go to state 26
+
+    $default  reduce using rule 138 (OPTMORE_Operation_def)
+
+    Operation_def          go to state 27
+    OPTMORE_Operation_def  go to state 28
+
+
+State 21
+
+    4 externals: EXTERNALsym . OPTMORE_FunctionDef
+
+    externsym  shift, and go to state 29
+
+    $default  reduce using rule 136 (OPTMORE_FunctionDef)
+
+    FunctionDef          go to state 30
+    OPTMORE_FunctionDef  go to state 31
+
+
+State 22
+
+  127 OPT_externals: externals .
+
+    $default  reduce using rule 127 (OPT_externals)
+
+
+State 23
+
+    1 doggy: OPT_Typedefs machine_description OPT_machine_description OPT_externals . OPTMORE_Section
+
+    FUNCTIONSsym  shift, and go to state 32
+    RULESsym      shift, and go to state 33
+
+    $default  reduce using rule 128 (OPTMORE_Section)
+
+    Section          go to state 34
+    Rules            go to state 35
+    Funcs            go to state 36
+    OPTMORE_Section  go to state 37
+
+
+State 24
+
+  133 OPT_Stringsym_Stringsym_Stringsym: Stringsym Stringsym Stringsym .
+
+    $default  reduce using rule 133 (OPT_Stringsym_Stringsym_Stringsym)
+
+
+State 25
+
+  135 OPT_ATTRIBUTESsym_openchainsym_Attributes_closechainsym: ATTRIBUTESsym openchainsym . Attributes closechainsym
+
+    OPRsym    shift, and go to state 38
+    Identsym  shift, and go to state 39
+    Intsym    shift, and go to state 40
+
+    $default  reduce using rule 150 (OPT_Attrs_OPT_commasym_Attributes)
+
+    Attributes                         go to state 41
+    Attrs                              go to state 42
+    Attribute                          go to state 43
+    OPT_Attrs_OPT_commasym_Attributes  go to state 44
+    MORE_Attribute                     go to state 45
+
+
+State 26
+
+    8 Operation_def: Identsym . openparsym OPT_Types closeparsym OPT_colonsym_Type Identsym OPT_ATTRIBUTESsym_openchainsym_Attributes_closechainsym OPTMORE_Property
+
+    openparsym  shift, and go to state 46
+
+
+State 27
+
+  139 OPTMORE_Operation_def: Operation_def . OPTMORE_Operation_def
+
+    Identsym  shift, and go to state 26
+
+    $default  reduce using rule 138 (OPTMORE_Operation_def)
+
+    Operation_def          go to state 27
+    OPTMORE_Operation_def  go to state 47
+
+
+State 28
+
+    7 machine_description: MACHINEsym DESCRIPTIONsym Identsym OPTMORE_Operation_def . OPT_SUPPORTSsym_OPTMORE_Applied_formal
+
+    SUPPORTSsym  shift, and go to state 48
+
+    $default  reduce using rule 140 (OPT_SUPPORTSsym_OPTMORE_Applied_formal)
+
+    OPT_SUPPORTSsym_OPTMORE_Applied_formal  go to state 49
+
+
+State 29
+
+    5 FunctionDef: externsym . Type Identsym ArgTypes semicolonsym
+    6            | externsym . Type Identsym semicolonsym
+
+    openchainsym  shift, and go to state 50
+    OPRsym        shift, and go to state 51
+    openbrksym    shift, and go to state 52
+    Identsym      shift, and go to state 53
+
+    Type                              go to state 54
+    BasicType                         go to state 55
+    ALT_BasicType_SEP_verticalbarsym  go to state 56
+
+
+State 30
+
+  137 OPTMORE_FunctionDef: FunctionDef . OPTMORE_FunctionDef
+
+    externsym  shift, and go to state 29
+
+    $default  reduce using rule 136 (OPTMORE_FunctionDef)
+
+    FunctionDef          go to state 30
+    OPTMORE_FunctionDef  go to state 57
+
+
+State 31
+
+    4 externals: EXTERNALsym OPTMORE_FunctionDef .
+
+    $default  reduce using rule 4 (externals)
+
+
+State 32
+
+   20 Funcs: FUNCTIONSsym . OPTMORE_Func
+
+    externsym  shift, and go to state 58
+
+    $end          reduce using rule 160 (OPTMORE_Func)
+    FUNCTIONSsym  reduce using rule 160 (OPTMORE_Func)
+    RULESsym      reduce using rule 160 (OPTMORE_Func)
+    $default      reduce using rule 162 (OPT_externsym)
+
+    Func           go to state 59
+    OPTMORE_Func   go to state 60
+    OPT_externsym  go to state 61
+
+
+State 33
+
+   16 Rules: RULESsym . OPT_colonsym_Identsym OPTMORE_Rule
+
+    colonsym  shift, and go to state 62
+
+    $default  reduce using rule 156 (OPT_colonsym_Identsym)
+
+    OPT_colonsym_Identsym  go to state 63
+
+
+State 34
+
+  129 OPTMORE_Section: Section . OPTMORE_Section
+
+    FUNCTIONSsym  shift, and go to state 32
+    RULESsym      shift, and go to state 33
+
+    $default  reduce using rule 128 (OPTMORE_Section)
+
+    Section          go to state 34
+    Rules            go to state 35
+    Funcs            go to state 36
+    OPTMORE_Section  go to state 64
+
+
+State 35
+
+   15 Section: Rules .
+
+    $default  reduce using rule 15 (Section)
+
+
+State 36
+
+   14 Section: Funcs .
+
+    $default  reduce using rule 14 (Section)
+
+
+State 37
+
+    1 doggy: OPT_Typedefs machine_description OPT_machine_description OPT_externals OPTMORE_Section .
+
+    $default  reduce using rule 1 (doggy)
+
+
+State 38
+
+   12 Attribute: OPRsym .
+
+    $default  reduce using rule 12 (Attribute)
+
+
+State 39
+
+   11 Attribute: Identsym .
+
+    $default  reduce using rule 11 (Attribute)
+
+
+State 40
+
+   13 Attribute: Intsym .
+
+    $default  reduce using rule 13 (Attribute)
+
+
+State 41
+
+  135 OPT_ATTRIBUTESsym_openchainsym_Attributes_closechainsym: ATTRIBUTESsym openchainsym Attributes . closechainsym
+
+    closechainsym  shift, and go to state 65
+
+
+State 42
+
+  151 OPT_Attrs_OPT_commasym_Attributes: Attrs . OPT_commasym_Attributes
+
+    commasym  shift, and go to state 66
+
+    $default  reduce using rule 152 (OPT_commasym_Attributes)
+
+    OPT_commasym_Attributes  go to state 67
+
+
+State 43
+
+  154 MORE_Attribute: Attribute .
+  155               | Attribute . MORE_Attribute
+
+    OPRsym    shift, and go to state 38
+    Identsym  shift, and go to state 39
+    Intsym    shift, and go to state 40
+
+    $default  reduce using rule 154 (MORE_Attribute)
+
+    Attribute       go to state 43
+    MORE_Attribute  go to state 68
+
+
+State 44
+
+    9 Attributes: OPT_Attrs_OPT_commasym_Attributes .
+
+    $default  reduce using rule 9 (Attributes)
+
+
+State 45
+
+   10 Attrs: MORE_Attribute .
+
+    $default  reduce using rule 10 (Attrs)
+
+
+State 46
+
+    8 Operation_def: Identsym openparsym . OPT_Types closeparsym OPT_colonsym_Type Identsym OPT_ATTRIBUTESsym_openchainsym_Attributes_closechainsym OPTMORE_Property
+
+    openchainsym  shift, and go to state 50
+    OPRsym        shift, and go to state 51
+    openbrksym    shift, and go to state 52
+    Identsym      shift, and go to state 53
+
+    $default  reduce using rule 144 (OPT_Types)
+
+    Type                              go to state 69
+    BasicType                         go to state 55
+    Types                             go to state 70
+    OPT_Types                         go to state 71
+    ALT_BasicType_SEP_verticalbarsym  go to state 56
+    ALT_Type_SEP_commasym             go to state 72
+
+
+State 47
+
+  139 OPTMORE_Operation_def: Operation_def OPTMORE_Operation_def .
+
+    $default  reduce using rule 139 (OPTMORE_Operation_def)
+
+
+State 48
+
+  141 OPT_SUPPORTSsym_OPTMORE_Applied_formal: SUPPORTSsym . OPTMORE_Applied_formal
+
+    Identsym  shift, and go to state 73
+
+    $default  reduce using rule 142 (OPTMORE_Applied_formal)
+
+    Applied_formal          go to state 74
+    OPTMORE_Applied_formal  go to state 75
+
+
+State 49
+
+    7 machine_description: MACHINEsym DESCRIPTIONsym Identsym OPTMORE_Operation_def OPT_SUPPORTSsym_OPTMORE_Applied_formal .
+
+    $default  reduce using rule 7 (machine_description)
+
+
+State 50
+
+  110 Type: openchainsym . OPT_Types closechainsym
+
+    openchainsym  shift, and go to state 50
+    OPRsym        shift, and go to state 51
+    openbrksym    shift, and go to state 52
+    Identsym      shift, and go to state 53
+
+    $default  reduce using rule 144 (OPT_Types)
+
+    Type                              go to state 69
+    BasicType                         go to state 55
+    Types                             go to state 70
+    OPT_Types                         go to state 76
+    ALT_BasicType_SEP_verticalbarsym  go to state 56
+    ALT_Type_SEP_commasym             go to state 72
+
+
+State 51
+
+  112 BasicType: OPRsym . OPT_ArgTypes
+
+    openparsym  shift, and go to state 77
+
+    $default  reduce using rule 198 (OPT_ArgTypes)
+
+    ArgTypes      go to state 78
+    OPT_ArgTypes  go to state 79
+
+
+State 52
+
+  114 BasicType: openbrksym . Num dotdotsym Num OPT_STEPsym_Num closebrksym
+  115          | openbrksym . Identsym openparsym closeparsym closebrksym
+
+    minussym  shift, and go to state 80
+    Identsym  shift, and go to state 81
+
+    $default  reduce using rule 208 (OPT_minussym)
+
+    Num           go to state 82
+    OPT_minussym  go to state 83
+
+
+State 53
+
+  111 BasicType: Identsym .
+
+    $default  reduce using rule 111 (BasicType)
+
+
+State 54
+
+    5 FunctionDef: externsym Type . Identsym ArgTypes semicolonsym
+    6            | externsym Type . Identsym semicolonsym
+
+    Identsym  shift, and go to state 84
+
+
+State 55
+
+  113 BasicType: BasicType . starsym
+  196 ALT_BasicType_SEP_verticalbarsym: BasicType .
+  197                                 | BasicType . verticalbarsym ALT_BasicType_SEP_verticalbarsym
+
+    starsym         shift, and go to state 85
+    verticalbarsym  shift, and go to state 86
+
+    $default  reduce using rule 196 (ALT_BasicType_SEP_verticalbarsym)
+
+
+State 56
+
+  109 Type: ALT_BasicType_SEP_verticalbarsym .
+
+    $default  reduce using rule 109 (Type)
+
+
+State 57
+
+  137 OPTMORE_FunctionDef: FunctionDef OPTMORE_FunctionDef .
+
+    $default  reduce using rule 137 (OPTMORE_FunctionDef)
+
+
+State 58
+
+  163 OPT_externsym: externsym .
+
+    $default  reduce using rule 163 (OPT_externsym)
+
+
+State 59
+
+  161 OPTMORE_Func: Func . OPTMORE_Func
+
+    externsym  shift, and go to state 58
+
+    $end          reduce using rule 160 (OPTMORE_Func)
+    FUNCTIONSsym  reduce using rule 160 (OPTMORE_Func)
+    RULESsym      reduce using rule 160 (OPTMORE_Func)
+    $default      reduce using rule 162 (OPT_externsym)
+
+    Func           go to state 59
+    OPTMORE_Func   go to state 87
+    OPT_externsym  go to state 61
+
+
+State 60
+
+   20 Funcs: FUNCTIONSsym OPTMORE_Func .
+
+    $default  reduce using rule 20 (Funcs)
+
+
+State 61
+
+   21 Func: OPT_externsym . Type Identsym FuncRules semicolonsym
+
+    openchainsym  shift, and go to state 50
+    OPRsym        shift, and go to state 51
+    openbrksym    shift, and go to state 52
+    Identsym      shift, and go to state 53
+
+    Type                              go to state 88
+    BasicType                         go to state 55
+    ALT_BasicType_SEP_verticalbarsym  go to state 56
+
+
+State 62
+
+  157 OPT_colonsym_Identsym: colonsym . Identsym
+
+    Identsym  shift, and go to state 89
+
+
+State 63
+
+   16 Rules: RULESsym OPT_colonsym_Identsym . OPTMORE_Rule
+
+    openchainsym  shift, and go to state 90
+    openbrksym    shift, and go to state 91
+    ANYsym        shift, and go to state 92
+    NULLsym       shift, and go to state 93
+    _sym          shift, and go to state 94
+    Identsym      shift, and go to state 95
+    Intsym        shift, and go to state 96
+
+    $default  reduce using rule 158 (OPTMORE_Rule)
+
+    Rule               go to state 97
+    Lhs                go to state 98
+    UnTypedPattern     go to state 99
+    ConsPattern        go to state 100
+    SimplePattern      go to state 101
+    DefPattern         go to state 102
+    IdentPattern       go to state 103
+    SingleDefPattern   go to state 104
+    IdParPattern       go to state 105
+    BinPattern         go to state 106
+    BasicPattern       go to state 107
+    Applied_operation  go to state 108
+    OpSet              go to state 109
+    Applied_formal     go to state 110
+    OPTMORE_Rule       go to state 111
+
+
+State 64
+
+  129 OPTMORE_Section: Section OPTMORE_Section .
+
+    $default  reduce using rule 129 (OPTMORE_Section)
+
+
+State 65
+
+  135 OPT_ATTRIBUTESsym_openchainsym_Attributes_closechainsym: ATTRIBUTESsym openchainsym Attributes closechainsym .
+
+    $default  reduce using rule 135 (OPT_ATTRIBUTESsym_openchainsym_Attributes_closechainsym)
+
+
+State 66
+
+  153 OPT_commasym_Attributes: commasym . Attributes
+
+    OPRsym    shift, and go to state 38
+    Identsym  shift, and go to state 39
+    Intsym    shift, and go to state 40
+
+    $default  reduce using rule 150 (OPT_Attrs_OPT_commasym_Attributes)
+
+    Attributes                         go to state 112
+    Attrs                              go to state 42
+    Attribute                          go to state 43
+    OPT_Attrs_OPT_commasym_Attributes  go to state 44
+    MORE_Attribute                     go to state 45
+
+
+State 67
+
+  151 OPT_Attrs_OPT_commasym_Attributes: Attrs OPT_commasym_Attributes .
+
+    $default  reduce using rule 151 (OPT_Attrs_OPT_commasym_Attributes)
+
+
+State 68
+
+  155 MORE_Attribute: Attribute MORE_Attribute .
+
+    $default  reduce using rule 155 (MORE_Attribute)
+
+
+State 69
+
+  206 ALT_Type_SEP_commasym: Type .
+  207                      | Type . commasym ALT_Type_SEP_commasym
+
+    commasym  shift, and go to state 113
+
+    $default  reduce using rule 206 (ALT_Type_SEP_commasym)
+
+
+State 70
+
+  145 OPT_Types: Types .
+
+    $default  reduce using rule 145 (OPT_Types)
+
+
+State 71
+
+    8 Operation_def: Identsym openparsym OPT_Types . closeparsym OPT_colonsym_Type Identsym OPT_ATTRIBUTESsym_openchainsym_Attributes_closechainsym OPTMORE_Property
+
+    closeparsym  shift, and go to state 114
+
+
+State 72
+
+  120 Types: ALT_Type_SEP_commasym .
+
+    $default  reduce using rule 120 (Types)
+
+
+State 73
+
+   66 Applied_formal: Identsym .
+
+    $default  reduce using rule 66 (Applied_formal)
+
+
+State 74
+
+  143 OPTMORE_Applied_formal: Applied_formal . OPTMORE_Applied_formal
+
+    Identsym  shift, and go to state 73
+
+    $default  reduce using rule 142 (OPTMORE_Applied_formal)
+
+    Applied_formal          go to state 74
+    OPTMORE_Applied_formal  go to state 115
+
+
+State 75
+
+  141 OPT_SUPPORTSsym_OPTMORE_Applied_formal: SUPPORTSsym OPTMORE_Applied_formal .
+
+    $default  reduce using rule 141 (OPT_SUPPORTSsym_OPTMORE_Applied_formal)
+
+
+State 76
+
+  110 Type: openchainsym OPT_Types . closechainsym
+
+    closechainsym  shift, and go to state 116
+
+
+State 77
+
+  117 ArgTypes: openparsym . OPT_Types closeparsym
+
+    openchainsym  shift, and go to state 50
+    OPRsym        shift, and go to state 51
+    openbrksym    shift, and go to state 52
+    Identsym      shift, and go to state 53
+
+    $default  reduce using rule 144 (OPT_Types)
+
+    Type                              go to state 69
+    BasicType                         go to state 55
+    Types                             go to state 70
+    OPT_Types                         go to state 117
+    ALT_BasicType_SEP_verticalbarsym  go to state 56
+    ALT_Type_SEP_commasym             go to state 72
+
+
+State 78
+
+  199 OPT_ArgTypes: ArgTypes .
+
+    $default  reduce using rule 199 (OPT_ArgTypes)
+
+
+State 79
+
+  112 BasicType: OPRsym OPT_ArgTypes .
+
+    $default  reduce using rule 112 (BasicType)
+
+
+State 80
+
+  209 OPT_minussym: minussym .
+
+    $default  reduce using rule 209 (OPT_minussym)
+
+
+State 81
+
+  115 BasicType: openbrksym Identsym . openparsym closeparsym closebrksym
+
+    openparsym  shift, and go to state 118
+
+
+State 82
+
+  114 BasicType: openbrksym Num . dotdotsym Num OPT_STEPsym_Num closebrksym
+
+    dotdotsym  shift, and go to state 119
+
+
+State 83
+
+  121 Num: OPT_minussym . Intsym
+
+    Intsym  shift, and go to state 120
+
+
+State 84
+
+    5 FunctionDef: externsym Type Identsym . ArgTypes semicolonsym
+    6            | externsym Type Identsym . semicolonsym
+
+    openparsym    shift, and go to state 77
+    semicolonsym  shift, and go to state 121
+
+    ArgTypes  go to state 122
+
+
+State 85
+
+  113 BasicType: BasicType starsym .
+
+    $default  reduce using rule 113 (BasicType)
+
+
+State 86
+
+  197 ALT_BasicType_SEP_verticalbarsym: BasicType verticalbarsym . ALT_BasicType_SEP_verticalbarsym
+
+    OPRsym      shift, and go to state 51
+    openbrksym  shift, and go to state 52
+    Identsym    shift, and go to state 53
+
+    BasicType                         go to state 55
+    ALT_BasicType_SEP_verticalbarsym  go to state 123
+
+
+State 87
+
+  161 OPTMORE_Func: Func OPTMORE_Func .
+
+    $default  reduce using rule 161 (OPTMORE_Func)
+
+
+State 88
+
+   21 Func: OPT_externsym Type . Identsym FuncRules semicolonsym
+
+    Identsym  shift, and go to state 124
+
+
+State 89
+
+  157 OPT_colonsym_Identsym: colonsym Identsym .
+
+    $default  reduce using rule 157 (OPT_colonsym_Identsym)
+
+
+State 90
+
+   43 DefPattern: openchainsym . IdentPatterns closechainsym equalssym BinPattern
+
+    Identsym  shift, and go to state 125
+
+    IdentPattern                   go to state 126
+    IdentPatterns                  go to state 127
+    ALT_IdentPattern_SEP_commasym  go to state 128
+
+
+State 91
+
+   64 OpSet: openbrksym . Applied_formals closebrksym
+
+    Identsym  shift, and go to state 73
+
+    Applied_formals                  go to state 129
+    Applied_formal                   go to state 130
+    ALT_Applied_formal_SEP_commasym  go to state 131
+
+
+State 92
+
+   61 Applied_operation: ANYsym .
+
+    $default  reduce using rule 61 (Applied_operation)
+
+
+State 93
+
+   51 BasicPattern: NULLsym .
+
+    $default  reduce using rule 51 (BasicPattern)
+
+
+State 94
+
+   52 BasicPattern: _sym . OPT_equalssym_SimpleExpr
+
+    equalssym  shift, and go to state 132
+
+    $default  reduce using rule 178 (OPT_equalssym_SimpleExpr)
+
+    OPT_equalssym_SimpleExpr  go to state 133
+
+
+State 95
+
+   18 Lhs: Identsym . colonsym UnTypedPattern
+   44 IdentPattern: Identsym .
+   46 SingleDefPattern: Identsym . equalssym BinPattern
+   47 IdParPattern: Identsym . ParPattern
+   66 Applied_formal: Identsym .
+
+    colonsym   shift, and go to state 134
+    equalssym  shift, and go to state 135
+
+    openparsym  reduce using rule 66 (Applied_formal)
+    $default    reduce using rule 44 (IdentPattern)
+
+    ParPattern  go to state 136
+
+
+State 96
+
+   50 BasicPattern: Intsym .
+
+    $default  reduce using rule 50 (BasicPattern)
+
+
+State 97
+
+  159 OPTMORE_Rule: Rule . OPTMORE_Rule
+
+    openchainsym  shift, and go to state 90
+    openbrksym    shift, and go to state 91
+    ANYsym        shift, and go to state 92
+    NULLsym       shift, and go to state 93
+    _sym          shift, and go to state 94
+    Identsym      shift, and go to state 95
+    Intsym        shift, and go to state 96
+
+    $default  reduce using rule 158 (OPTMORE_Rule)
+
+    Rule               go to state 97
+    Lhs                go to state 98
+    UnTypedPattern     go to state 99
+    ConsPattern        go to state 100
+    SimplePattern      go to state 101
+    DefPattern         go to state 102
+    IdentPattern       go to state 103
+    SingleDefPattern   go to state 104
+    IdParPattern       go to state 105
+    BinPattern         go to state 106
+    BasicPattern       go to state 107
+    Applied_operation  go to state 108
+    OpSet              go to state 109
+    Applied_formal     go to state 110
+    OPTMORE_Rule       go to state 137
+
+
+State 98
+
+   17 Rule: Lhs . Rhs semicolonsym
+
+    openchainsym    shift, and go to state 138
+    verticalbarsym  shift, and go to state 139
+
+    $default  reduce using rule 184 (OPT_verticalbarsym_Condition)
+
+    Rhs                           go to state 140
+    Guard                         go to state 141
+    MORE_Guard                    go to state 142
+    OPT_verticalbarsym_Condition  go to state 143
+
+
+State 99
+
+   19 Lhs: UnTypedPattern .
+
+    $default  reduce using rule 19 (Lhs)
+
+
+State 100
+
+   36 UnTypedPattern: ConsPattern .
+
+    $default  reduce using rule 36 (UnTypedPattern)
+
+
+State 101
+
+   35 UnTypedPattern: SimplePattern .
+   37 ConsPattern: SimplePattern . cons UnTypedPattern
+
+    CONSsym  shift, and go to state 144
+
+    $default  reduce using rule 35 (UnTypedPattern)
+
+    cons  go to state 145
+
+
+State 102
+
+   40 SimplePattern: DefPattern .
+
+    $default  reduce using rule 40 (SimplePattern)
+
+
+State 103
+
+   38 SimplePattern: IdentPattern .
+
+    $default  reduce using rule 38 (SimplePattern)
+
+
+State 104
+
+   39 SimplePattern: SingleDefPattern .
+
+    $default  reduce using rule 39 (SimplePattern)
+
+
+State 105
+
+   41 SimplePattern: IdParPattern .
+
+    $default  reduce using rule 41 (SimplePattern)
+
+
+State 106
+
+   42 SimplePattern: BinPattern .
+
+    $default  reduce using rule 42 (SimplePattern)
+
+
+State 107
+
+   48 BinPattern: BasicPattern . OPT_IdOp_SimplePattern
+
+    openquotesym  shift, and go to state 146
+
+    $default  reduce using rule 174 (OPT_IdOp_SimplePattern)
+
+    IdOp                    go to state 147
+    OPT_IdOp_SimplePattern  go to state 148
+
+
+State 108
+
+   49 BasicPattern: Applied_operation . openparsym OPT_Patterns closeparsym
+
+    openparsym  shift, and go to state 149
+
+
+State 109
+
+   62 Applied_operation: OpSet .
+
+    $default  reduce using rule 62 (Applied_operation)
+
+
+State 110
+
+   63 Applied_operation: Applied_formal .
+
+    $default  reduce using rule 63 (Applied_operation)
+
+
+State 111
+
+   16 Rules: RULESsym OPT_colonsym_Identsym OPTMORE_Rule .
+
+    $default  reduce using rule 16 (Rules)
+
+
+State 112
+
+  153 OPT_commasym_Attributes: commasym Attributes .
+
+    $default  reduce using rule 153 (OPT_commasym_Attributes)
+
+
+State 113
+
+  207 ALT_Type_SEP_commasym: Type commasym . ALT_Type_SEP_commasym
+
+    openchainsym  shift, and go to state 50
+    OPRsym        shift, and go to state 51
+    openbrksym    shift, and go to state 52
+    Identsym      shift, and go to state 53
+
+    Type                              go to state 69
+    BasicType                         go to state 55
+    ALT_BasicType_SEP_verticalbarsym  go to state 56
+    ALT_Type_SEP_commasym             go to state 150
+
+
+State 114
+
+    8 Operation_def: Identsym openparsym OPT_Types closeparsym . OPT_colonsym_Type Identsym OPT_ATTRIBUTESsym_openchainsym_Attributes_closechainsym OPTMORE_Property
+
+    colonsym  shift, and go to state 151
+
+    $default  reduce using rule 146 (OPT_colonsym_Type)
+
+    OPT_colonsym_Type  go to state 152
+
+
+State 115
+
+  143 OPTMORE_Applied_formal: Applied_formal OPTMORE_Applied_formal .
+
+    $default  reduce using rule 143 (OPTMORE_Applied_formal)
+
+
+State 116
+
+  110 Type: openchainsym OPT_Types closechainsym .
+
+    $default  reduce using rule 110 (Type)
+
+
+State 117
+
+  117 ArgTypes: openparsym OPT_Types . closeparsym
+
+    closeparsym  shift, and go to state 153
+
+
+State 118
+
+  115 BasicType: openbrksym Identsym openparsym . closeparsym closebrksym
+
+    closeparsym  shift, and go to state 154
+
+
+State 119
+
+  114 BasicType: openbrksym Num dotdotsym . Num OPT_STEPsym_Num closebrksym
+
+    minussym  shift, and go to state 80
+
+    $default  reduce using rule 208 (OPT_minussym)
+
+    Num           go to state 155
+    OPT_minussym  go to state 83
+
+
+State 120
+
+  121 Num: OPT_minussym Intsym .
+
+    $default  reduce using rule 121 (Num)
+
+
+State 121
+
+    6 FunctionDef: externsym Type Identsym semicolonsym .
+
+    $default  reduce using rule 6 (FunctionDef)
+
+
+State 122
+
+    5 FunctionDef: externsym Type Identsym ArgTypes . semicolonsym
+
+    semicolonsym  shift, and go to state 156
+
+
+State 123
+
+  197 ALT_BasicType_SEP_verticalbarsym: BasicType verticalbarsym ALT_BasicType_SEP_verticalbarsym .
+
+    $default  reduce using rule 197 (ALT_BasicType_SEP_verticalbarsym)
+
+
+State 124
+
+   21 Func: OPT_externsym Type Identsym . FuncRules semicolonsym
+
+    openparsym  shift, and go to state 157
+
+    FuncRules                  go to state 158
+    FuncRule                   go to state 159
+    ALT_FuncRule_SEP_commasym  go to state 160
+
+
+State 125
+
+   44 IdentPattern: Identsym .
+
+    $default  reduce using rule 44 (IdentPattern)
+
+
+State 126
+
+  172 ALT_IdentPattern_SEP_commasym: IdentPattern .
+  173                              | IdentPattern . commasym ALT_IdentPattern_SEP_commasym
+
+    commasym  shift, and go to state 161
+
+    $default  reduce using rule 172 (ALT_IdentPattern_SEP_commasym)
+
+
+State 127
+
+   43 DefPattern: openchainsym IdentPatterns . closechainsym equalssym BinPattern
+
+    closechainsym  shift, and go to state 162
+
+
+State 128
+
+   45 IdentPatterns: ALT_IdentPattern_SEP_commasym .
+
+    $default  reduce using rule 45 (IdentPatterns)
+
+
+State 129
+
+   64 OpSet: openbrksym Applied_formals . closebrksym
+
+    closebrksym  shift, and go to state 163
+
+
+State 130
+
+  188 ALT_Applied_formal_SEP_commasym: Applied_formal .
+  189                                | Applied_formal . commasym ALT_Applied_formal_SEP_commasym
+
+    commasym  shift, and go to state 164
+
+    $default  reduce using rule 188 (ALT_Applied_formal_SEP_commasym)
+
+
+State 131
+
+   65 Applied_formals: ALT_Applied_formal_SEP_commasym .
+
+    $default  reduce using rule 65 (Applied_formals)
+
+
+State 132
+
+  179 OPT_equalssym_SimpleExpr: equalssym . SimpleExpr
+
+    openparsym    shift, and go to state 165
+    starsym       shift, and go to state 166
+    minussym      shift, and go to state 167
+    NULLsym       shift, and go to state 168
+    ampersandsym  shift, and go to state 169
+    plussym       shift, and go to state 170
+    IFsym         shift, and go to state 171
+    exclaimsym    shift, and go to state 172
+    tildasym      shift, and go to state 173
+    Boolsym       shift, and go to state 174
+    Identsym      shift, and go to state 175
+    Intsym        shift, and go to state 176
+    Stringsym     shift, and go to state 177
+
+    SimpleExpr  go to state 178
+    Constant    go to state 179
+    MonOp       go to state 180
+
+
+State 133
+
+   52 BasicPattern: _sym OPT_equalssym_SimpleExpr .
+
+    $default  reduce using rule 52 (BasicPattern)
+
+
+State 134
+
+   18 Lhs: Identsym colonsym . UnTypedPattern
+
+    openchainsym  shift, and go to state 90
+    openbrksym    shift, and go to state 91
+    ANYsym        shift, and go to state 92
+    NULLsym       shift, and go to state 93
+    _sym          shift, and go to state 94
+    Identsym      shift, and go to state 181
+    Intsym        shift, and go to state 96
+
+    UnTypedPattern     go to state 182
+    ConsPattern        go to state 100
+    SimplePattern      go to state 101
+    DefPattern         go to state 102
+    IdentPattern       go to state 103
+    SingleDefPattern   go to state 104
+    IdParPattern       go to state 105
+    BinPattern         go to state 106
+    BasicPattern       go to state 107
+    Applied_operation  go to state 108
+    OpSet              go to state 109
+    Applied_formal     go to state 110
+
+
+State 135
+
+   46 SingleDefPattern: Identsym equalssym . BinPattern
+   53 ParPattern: equalssym . openparsym Pattern closeparsym
+
+    openparsym  shift, and go to state 183
+    openbrksym  shift, and go to state 91
+    ANYsym      shift, and go to state 92
+    NULLsym     shift, and go to state 93
+    _sym        shift, and go to state 94
+    Identsym    shift, and go to state 73
+    Intsym      shift, and go to state 96
+
+    BinPattern         go to state 184
+    BasicPattern       go to state 107
+    Applied_operation  go to state 108
+    OpSet              go to state 109
+    Applied_formal     go to state 110
+
+
+State 136
+
+   47 IdParPattern: Identsym ParPattern .
+
+    $default  reduce using rule 47 (IdParPattern)
+
+
+State 137
+
+  159 OPTMORE_Rule: Rule OPTMORE_Rule .
+
+    $default  reduce using rule 159 (OPTMORE_Rule)
+
+
+State 138
+
+   55 Rhs: openchainsym . Rhs closechainsym OPT_Wherepart
+
+    openchainsym    shift, and go to state 138
+    verticalbarsym  shift, and go to state 139
+
+    $default  reduce using rule 184 (OPT_verticalbarsym_Condition)
+
+    Rhs                           go to state 185
+    Guard                         go to state 141
+    MORE_Guard                    go to state 142
+    OPT_verticalbarsym_Condition  go to state 143
+
+
+State 139
+
+   56 Guard: verticalbarsym . Condition openchainsym Rhs closechainsym OPT_Wherepart
+  185 OPT_verticalbarsym_Condition: verticalbarsym . Condition
+
+    openparsym    shift, and go to state 165
+    starsym       shift, and go to state 166
+    minussym      shift, and go to state 167
+    NULLsym       shift, and go to state 168
+    ampersandsym  shift, and go to state 169
+    plussym       shift, and go to state 170
+    IFsym         shift, and go to state 171
+    exclaimsym    shift, and go to state 172
+    tildasym      shift, and go to state 173
+    Boolsym       shift, and go to state 174
+    Identsym      shift, and go to state 175
+    Intsym        shift, and go to state 176
+    Stringsym     shift, and go to state 177
+
+    Expr                         go to state 186
+    IdOpExpr                     go to state 187
+    ConsExpr                     go to state 188
+    SimpleExpr                   go to state 189
+    Condition                    go to state 190
+    Constant                     go to state 179
+    MonOp                        go to state 180
+    ALT_SimpleExpr_SEP_Operator  go to state 191
+
+
+State 140
+
+   17 Rule: Lhs Rhs . semicolonsym
+
+    semicolonsym  shift, and go to state 192
+
+
+State 141
+
+  180 MORE_Guard: Guard .
+  181           | Guard . MORE_Guard
+
+    verticalbarsym  shift, and go to state 139
+
+    arrowsym  reduce using rule 184 (OPT_verticalbarsym_Condition)
+    $default  reduce using rule 180 (MORE_Guard)
+
+    Guard                         go to state 141
+    MORE_Guard                    go to state 193
+    OPT_verticalbarsym_Condition  go to state 143
+
+
+State 142
+
+   54 Rhs: MORE_Guard .
+
+    $default  reduce using rule 54 (Rhs)
+
+
+State 143
+
+   57 Guard: OPT_verticalbarsym_Condition . arrowsym ExprSeq OPT_Wherepart
+
+    arrowsym  shift, and go to state 194
+
+
+State 144
+
+   72 cons: CONSsym .
+
+    $default  reduce using rule 72 (cons)
+
+
+State 145
+
+   37 ConsPattern: SimplePattern cons . UnTypedPattern
+
+    openchainsym  shift, and go to state 90
+    openbrksym    shift, and go to state 91
+    ANYsym        shift, and go to state 92
+    NULLsym       shift, and go to state 93
+    _sym          shift, and go to state 94
+    Identsym      shift, and go to state 181
+    Intsym        shift, and go to state 96
+
+    UnTypedPattern     go to state 195
+    ConsPattern        go to state 100
+    SimplePattern      go to state 101
+    DefPattern         go to state 102
+    IdentPattern       go to state 103
+    SingleDefPattern   go to state 104
+    IdParPattern       go to state 105
+    BinPattern         go to state 106
+    BasicPattern       go to state 107
+    Applied_operation  go to state 108
+    OpSet              go to state 109
+    Applied_formal     go to state 110
+
+
+State 146
+
+  102 IdOp: openquotesym . Identsym
+
+    Identsym  shift, and go to state 196
+
+
+State 147
+
+  175 OPT_IdOp_SimplePattern: IdOp . SimplePattern
+
+    openchainsym  shift, and go to state 90
+    openbrksym    shift, and go to state 91
+    ANYsym        shift, and go to state 92
+    NULLsym       shift, and go to state 93
+    _sym          shift, and go to state 94
+    Identsym      shift, and go to state 181
+    Intsym        shift, and go to state 96
+
+    SimplePattern      go to state 197
+    DefPattern         go to state 102
+    IdentPattern       go to state 103
+    SingleDefPattern   go to state 104
+    IdParPattern       go to state 105
+    BinPattern         go to state 106
+    BasicPattern       go to state 107
+    Applied_operation  go to state 108
+    OpSet              go to state 109
+    Applied_formal     go to state 110
+
+
+State 148
+
+   48 BinPattern: BasicPattern OPT_IdOp_SimplePattern .
+
+    $default  reduce using rule 48 (BinPattern)
+
+
+State 149
+
+   49 BasicPattern: Applied_operation openparsym . OPT_Patterns closeparsym
+
+    openchainsym  shift, and go to state 90
+    OPRsym        shift, and go to state 51
+    openbrksym    shift, and go to state 198
+    ANYsym        shift, and go to state 92
+    NULLsym       shift, and go to state 93
+    _sym          shift, and go to state 94
+    Identsym      shift, and go to state 199
+    Intsym        shift, and go to state 96
+
+    $default  reduce using rule 176 (OPT_Patterns)
+
+    Pattern                   go to state 200
+    UnTypedPattern            go to state 201
+    ConsPattern               go to state 100
+    SimplePattern             go to state 101
+    DefPattern                go to state 102
+    IdentPattern              go to state 103
+    SingleDefPattern          go to state 104
+    IdParPattern              go to state 105
+    BinPattern                go to state 106
+    BasicPattern              go to state 107
+    Applied_operation         go to state 108
+    OpSet                     go to state 109
+    Applied_formal            go to state 110
+    BasicType                 go to state 202
+    Patterns                  go to state 203
+    OPT_Patterns              go to state 204
+    ALT_Pattern_SEP_commasym  go to state 205
+
+
+State 150
+
+  207 ALT_Type_SEP_commasym: Type commasym ALT_Type_SEP_commasym .
+
+    $default  reduce using rule 207 (ALT_Type_SEP_commasym)
+
+
+State 151
+
+  147 OPT_colonsym_Type: colonsym . Type
+
+    openchainsym  shift, and go to state 50
+    OPRsym        shift, and go to state 51
+    openbrksym    shift, and go to state 52
+    Identsym      shift, and go to state 53
+
+    Type                              go to state 206
+    BasicType                         go to state 55
+    ALT_BasicType_SEP_verticalbarsym  go to state 56
+
+
+State 152
+
+    8 Operation_def: Identsym openparsym OPT_Types closeparsym OPT_colonsym_Type . Identsym OPT_ATTRIBUTESsym_openchainsym_Attributes_closechainsym OPTMORE_Property
+
+    Identsym  shift, and go to state 207
+
+
+State 153
+
+  117 ArgTypes: openparsym OPT_Types closeparsym .
+
+    $default  reduce using rule 117 (ArgTypes)
+
+
+State 154
+
+  115 BasicType: openbrksym Identsym openparsym closeparsym . closebrksym
+
+    closebrksym  shift, and go to state 208
+
+
+State 155
+
+  114 BasicType: openbrksym Num dotdotsym Num . OPT_STEPsym_Num closebrksym
+
+    STEPsym  shift, and go to state 209
+
+    $default  reduce using rule 200 (OPT_STEPsym_Num)
+
+    OPT_STEPsym_Num  go to state 210
+
+
+State 156
+
+    5 FunctionDef: externsym Type Identsym ArgTypes semicolonsym .
+
+    $default  reduce using rule 5 (FunctionDef)
+
+
+State 157
+
+   23 FuncRule: openparsym . OPT_Arguments closeparsym Rhs
+
+    openchainsym  shift, and go to state 50
+    OPRsym        shift, and go to state 51
+    openbrksym    shift, and go to state 52
+    Identsym      shift, and go to state 211
+
+    $default  reduce using rule 166 (OPT_Arguments)
+
+    Arguments                         go to state 212
+    Argument                          go to state 213
+    Type                              go to state 214
+    BasicType                         go to state 55
+    OPT_Arguments                     go to state 215
+    ALT_Argument_SEP_commasym         go to state 216
+    ALT_BasicType_SEP_verticalbarsym  go to state 56
+
+
+State 158
+
+   21 Func: OPT_externsym Type Identsym FuncRules . semicolonsym
+
+    semicolonsym  shift, and go to state 217
+
+
+State 159
+
+  164 ALT_FuncRule_SEP_commasym: FuncRule .
+  165                          | FuncRule . commasym ALT_FuncRule_SEP_commasym
+
+    commasym  shift, and go to state 218
+
+    $default  reduce using rule 164 (ALT_FuncRule_SEP_commasym)
+
+
+State 160
+
+   22 FuncRules: ALT_FuncRule_SEP_commasym .
+
+    $default  reduce using rule 22 (FuncRules)
+
+
+State 161
+
+  173 ALT_IdentPattern_SEP_commasym: IdentPattern commasym . ALT_IdentPattern_SEP_commasym
+
+    Identsym  shift, and go to state 125
+
+    IdentPattern                   go to state 126
+    ALT_IdentPattern_SEP_commasym  go to state 219
+
+
+State 162
+
+   43 DefPattern: openchainsym IdentPatterns closechainsym . equalssym BinPattern
+
+    equalssym  shift, and go to state 220
+
+
+State 163
+
+   64 OpSet: openbrksym Applied_formals closebrksym .
+
+    $default  reduce using rule 64 (OpSet)
+
+
+State 164
+
+  189 ALT_Applied_formal_SEP_commasym: Applied_formal commasym . ALT_Applied_formal_SEP_commasym
+
+    Identsym  shift, and go to state 73
+
+    Applied_formal                   go to state 130
+    ALT_Applied_formal_SEP_commasym  go to state 221
+
+
+State 165
+
+   77 SimpleExpr: openparsym . Expr closeparsym
+
+    openparsym    shift, and go to state 165
+    starsym       shift, and go to state 166
+    minussym      shift, and go to state 167
+    NULLsym       shift, and go to state 168
+    ampersandsym  shift, and go to state 169
+    plussym       shift, and go to state 170
+    IFsym         shift, and go to state 171
+    exclaimsym    shift, and go to state 172
+    tildasym      shift, and go to state 173
+    Boolsym       shift, and go to state 174
+    Identsym      shift, and go to state 175
+    Intsym        shift, and go to state 176
+    Stringsym     shift, and go to state 177
+
+    Expr                         go to state 222
+    IdOpExpr                     go to state 187
+    ConsExpr                     go to state 188
+    SimpleExpr                   go to state 189
+    Constant                     go to state 179
+    MonOp                        go to state 180
+    ALT_SimpleExpr_SEP_Operator  go to state 191
+
+
+State 166
+
+  106 MonOp: starsym .
+
+    $default  reduce using rule 106 (MonOp)
+
+
+State 167
+
+  108 MonOp: minussym .
+
+    $default  reduce using rule 108 (MonOp)
+
+
+State 168
+
+   83 Constant: NULLsym .
+
+    $default  reduce using rule 83 (Constant)
+
+
+State 169
+
+  105 MonOp: ampersandsym .
+
+    $default  reduce using rule 105 (MonOp)
+
+
+State 170
+
+  107 MonOp: plussym .
+
+    $default  reduce using rule 107 (MonOp)
+
+
+State 171
+
+   74 SimpleExpr: IFsym . Condition THENsym Expr OPTMORE_ELSIFsym_Condition_THENsym_Expr ELSEsym Expr FIsym
+
+    openparsym    shift, and go to state 165
+    starsym       shift, and go to state 166
+    minussym      shift, and go to state 167
+    NULLsym       shift, and go to state 168
+    ampersandsym  shift, and go to state 169
+    plussym       shift, and go to state 170
+    IFsym         shift, and go to state 171
+    exclaimsym    shift, and go to state 172
+    tildasym      shift, and go to state 173
+    Boolsym       shift, and go to state 174
+    Identsym      shift, and go to state 175
+    Intsym        shift, and go to state 176
+    Stringsym     shift, and go to state 177
+
+    Expr                         go to state 186
+    IdOpExpr                     go to state 187
+    ConsExpr                     go to state 188
+    SimpleExpr                   go to state 189
+    Condition                    go to state 223
+    Constant                     go to state 179
+    MonOp                        go to state 180
+    ALT_SimpleExpr_SEP_Operator  go to state 191
+
+
+State 172
+
+  103 MonOp: exclaimsym .
+
+    $default  reduce using rule 103 (MonOp)
+
+
+State 173
+
+  104 MonOp: tildasym .
+
+    $default  reduce using rule 104 (MonOp)
+
+
+State 174
+
+   81 Constant: Boolsym .
+
+    $default  reduce using rule 81 (Constant)
+
+
+State 175
+
+   73 SimpleExpr: Identsym .
+   76           | Identsym . openparsym OPT_Exprs closeparsym
+
+    openparsym  shift, and go to state 224
+
+    $default  reduce using rule 73 (SimpleExpr)
+
+
+State 176
+
+   80 Constant: Intsym .
+
+    $default  reduce using rule 80 (Constant)
+
+
+State 177
+
+   82 Constant: Stringsym .
+
+    $default  reduce using rule 82 (Constant)
+
+
+State 178
+
+  179 OPT_equalssym_SimpleExpr: equalssym SimpleExpr .
+
+    $default  reduce using rule 179 (OPT_equalssym_SimpleExpr)
+
+
+State 179
+
+   75 SimpleExpr: Constant .
+
+    $default  reduce using rule 75 (SimpleExpr)
+
+
+State 180
+
+   78 SimpleExpr: MonOp . SimpleExpr
+
+    openparsym    shift, and go to state 165
+    starsym       shift, and go to state 166
+    minussym      shift, and go to state 167
+    NULLsym       shift, and go to state 168
+    ampersandsym  shift, and go to state 169
+    plussym       shift, and go to state 170
+    IFsym         shift, and go to state 171
+    exclaimsym    shift, and go to state 172
+    tildasym      shift, and go to state 173
+    Boolsym       shift, and go to state 174
+    Identsym      shift, and go to state 175
+    Intsym        shift, and go to state 176
+    Stringsym     shift, and go to state 177
+
+    SimpleExpr  go to state 225
+    Constant    go to state 179
+    MonOp       go to state 180
+
+
+State 181
+
+   44 IdentPattern: Identsym .
+   46 SingleDefPattern: Identsym . equalssym BinPattern
+   47 IdParPattern: Identsym . ParPattern
+   66 Applied_formal: Identsym .
+
+    equalssym  shift, and go to state 135
+
+    openparsym  reduce using rule 66 (Applied_formal)
+    $default    reduce using rule 44 (IdentPattern)
+
+    ParPattern  go to state 136
+
+
+State 182
+
+   18 Lhs: Identsym colonsym UnTypedPattern .
+
+    $default  reduce using rule 18 (Lhs)
+
+
+State 183
+
+   53 ParPattern: equalssym openparsym . Pattern closeparsym
+
+    openchainsym  shift, and go to state 90
+    OPRsym        shift, and go to state 51
+    openbrksym    shift, and go to state 198
+    ANYsym        shift, and go to state 92
+    NULLsym       shift, and go to state 93
+    _sym          shift, and go to state 94
+    Identsym      shift, and go to state 199
+    Intsym        shift, and go to state 96
+
+    Pattern            go to state 226
+    UnTypedPattern     go to state 201
+    ConsPattern        go to state 100
+    SimplePattern      go to state 101
+    DefPattern         go to state 102
+    IdentPattern       go to state 103
+    SingleDefPattern   go to state 104
+    IdParPattern       go to state 105
+    BinPattern         go to state 106
+    BasicPattern       go to state 107
+    Applied_operation  go to state 108
+    OpSet              go to state 109
+    Applied_formal     go to state 110
+    BasicType          go to state 202
+
+
+State 184
+
+   46 SingleDefPattern: Identsym equalssym BinPattern .
+
+    $default  reduce using rule 46 (SingleDefPattern)
+
+
+State 185
+
+   55 Rhs: openchainsym Rhs . closechainsym OPT_Wherepart
+
+    closechainsym  shift, and go to state 227
+
+
+State 186
+
+   79 Condition: Expr .
+
+    $default  reduce using rule 79 (Condition)
+
+
+State 187
+
+   68 Expr: IdOpExpr .
+
+    $default  reduce using rule 68 (Expr)
+
+
+State 188
+
+   69 Expr: ConsExpr .
+
+    $default  reduce using rule 69 (Expr)
+
+
+State 189
+
+   70 IdOpExpr: SimpleExpr . IdOp Expr
+   71 ConsExpr: SimpleExpr . cons Expr
+  190 ALT_SimpleExpr_SEP_Operator: SimpleExpr .
+  191                            | SimpleExpr . Operator ALT_SimpleExpr_SEP_Operator
+
+    starsym         shift, and go to state 228
+    minussym        shift, and go to state 229
+    candsym         shift, and go to state 230
+    corsym          shift, and go to state 231
+    hatsym          shift, and go to state 232
+    eqsym           shift, and go to state 233
+    neqsym          shift, and go to state 234
+    lesym           shift, and go to state 235
+    gesym           shift, and go to state 236
+    lessthansym     shift, and go to state 237
+    greaterthansym  shift, and go to state 238
+    shlsym          shift, and go to state 239
+    shrsym          shift, and go to state 240
+    slashsym        shift, and go to state 241
+    percentsym      shift, and go to state 242
+    ampersandsym    shift, and go to state 243
+    plussym         shift, and go to state 244
+    openquotesym    shift, and go to state 146
+    CONSsym         shift, and go to state 144
+
+    $default  reduce using rule 190 (ALT_SimpleExpr_SEP_Operator)
+
+    cons      go to state 245
+    Operator  go to state 246
+    IdOp      go to state 247
+
+
+State 190
+
+   56 Guard: verticalbarsym Condition . openchainsym Rhs closechainsym OPT_Wherepart
+  185 OPT_verticalbarsym_Condition: verticalbarsym Condition .
+
+    openchainsym  shift, and go to state 248
+
+    $default  reduce using rule 185 (OPT_verticalbarsym_Condition)
+
+
+State 191
+
+   67 Expr: ALT_SimpleExpr_SEP_Operator .
+
+    $default  reduce using rule 67 (Expr)
+
+
+State 192
+
+   17 Rule: Lhs Rhs semicolonsym .
+
+    $default  reduce using rule 17 (Rule)
+
+
+State 193
+
+  181 MORE_Guard: Guard MORE_Guard .
+
+    $default  reduce using rule 181 (MORE_Guard)
+
+
+State 194
+
+   57 Guard: OPT_verticalbarsym_Condition arrowsym . ExprSeq OPT_Wherepart
+
+    openchainsym  shift, and go to state 249
+    openparsym    shift, and go to state 165
+    starsym       shift, and go to state 166
+    minussym      shift, and go to state 167
+    NULLsym       shift, and go to state 168
+    ampersandsym  shift, and go to state 169
+    plussym       shift, and go to state 170
+    IFsym         shift, and go to state 171
+    exclaimsym    shift, and go to state 172
+    tildasym      shift, and go to state 173
+    Boolsym       shift, and go to state 174
+    Identsym      shift, and go to state 175
+    Intsym        shift, and go to state 176
+    Stringsym     shift, and go to state 177
+
+    ExprSeq                      go to state 250
+    Expr                         go to state 251
+    IdOpExpr                     go to state 187
+    ConsExpr                     go to state 188
+    SimpleExpr                   go to state 189
+    Constant                     go to state 179
+    MonOp                        go to state 180
+    ALT_SimpleExpr_SEP_Operator  go to state 191
+
+
+State 195
+
+   37 ConsPattern: SimplePattern cons UnTypedPattern .
+
+    $default  reduce using rule 37 (ConsPattern)
+
+
+State 196
+
+  102 IdOp: openquotesym Identsym .
+
+    $default  reduce using rule 102 (IdOp)
+
+
+State 197
+
+  175 OPT_IdOp_SimplePattern: IdOp SimplePattern .
+
+    $default  reduce using rule 175 (OPT_IdOp_SimplePattern)
+
+
+State 198
+
+   64 OpSet: openbrksym . Applied_formals closebrksym
+  114 BasicType: openbrksym . Num dotdotsym Num OPT_STEPsym_Num closebrksym
+  115          | openbrksym . Identsym openparsym closeparsym closebrksym
+
+    minussym  shift, and go to state 80
+    Identsym  shift, and go to state 252
+
+    $default  reduce using rule 208 (OPT_minussym)
+
+    Applied_formals                  go to state 129
+    Applied_formal                   go to state 130
+    Num                              go to state 82
+    ALT_Applied_formal_SEP_commasym  go to state 131
+    OPT_minussym                     go to state 83
+
+
+State 199
+
+   44 IdentPattern: Identsym .
+   46 SingleDefPattern: Identsym . equalssym BinPattern
+   47 IdParPattern: Identsym . ParPattern
+   66 Applied_formal: Identsym .
+  111 BasicType: Identsym .
+
+    equalssym  shift, and go to state 135
+
+    commasym     reduce using rule 44 (IdentPattern)
+    openparsym   reduce using rule 66 (Applied_formal)
+    closeparsym  reduce using rule 44 (IdentPattern)
+    CONSsym      reduce using rule 44 (IdentPattern)
+    $default     reduce using rule 111 (BasicType)
+
+    ParPattern  go to state 136
+
+
+State 200
+
+  202 ALT_Pattern_SEP_commasym: Pattern .
+  203                         | Pattern . commasym ALT_Pattern_SEP_commasym
+
+    commasym  shift, and go to state 253
+
+    $default  reduce using rule 202 (ALT_Pattern_SEP_commasym)
+
+
+State 201
+
+   33 Pattern: UnTypedPattern .
+
+    $default  reduce using rule 33 (Pattern)
+
+
+State 202
+
+   34 Pattern: BasicType . UnTypedPattern
+  113 BasicType: BasicType . starsym
+
+    openchainsym  shift, and go to state 90
+    starsym       shift, and go to state 85
+    openbrksym    shift, and go to state 91
+    ANYsym        shift, and go to state 92
+    NULLsym       shift, and go to state 93
+    _sym          shift, and go to state 94
+    Identsym      shift, and go to state 181
+    Intsym        shift, and go to state 96
+
+    UnTypedPattern     go to state 254
+    ConsPattern        go to state 100
+    SimplePattern      go to state 101
+    DefPattern         go to state 102
+    IdentPattern       go to state 103
+    SingleDefPattern   go to state 104
+    IdParPattern       go to state 105
+    BinPattern         go to state 106
+    BasicPattern       go to state 107
+    Applied_operation  go to state 108
+    OpSet              go to state 109
+    Applied_formal     go to state 110
+
+
+State 203
+
+  177 OPT_Patterns: Patterns .
+
+    $default  reduce using rule 177 (OPT_Patterns)
+
+
+State 204
+
+   49 BasicPattern: Applied_operation openparsym OPT_Patterns . closeparsym
+
+    closeparsym  shift, and go to state 255
+
+
+State 205
+
+  118 Patterns: ALT_Pattern_SEP_commasym .
+
+    $default  reduce using rule 118 (Patterns)
+
+
+State 206
+
+  147 OPT_colonsym_Type: colonsym Type .
+
+    $default  reduce using rule 147 (OPT_colonsym_Type)
+
+
+State 207
+
+    8 Operation_def: Identsym openparsym OPT_Types closeparsym OPT_colonsym_Type Identsym . OPT_ATTRIBUTESsym_openchainsym_Attributes_closechainsym OPTMORE_Property
+
+    ATTRIBUTESsym  shift, and go to state 18
+
+    $default  reduce using rule 134 (OPT_ATTRIBUTESsym_openchainsym_Attributes_closechainsym)
+
+    OPT_ATTRIBUTESsym_openchainsym_Attributes_closechainsym  go to state 256
+
+
+State 208
+
+  115 BasicType: openbrksym Identsym openparsym closeparsym closebrksym .
+
+    $default  reduce using rule 115 (BasicType)
+
+
+State 209
+
+  201 OPT_STEPsym_Num: STEPsym . Num
+
+    minussym  shift, and go to state 80
+
+    $default  reduce using rule 208 (OPT_minussym)
+
+    Num           go to state 257
+    OPT_minussym  go to state 83
+
+
+State 210
+
+  114 BasicType: openbrksym Num dotdotsym Num OPT_STEPsym_Num . closebrksym
+
+    closebrksym  shift, and go to state 258
+
+
+State 211
+
+   26 Argument: Identsym . ArgPat2
+  111 BasicType: Identsym .
+
+    equalssym  shift, and go to state 259
+
+    commasym     reduce using rule 170 (OPT_equalssym_UnTypedPattern)
+    closeparsym  reduce using rule 170 (OPT_equalssym_UnTypedPattern)
+    $default     reduce using rule 111 (BasicType)
+
+    ArgPat2                       go to state 260
+    PatArg1                       go to state 261
+    ParArg                        go to state 262
+    SetArg                        go to state 263
+    ParPattern                    go to state 264
+    OPT_equalssym_UnTypedPattern  go to state 265
+
+
+State 212
+
+  167 OPT_Arguments: Arguments .
+
+    $default  reduce using rule 167 (OPT_Arguments)
+
+
+State 213
+
+  168 ALT_Argument_SEP_commasym: Argument .
+  169                          | Argument . commasym ALT_Argument_SEP_commasym
+
+    commasym  shift, and go to state 266
+
+    $default  reduce using rule 168 (ALT_Argument_SEP_commasym)
+
+
+State 214
+
+   25 Argument: Type . Identsym ArgPat2
+
+    Identsym  shift, and go to state 267
+
+
+State 215
+
+   23 FuncRule: openparsym OPT_Arguments . closeparsym Rhs
+
+    closeparsym  shift, and go to state 268
+
+
+State 216
+
+   24 Arguments: ALT_Argument_SEP_commasym .
+
+    $default  reduce using rule 24 (Arguments)
+
+
+State 217
+
+   21 Func: OPT_externsym Type Identsym FuncRules semicolonsym .
+
+    $default  reduce using rule 21 (Func)
+
+
+State 218
+
+  165 ALT_FuncRule_SEP_commasym: FuncRule commasym . ALT_FuncRule_SEP_commasym
+
+    openparsym  shift, and go to state 157
+
+    FuncRule                   go to state 159
+    ALT_FuncRule_SEP_commasym  go to state 269
+
+
+State 219
+
+  173 ALT_IdentPattern_SEP_commasym: IdentPattern commasym ALT_IdentPattern_SEP_commasym .
+
+    $default  reduce using rule 173 (ALT_IdentPattern_SEP_commasym)
+
+
+State 220
+
+   43 DefPattern: openchainsym IdentPatterns closechainsym equalssym . BinPattern
+
+    openbrksym  shift, and go to state 91
+    ANYsym      shift, and go to state 92
+    NULLsym     shift, and go to state 93
+    _sym        shift, and go to state 94
+    Identsym    shift, and go to state 73
+    Intsym      shift, and go to state 96
+
+    BinPattern         go to state 270
+    BasicPattern       go to state 107
+    Applied_operation  go to state 108
+    OpSet              go to state 109
+    Applied_formal     go to state 110
+
+
+State 221
+
+  189 ALT_Applied_formal_SEP_commasym: Applied_formal commasym ALT_Applied_formal_SEP_commasym .
+
+    $default  reduce using rule 189 (ALT_Applied_formal_SEP_commasym)
+
+
+State 222
+
+   77 SimpleExpr: openparsym Expr . closeparsym
+
+    closeparsym  shift, and go to state 271
+
+
+State 223
+
+   74 SimpleExpr: IFsym Condition . THENsym Expr OPTMORE_ELSIFsym_Condition_THENsym_Expr ELSEsym Expr FIsym
+
+    THENsym  shift, and go to state 272
+
+
+State 224
+
+   76 SimpleExpr: Identsym openparsym . OPT_Exprs closeparsym
+
+    openparsym    shift, and go to state 165
+    starsym       shift, and go to state 166
+    minussym      shift, and go to state 167
+    NULLsym       shift, and go to state 168
+    ampersandsym  shift, and go to state 169
+    plussym       shift, and go to state 170
+    IFsym         shift, and go to state 171
+    exclaimsym    shift, and go to state 172
+    tildasym      shift, and go to state 173
+    Boolsym       shift, and go to state 174
+    Identsym      shift, and go to state 175
+    Intsym        shift, and go to state 176
+    Stringsym     shift, and go to state 177
+
+    $default  reduce using rule 194 (OPT_Exprs)
+
+    Expr                         go to state 273
+    IdOpExpr                     go to state 187
+    ConsExpr                     go to state 188
+    SimpleExpr                   go to state 189
+    Constant                     go to state 179
+    MonOp                        go to state 180
+    Exprs                        go to state 274
+    ALT_SimpleExpr_SEP_Operator  go to state 191
+    OPT_Exprs                    go to state 275
+    ALT_Expr_SEP_commasym        go to state 276
+
+
+State 225
+
+   78 SimpleExpr: MonOp SimpleExpr .
+
+    $default  reduce using rule 78 (SimpleExpr)
+
+
+State 226
+
+   53 ParPattern: equalssym openparsym Pattern . closeparsym
+
+    closeparsym  shift, and go to state 277
+
+
+State 227
+
+   55 Rhs: openchainsym Rhs closechainsym . OPT_Wherepart
+
+    WHEREsym  shift, and go to state 278
+
+    $default  reduce using rule 182 (OPT_Wherepart)
+
+    Wherepart      go to state 279
+    OPT_Wherepart  go to state 280
+
+
+State 228
+
+   98 Operator: starsym .
+
+    $default  reduce using rule 98 (Operator)
+
+
+State 229
+
+  101 Operator: minussym .
+
+    $default  reduce using rule 101 (Operator)
+
+
+State 230
+
+   85 Operator: candsym .
+
+    $default  reduce using rule 85 (Operator)
+
+
+State 231
+
+   86 Operator: corsym .
+
+    $default  reduce using rule 86 (Operator)
+
+
+State 232
+
+   87 Operator: hatsym .
+
+    $default  reduce using rule 87 (Operator)
+
+
+State 233
+
+   88 Operator: eqsym .
+
+    $default  reduce using rule 88 (Operator)
+
+
+State 234
+
+   89 Operator: neqsym .
+
+    $default  reduce using rule 89 (Operator)
+
+
+State 235
+
+   90 Operator: lesym .
+
+    $default  reduce using rule 90 (Operator)
+
+
+State 236
+
+   91 Operator: gesym .
+
+    $default  reduce using rule 91 (Operator)
+
+
+State 237
+
+   92 Operator: lessthansym .
+
+    $default  reduce using rule 92 (Operator)
+
+
+State 238
+
+   93 Operator: greaterthansym .
+
+    $default  reduce using rule 93 (Operator)
+
+
+State 239
+
+   94 Operator: shlsym .
+
+    $default  reduce using rule 94 (Operator)
+
+
+State 240
+
+   95 Operator: shrsym .
+
+    $default  reduce using rule 95 (Operator)
+
+
+State 241
+
+   96 Operator: slashsym .
+
+    $default  reduce using rule 96 (Operator)
+
+
+State 242
+
+   97 Operator: percentsym .
+
+    $default  reduce using rule 97 (Operator)
+
+
+State 243
+
+   99 Operator: ampersandsym .
+
+    $default  reduce using rule 99 (Operator)
+
+
+State 244
+
+  100 Operator: plussym .
+
+    $default  reduce using rule 100 (Operator)
+
+
+State 245
+
+   71 ConsExpr: SimpleExpr cons . Expr
+
+    openparsym    shift, and go to state 165
+    starsym       shift, and go to state 166
+    minussym      shift, and go to state 167
+    NULLsym       shift, and go to state 168
+    ampersandsym  shift, and go to state 169
+    plussym       shift, and go to state 170
+    IFsym         shift, and go to state 171
+    exclaimsym    shift, and go to state 172
+    tildasym      shift, and go to state 173
+    Boolsym       shift, and go to state 174
+    Identsym      shift, and go to state 175
+    Intsym        shift, and go to state 176
+    Stringsym     shift, and go to state 177
+
+    Expr                         go to state 281
+    IdOpExpr                     go to state 187
+    ConsExpr                     go to state 188
+    SimpleExpr                   go to state 189
+    Constant                     go to state 179
+    MonOp                        go to state 180
+    ALT_SimpleExpr_SEP_Operator  go to state 191
+
+
+State 246
+
+  191 ALT_SimpleExpr_SEP_Operator: SimpleExpr Operator . ALT_SimpleExpr_SEP_Operator
+
+    openparsym    shift, and go to state 165
+    starsym       shift, and go to state 166
+    minussym      shift, and go to state 167
+    NULLsym       shift, and go to state 168
+    ampersandsym  shift, and go to state 169
+    plussym       shift, and go to state 170
+    IFsym         shift, and go to state 171
+    exclaimsym    shift, and go to state 172
+    tildasym      shift, and go to state 173
+    Boolsym       shift, and go to state 174
+    Identsym      shift, and go to state 175
+    Intsym        shift, and go to state 176
+    Stringsym     shift, and go to state 177
+
+    SimpleExpr                   go to state 282
+    Constant                     go to state 179
+    MonOp                        go to state 180
+    ALT_SimpleExpr_SEP_Operator  go to state 283
+
+
+State 247
+
+   70 IdOpExpr: SimpleExpr IdOp . Expr
+
+    openparsym    shift, and go to state 165
+    starsym       shift, and go to state 166
+    minussym      shift, and go to state 167
+    NULLsym       shift, and go to state 168
+    ampersandsym  shift, and go to state 169
+    plussym       shift, and go to state 170
+    IFsym         shift, and go to state 171
+    exclaimsym    shift, and go to state 172
+    tildasym      shift, and go to state 173
+    Boolsym       shift, and go to state 174
+    Identsym      shift, and go to state 175
+    Intsym        shift, and go to state 176
+    Stringsym     shift, and go to state 177
+
+    Expr                         go to state 284
+    IdOpExpr                     go to state 187
+    ConsExpr                     go to state 188
+    SimpleExpr                   go to state 189
+    Constant                     go to state 179
+    MonOp                        go to state 180
+    ALT_SimpleExpr_SEP_Operator  go to state 191
+
+
+State 248
+
+   56 Guard: verticalbarsym Condition openchainsym . Rhs closechainsym OPT_Wherepart
+
+    openchainsym    shift, and go to state 138
+    verticalbarsym  shift, and go to state 139
+
+    $default  reduce using rule 184 (OPT_verticalbarsym_Condition)
+
+    Rhs                           go to state 285
+    Guard                         go to state 141
+    MORE_Guard                    go to state 142
+    OPT_verticalbarsym_Condition  go to state 143
+
+
+State 249
+
+   59 ExprSeq: openchainsym . Exprs closechainsym
+
+    openparsym    shift, and go to state 165
+    starsym       shift, and go to state 166
+    minussym      shift, and go to state 167
+    NULLsym       shift, and go to state 168
+    ampersandsym  shift, and go to state 169
+    plussym       shift, and go to state 170
+    IFsym         shift, and go to state 171
+    exclaimsym    shift, and go to state 172
+    tildasym      shift, and go to state 173
+    Boolsym       shift, and go to state 174
+    Identsym      shift, and go to state 175
+    Intsym        shift, and go to state 176
+    Stringsym     shift, and go to state 177
+
+    Expr                         go to state 273
+    IdOpExpr                     go to state 187
+    ConsExpr                     go to state 188
+    SimpleExpr                   go to state 189
+    Constant                     go to state 179
+    MonOp                        go to state 180
+    Exprs                        go to state 286
+    ALT_SimpleExpr_SEP_Operator  go to state 191
+    ALT_Expr_SEP_commasym        go to state 276
+
+
+State 250
+
+   57 Guard: OPT_verticalbarsym_Condition arrowsym ExprSeq . OPT_Wherepart
+
+    WHEREsym  shift, and go to state 278
+
+    $default  reduce using rule 182 (OPT_Wherepart)
+
+    Wherepart      go to state 279
+    OPT_Wherepart  go to state 287
+
+
+State 251
+
+   58 ExprSeq: Expr .
+
+    $default  reduce using rule 58 (ExprSeq)
+
+
+State 252
+
+   66 Applied_formal: Identsym .
+  115 BasicType: openbrksym Identsym . openparsym closeparsym closebrksym
+
+    openparsym  shift, and go to state 118
+
+    $default  reduce using rule 66 (Applied_formal)
+
+
+State 253
+
+  203 ALT_Pattern_SEP_commasym: Pattern commasym . ALT_Pattern_SEP_commasym
+
+    openchainsym  shift, and go to state 90
+    OPRsym        shift, and go to state 51
+    openbrksym    shift, and go to state 198
+    ANYsym        shift, and go to state 92
+    NULLsym       shift, and go to state 93
+    _sym          shift, and go to state 94
+    Identsym      shift, and go to state 199
+    Intsym        shift, and go to state 96
+
+    Pattern                   go to state 200
+    UnTypedPattern            go to state 201
+    ConsPattern               go to state 100
+    SimplePattern             go to state 101
+    DefPattern                go to state 102
+    IdentPattern              go to state 103
+    SingleDefPattern          go to state 104
+    IdParPattern              go to state 105
+    BinPattern                go to state 106
+    BasicPattern              go to state 107
+    Applied_operation         go to state 108
+    OpSet                     go to state 109
+    Applied_formal            go to state 110
+    BasicType                 go to state 202
+    ALT_Pattern_SEP_commasym  go to state 288
+
+
+State 254
+
+   34 Pattern: BasicType UnTypedPattern .
+
+    $default  reduce using rule 34 (Pattern)
+
+
+State 255
+
+   49 BasicPattern: Applied_operation openparsym OPT_Patterns closeparsym .
+
+    $default  reduce using rule 49 (BasicPattern)
+
+
+State 256
+
+    8 Operation_def: Identsym openparsym OPT_Types closeparsym OPT_colonsym_Type Identsym OPT_ATTRIBUTESsym_openchainsym_Attributes_closechainsym . OPTMORE_Property
+
+    COMMUTATIVEsym  shift, and go to state 289
+
+    $default  reduce using rule 148 (OPTMORE_Property)
+
+    Property          go to state 290
+    OPTMORE_Property  go to state 291
+
+
+State 257
+
+  201 OPT_STEPsym_Num: STEPsym Num .
+
+    $default  reduce using rule 201 (OPT_STEPsym_Num)
+
+
+State 258
+
+  114 BasicType: openbrksym Num dotdotsym Num OPT_STEPsym_Num closebrksym .
+
+    $default  reduce using rule 114 (BasicType)
+
+
+State 259
+
+   32 SetArg: equalssym . OpSet
+   53 ParPattern: equalssym . openparsym Pattern closeparsym
+  171 OPT_equalssym_UnTypedPattern: equalssym . UnTypedPattern
+
+    openchainsym  shift, and go to state 90
+    openparsym    shift, and go to state 183
+    openbrksym    shift, and go to state 91
+    ANYsym        shift, and go to state 92
+    NULLsym       shift, and go to state 93
+    _sym          shift, and go to state 94
+    Identsym      shift, and go to state 181
+    Intsym        shift, and go to state 96
+
+    UnTypedPattern     go to state 292
+    ConsPattern        go to state 100
+    SimplePattern      go to state 101
+    DefPattern         go to state 102
+    IdentPattern       go to state 103
+    SingleDefPattern   go to state 104
+    IdParPattern       go to state 105
+    BinPattern         go to state 106
+    BasicPattern       go to state 107
+    Applied_operation  go to state 108
+    OpSet              go to state 293
+    Applied_formal     go to state 110
+
+
+State 260
+
+   26 Argument: Identsym ArgPat2 .
+
+    $default  reduce using rule 26 (Argument)
+
+
+State 261
+
+   27 ArgPat2: PatArg1 .
+
+    $default  reduce using rule 27 (ArgPat2)
+
+
+State 262
+
+   28 ArgPat2: ParArg .
+
+    $default  reduce using rule 28 (ArgPat2)
+
+
+State 263
+
+   29 ArgPat2: SetArg .
+
+    $default  reduce using rule 29 (ArgPat2)
+
+
+State 264
+
+   31 ParArg: ParPattern .
+
+    $default  reduce using rule 31 (ParArg)
+
+
+State 265
+
+   30 PatArg1: OPT_equalssym_UnTypedPattern .
+
+    $default  reduce using rule 30 (PatArg1)
+
+
+State 266
+
+  169 ALT_Argument_SEP_commasym: Argument commasym . ALT_Argument_SEP_commasym
+
+    openchainsym  shift, and go to state 50
+    OPRsym        shift, and go to state 51
+    openbrksym    shift, and go to state 52
+    Identsym      shift, and go to state 211
+
+    Argument                          go to state 213
+    Type                              go to state 214
+    BasicType                         go to state 55
+    ALT_Argument_SEP_commasym         go to state 294
+    ALT_BasicType_SEP_verticalbarsym  go to state 56
+
+
+State 267
+
+   25 Argument: Type Identsym . ArgPat2
+
+    equalssym  shift, and go to state 259
+
+    $default  reduce using rule 170 (OPT_equalssym_UnTypedPattern)
+
+    ArgPat2                       go to state 295
+    PatArg1                       go to state 261
+    ParArg                        go to state 262
+    SetArg                        go to state 263
+    ParPattern                    go to state 264
+    OPT_equalssym_UnTypedPattern  go to state 265
+
+
+State 268
+
+   23 FuncRule: openparsym OPT_Arguments closeparsym . Rhs
+
+    openchainsym    shift, and go to state 138
+    verticalbarsym  shift, and go to state 139
+
+    $default  reduce using rule 184 (OPT_verticalbarsym_Condition)
+
+    Rhs                           go to state 296
+    Guard                         go to state 141
+    MORE_Guard                    go to state 142
+    OPT_verticalbarsym_Condition  go to state 143
+
+
+State 269
+
+  165 ALT_FuncRule_SEP_commasym: FuncRule commasym ALT_FuncRule_SEP_commasym .
+
+    $default  reduce using rule 165 (ALT_FuncRule_SEP_commasym)
+
+
+State 270
+
+   43 DefPattern: openchainsym IdentPatterns closechainsym equalssym BinPattern .
+
+    $default  reduce using rule 43 (DefPattern)
+
+
+State 271
+
+   77 SimpleExpr: openparsym Expr closeparsym .
+
+    $default  reduce using rule 77 (SimpleExpr)
+
+
+State 272
+
+   74 SimpleExpr: IFsym Condition THENsym . Expr OPTMORE_ELSIFsym_Condition_THENsym_Expr ELSEsym Expr FIsym
+
+    openparsym    shift, and go to state 165
+    starsym       shift, and go to state 166
+    minussym      shift, and go to state 167
+    NULLsym       shift, and go to state 168
+    ampersandsym  shift, and go to state 169
+    plussym       shift, and go to state 170
+    IFsym         shift, and go to state 171
+    exclaimsym    shift, and go to state 172
+    tildasym      shift, and go to state 173
+    Boolsym       shift, and go to state 174
+    Identsym      shift, and go to state 175
+    Intsym        shift, and go to state 176
+    Stringsym     shift, and go to state 177
+
+    Expr                         go to state 297
+    IdOpExpr                     go to state 187
+    ConsExpr                     go to state 188
+    SimpleExpr                   go to state 189
+    Constant                     go to state 179
+    MonOp                        go to state 180
+    ALT_SimpleExpr_SEP_Operator  go to state 191
+
+
+State 273
+
+  204 ALT_Expr_SEP_commasym: Expr .
+  205                      | Expr . commasym ALT_Expr_SEP_commasym
+
+    commasym  shift, and go to state 298
+
+    $default  reduce using rule 204 (ALT_Expr_SEP_commasym)
+
+
+State 274
+
+  195 OPT_Exprs: Exprs .
+
+    $default  reduce using rule 195 (OPT_Exprs)
+
+
+State 275
+
+   76 SimpleExpr: Identsym openparsym OPT_Exprs . closeparsym
+
+    closeparsym  shift, and go to state 299
+
+
+State 276
+
+  119 Exprs: ALT_Expr_SEP_commasym .
+
+    $default  reduce using rule 119 (Exprs)
+
+
+State 277
+
+   53 ParPattern: equalssym openparsym Pattern closeparsym .
+
+    $default  reduce using rule 53 (ParPattern)
+
+
+State 278
+
+   60 Wherepart: WHEREsym . OPTMORE_Definition
+
+    openchainsym  shift, and go to state 50
+    OPRsym        shift, and go to state 51
+    openbrksym    shift, and go to state 52
+    Identsym      shift, and go to state 53
+
+    $default  reduce using rule 186 (OPTMORE_Definition)
+
+    Definition                        go to state 300
+    Type                              go to state 301
+    BasicType                         go to state 55
+    OPTMORE_Definition                go to state 302
+    ALT_BasicType_SEP_verticalbarsym  go to state 56
+
+
+State 279
+
+  183 OPT_Wherepart: Wherepart .
+
+    $default  reduce using rule 183 (OPT_Wherepart)
+
+
+State 280
+
+   55 Rhs: openchainsym Rhs closechainsym OPT_Wherepart .
+
+    $default  reduce using rule 55 (Rhs)
+
+
+State 281
+
+   71 ConsExpr: SimpleExpr cons Expr .
+
+    $default  reduce using rule 71 (ConsExpr)
+
+
+State 282
+
+  190 ALT_SimpleExpr_SEP_Operator: SimpleExpr .
+  191                            | SimpleExpr . Operator ALT_SimpleExpr_SEP_Operator
+
+    starsym         shift, and go to state 228
+    minussym        shift, and go to state 229
+    candsym         shift, and go to state 230
+    corsym          shift, and go to state 231
+    hatsym          shift, and go to state 232
+    eqsym           shift, and go to state 233
+    neqsym          shift, and go to state 234
+    lesym           shift, and go to state 235
+    gesym           shift, and go to state 236
+    lessthansym     shift, and go to state 237
+    greaterthansym  shift, and go to state 238
+    shlsym          shift, and go to state 239
+    shrsym          shift, and go to state 240
+    slashsym        shift, and go to state 241
+    percentsym      shift, and go to state 242
+    ampersandsym    shift, and go to state 243
+    plussym         shift, and go to state 244
+
+    $default  reduce using rule 190 (ALT_SimpleExpr_SEP_Operator)
+
+    Operator  go to state 246
+
+
+State 283
+
+  191 ALT_SimpleExpr_SEP_Operator: SimpleExpr Operator ALT_SimpleExpr_SEP_Operator .
+
+    $default  reduce using rule 191 (ALT_SimpleExpr_SEP_Operator)
+
+
+State 284
+
+   70 IdOpExpr: SimpleExpr IdOp Expr .
+
+    $default  reduce using rule 70 (IdOpExpr)
+
+
+State 285
+
+   56 Guard: verticalbarsym Condition openchainsym Rhs . closechainsym OPT_Wherepart
+
+    closechainsym  shift, and go to state 303
+
+
+State 286
+
+   59 ExprSeq: openchainsym Exprs . closechainsym
+
+    closechainsym  shift, and go to state 304
+
+
+State 287
+
+   57 Guard: OPT_verticalbarsym_Condition arrowsym ExprSeq OPT_Wherepart .
+
+    $default  reduce using rule 57 (Guard)
+
+
+State 288
+
+  203 ALT_Pattern_SEP_commasym: Pattern commasym ALT_Pattern_SEP_commasym .
+
+    $default  reduce using rule 203 (ALT_Pattern_SEP_commasym)
+
+
+State 289
+
+  116 Property: COMMUTATIVEsym .
+
+    $default  reduce using rule 116 (Property)
+
+
+State 290
+
+  149 OPTMORE_Property: Property . OPTMORE_Property
+
+    COMMUTATIVEsym  shift, and go to state 289
+
+    $default  reduce using rule 148 (OPTMORE_Property)
+
+    Property          go to state 290
+    OPTMORE_Property  go to state 305
+
+
+State 291
+
+    8 Operation_def: Identsym openparsym OPT_Types closeparsym OPT_colonsym_Type Identsym OPT_ATTRIBUTESsym_openchainsym_Attributes_closechainsym OPTMORE_Property .
+
+    $default  reduce using rule 8 (Operation_def)
+
+
+State 292
+
+  171 OPT_equalssym_UnTypedPattern: equalssym UnTypedPattern .
+
+    $default  reduce using rule 171 (OPT_equalssym_UnTypedPattern)
+
+
+State 293
+
+   32 SetArg: equalssym OpSet .
+   62 Applied_operation: OpSet .
+
+    openparsym  reduce using rule 62 (Applied_operation)
+    $default    reduce using rule 32 (SetArg)
+
+
+State 294
+
+  169 ALT_Argument_SEP_commasym: Argument commasym ALT_Argument_SEP_commasym .
+
+    $default  reduce using rule 169 (ALT_Argument_SEP_commasym)
+
+
+State 295
+
+   25 Argument: Type Identsym ArgPat2 .
+
+    $default  reduce using rule 25 (Argument)
+
+
+State 296
+
+   23 FuncRule: openparsym OPT_Arguments closeparsym Rhs .
+
+    $default  reduce using rule 23 (FuncRule)
+
+
+State 297
+
+   74 SimpleExpr: IFsym Condition THENsym Expr . OPTMORE_ELSIFsym_Condition_THENsym_Expr ELSEsym Expr FIsym
+
+    ELSIFsym  shift, and go to state 306
+
+    $default  reduce using rule 192 (OPTMORE_ELSIFsym_Condition_THENsym_Expr)
+
+    OPTMORE_ELSIFsym_Condition_THENsym_Expr  go to state 307
+
+
+State 298
+
+  205 ALT_Expr_SEP_commasym: Expr commasym . ALT_Expr_SEP_commasym
+
+    openparsym    shift, and go to state 165
+    starsym       shift, and go to state 166
+    minussym      shift, and go to state 167
+    NULLsym       shift, and go to state 168
+    ampersandsym  shift, and go to state 169
+    plussym       shift, and go to state 170
+    IFsym         shift, and go to state 171
+    exclaimsym    shift, and go to state 172
+    tildasym      shift, and go to state 173
+    Boolsym       shift, and go to state 174
+    Identsym      shift, and go to state 175
+    Intsym        shift, and go to state 176
+    Stringsym     shift, and go to state 177
+
+    Expr                         go to state 273
+    IdOpExpr                     go to state 187
+    ConsExpr                     go to state 188
+    SimpleExpr                   go to state 189
+    Constant                     go to state 179
+    MonOp                        go to state 180
+    ALT_SimpleExpr_SEP_Operator  go to state 191
+    ALT_Expr_SEP_commasym        go to state 308
+
+
+State 299
+
+   76 SimpleExpr: Identsym openparsym OPT_Exprs closeparsym .
+
+    $default  reduce using rule 76 (SimpleExpr)
+
+
+State 300
+
+  187 OPTMORE_Definition: Definition . OPTMORE_Definition
+
+    openchainsym  shift, and go to state 50
+    OPRsym        shift, and go to state 51
+    openbrksym    shift, and go to state 52
+    Identsym      shift, and go to state 53
+
+    $default  reduce using rule 186 (OPTMORE_Definition)
+
+    Definition                        go to state 300
+    Type                              go to state 301
+    BasicType                         go to state 55
+    OPTMORE_Definition                go to state 309
+    ALT_BasicType_SEP_verticalbarsym  go to state 56
+
+
+State 301
+
+   84 Definition: Type . Identsym equalssym Expr
+
+    Identsym  shift, and go to state 310
+
+
+State 302
+
+   60 Wherepart: WHEREsym OPTMORE_Definition .
+
+    $default  reduce using rule 60 (Wherepart)
+
+
+State 303
+
+   56 Guard: verticalbarsym Condition openchainsym Rhs closechainsym . OPT_Wherepart
+
+    WHEREsym  shift, and go to state 278
+
+    $default  reduce using rule 182 (OPT_Wherepart)
+
+    Wherepart      go to state 279
+    OPT_Wherepart  go to state 311
+
+
+State 304
+
+   59 ExprSeq: openchainsym Exprs closechainsym .
+
+    $default  reduce using rule 59 (ExprSeq)
+
+
+State 305
+
+  149 OPTMORE_Property: Property OPTMORE_Property .
+
+    $default  reduce using rule 149 (OPTMORE_Property)
+
+
+State 306
+
+  193 OPTMORE_ELSIFsym_Condition_THENsym_Expr: ELSIFsym . Condition THENsym Expr OPTMORE_ELSIFsym_Condition_THENsym_Expr
+
+    openparsym    shift, and go to state 165
+    starsym       shift, and go to state 166
+    minussym      shift, and go to state 167
+    NULLsym       shift, and go to state 168
+    ampersandsym  shift, and go to state 169
+    plussym       shift, and go to state 170
+    IFsym         shift, and go to state 171
+    exclaimsym    shift, and go to state 172
+    tildasym      shift, and go to state 173
+    Boolsym       shift, and go to state 174
+    Identsym      shift, and go to state 175
+    Intsym        shift, and go to state 176
+    Stringsym     shift, and go to state 177
+
+    Expr                         go to state 186
+    IdOpExpr                     go to state 187
+    ConsExpr                     go to state 188
+    SimpleExpr                   go to state 189
+    Condition                    go to state 312
+    Constant                     go to state 179
+    MonOp                        go to state 180
+    ALT_SimpleExpr_SEP_Operator  go to state 191
+
+
+State 307
+
+   74 SimpleExpr: IFsym Condition THENsym Expr OPTMORE_ELSIFsym_Condition_THENsym_Expr . ELSEsym Expr FIsym
+
+    ELSEsym  shift, and go to state 313
+
+
+State 308
+
+  205 ALT_Expr_SEP_commasym: Expr commasym ALT_Expr_SEP_commasym .
+
+    $default  reduce using rule 205 (ALT_Expr_SEP_commasym)
+
+
+State 309
+
+  187 OPTMORE_Definition: Definition OPTMORE_Definition .
+
+    $default  reduce using rule 187 (OPTMORE_Definition)
+
+
+State 310
+
+   84 Definition: Type Identsym . equalssym Expr
+
+    equalssym  shift, and go to state 314
+
+
+State 311
+
+   56 Guard: verticalbarsym Condition openchainsym Rhs closechainsym OPT_Wherepart .
+
+    $default  reduce using rule 56 (Guard)
+
+
+State 312
+
+  193 OPTMORE_ELSIFsym_Condition_THENsym_Expr: ELSIFsym Condition . THENsym Expr OPTMORE_ELSIFsym_Condition_THENsym_Expr
+
+    THENsym  shift, and go to state 315
+
+
+State 313
+
+   74 SimpleExpr: IFsym Condition THENsym Expr OPTMORE_ELSIFsym_Condition_THENsym_Expr ELSEsym . Expr FIsym
+
+    openparsym    shift, and go to state 165
+    starsym       shift, and go to state 166
+    minussym      shift, and go to state 167
+    NULLsym       shift, and go to state 168
+    ampersandsym  shift, and go to state 169
+    plussym       shift, and go to state 170
+    IFsym         shift, and go to state 171
+    exclaimsym    shift, and go to state 172
+    tildasym      shift, and go to state 173
+    Boolsym       shift, and go to state 174
+    Identsym      shift, and go to state 175
+    Intsym        shift, and go to state 176
+    Stringsym     shift, and go to state 177
+
+    Expr                         go to state 316
+    IdOpExpr                     go to state 187
+    ConsExpr                     go to state 188
+    SimpleExpr                   go to state 189
+    Constant                     go to state 179
+    MonOp                        go to state 180
+    ALT_SimpleExpr_SEP_Operator  go to state 191
+
+
+State 314
+
+   84 Definition: Type Identsym equalssym . Expr
+
+    openparsym    shift, and go to state 165
+    starsym       shift, and go to state 166
+    minussym      shift, and go to state 167
+    NULLsym       shift, and go to state 168
+    ampersandsym  shift, and go to state 169
+    plussym       shift, and go to state 170
+    IFsym         shift, and go to state 171
+    exclaimsym    shift, and go to state 172
+    tildasym      shift, and go to state 173
+    Boolsym       shift, and go to state 174
+    Identsym      shift, and go to state 175
+    Intsym        shift, and go to state 176
+    Stringsym     shift, and go to state 177
+
+    Expr                         go to state 317
+    IdOpExpr                     go to state 187
+    ConsExpr                     go to state 188
+    SimpleExpr                   go to state 189
+    Constant                     go to state 179
+    MonOp                        go to state 180
+    ALT_SimpleExpr_SEP_Operator  go to state 191
+
+
+State 315
+
+  193 OPTMORE_ELSIFsym_Condition_THENsym_Expr: ELSIFsym Condition THENsym . Expr OPTMORE_ELSIFsym_Condition_THENsym_Expr
+
+    openparsym    shift, and go to state 165
+    starsym       shift, and go to state 166
+    minussym      shift, and go to state 167
+    NULLsym       shift, and go to state 168
+    ampersandsym  shift, and go to state 169
+    plussym       shift, and go to state 170
+    IFsym         shift, and go to state 171
+    exclaimsym    shift, and go to state 172
+    tildasym      shift, and go to state 173
+    Boolsym       shift, and go to state 174
+    Identsym      shift, and go to state 175
+    Intsym        shift, and go to state 176
+    Stringsym     shift, and go to state 177
+
+    Expr                         go to state 318
+    IdOpExpr                     go to state 187
+    ConsExpr                     go to state 188
+    SimpleExpr                   go to state 189
+    Constant                     go to state 179
+    MonOp                        go to state 180
+    ALT_SimpleExpr_SEP_Operator  go to state 191
+
+
+State 316
+
+   74 SimpleExpr: IFsym Condition THENsym Expr OPTMORE_ELSIFsym_Condition_THENsym_Expr ELSEsym Expr . FIsym
+
+    FIsym  shift, and go to state 319
+
+
+State 317
+
+   84 Definition: Type Identsym equalssym Expr .
+
+    $default  reduce using rule 84 (Definition)
+
+
+State 318
+
+  193 OPTMORE_ELSIFsym_Condition_THENsym_Expr: ELSIFsym Condition THENsym Expr . OPTMORE_ELSIFsym_Condition_THENsym_Expr
+
+    ELSIFsym  shift, and go to state 306
+
+    $default  reduce using rule 192 (OPTMORE_ELSIFsym_Condition_THENsym_Expr)
+
+    OPTMORE_ELSIFsym_Condition_THENsym_Expr  go to state 320
+
+
+State 319
+
+   74 SimpleExpr: IFsym Condition THENsym Expr OPTMORE_ELSIFsym_Condition_THENsym_Expr ELSEsym Expr FIsym .
+
+    $default  reduce using rule 74 (SimpleExpr)
+
+
+State 320
+
+  193 OPTMORE_ELSIFsym_Condition_THENsym_Expr: ELSIFsym Condition THENsym Expr OPTMORE_ELSIFsym_Condition_THENsym_Expr .
+
+    $default  reduce using rule 193 (OPTMORE_ELSIFsym_Condition_THENsym_Expr)

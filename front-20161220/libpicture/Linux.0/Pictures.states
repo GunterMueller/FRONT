@@ -1,0 +1,644 @@
+GRAMMAR
+
+Pictures -> OPTMORE_Picture ;
+  empty: EMPTY
+  first: hole_OPTMORE_Picture hole_Picture Floatsym 
+Direction -> Lsym ;
+  empty: NON_EMPTY
+  first: Lsym 
+Direction -> Rsym ;
+  empty: NON_EMPTY
+  first: Rsym 
+Direction -> Usym ;
+  empty: NON_EMPTY
+  first: Usym 
+Direction -> Dsym ;
+  empty: NON_EMPTY
+  first: Dsym 
+Direction -> Csym ;
+  empty: NON_EMPTY
+  first: Csym 
+Picture -> Floatsym Floatsym Floatsym Floatsym ;
+  empty: NON_EMPTY
+  first: Floatsym 
+Picture -> Floatsym Floatsym Floatsym Floatsym rectanglesym ;
+  empty: NON_EMPTY
+  first: Floatsym 
+Picture -> Floatsym Floatsym Floatsym Floatsym circlesym ;
+  empty: NON_EMPTY
+  first: Floatsym 
+Picture -> Floatsym Floatsym Floatsym Floatsym arcsym Floatsym Floatsym ;
+  empty: NON_EMPTY
+  first: Floatsym 
+Picture -> Floatsym Floatsym Floatsym Floatsym arctopopsym Boolsym Boolsym ;
+  empty: NON_EMPTY
+  first: Floatsym 
+Picture -> Floatsym Floatsym Floatsym Floatsym linesym ;
+  empty: NON_EMPTY
+  first: Floatsym 
+Picture -> Floatsym Floatsym Floatsym Floatsym trianglesym eofillsym Direction ;
+  empty: NON_EMPTY
+  first: Floatsym 
+Picture -> Floatsym Floatsym Floatsym Floatsym openparsym Stringsym closeparsym Identsym ;
+  empty: NON_EMPTY
+  first: Floatsym 
+Picture -> Floatsym Floatsym Floatsym Floatsym ALT_ORspacesym_Picture_SEP_Direction_ENDORsym_NL ;
+  empty: NON_EMPTY
+  first: Floatsym 
+Picture -> Floatsym Floatsym Floatsym Floatsym ALT_ANDspacesym_Picture_SEP_Direction_ENDANDsym_NL ;
+  empty: NON_EMPTY
+  first: Floatsym 
+Picture -> Floatsym Floatsym Floatsym Floatsym ALTspacesym Picture Picture Boolsym ENDALTsym ;
+  empty: NON_EMPTY
+  first: Floatsym 
+Picture -> Floatsym Floatsym Floatsym Floatsym MORE_Picture ;
+  empty: NON_EMPTY
+  first: Floatsym 
+OPTMORE_Picture -> ;
+  empty: EMPTY
+  first: 
+OPTMORE_Picture -> Picture OPTMORE_Picture ;
+  empty: NON_EMPTY
+  first: hole_Picture Floatsym 
+ALT_ORspacesym_Picture_SEP_Direction_ENDORsym_NL -> ORspacesym Picture ;
+  empty: NON_EMPTY
+  first: ORspacesym 
+ALT_ORspacesym_Picture_SEP_Direction_ENDORsym_NL -> ORspacesym Picture Direction ENDORsym ALT_ORspacesym_Picture_SEP_Direction_ENDORsym_NL ;
+  empty: NON_EMPTY
+  first: ORspacesym 
+ALT_ANDspacesym_Picture_SEP_Direction_ENDANDsym_NL -> ANDspacesym Picture ;
+  empty: NON_EMPTY
+  first: ANDspacesym 
+ALT_ANDspacesym_Picture_SEP_Direction_ENDANDsym_NL -> ANDspacesym Picture Direction ENDANDsym ALT_ANDspacesym_Picture_SEP_Direction_ENDANDsym_NL ;
+  empty: NON_EMPTY
+  first: ANDspacesym 
+MORE_Picture -> Picture ;
+  empty: NON_EMPTY
+  first: hole_Picture Floatsym 
+MORE_Picture -> Picture MORE_Picture ;
+  empty: NON_EMPTY
+  first: hole_Picture Floatsym 
+
+STATES
+
+state 0
+  OPTMORE_Picture  ->  . Picture OPTMORE_Picture        followers: Pictures_EOF 
+  OPTMORE_Picture  ->  .        followers: Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym MORE_Picture       followers: hole_OPTMORE_Picture hole_Picture Floatsym Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym ALTspacesym Picture Picture Boolsym ENDALTsym      followers: hole_OPTMORE_Picture hole_Picture Floatsym Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym ALT_ANDspacesym_Picture_SEP_Direction_ENDANDsym_NL followers: hole_OPTMORE_Picture hole_Picture Floatsym Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym ALT_ORspacesym_Picture_SEP_Direction_ENDORsym_NL   followers: hole_OPTMORE_Picture hole_Picture Floatsym Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym openparsym Stringsym closeparsym Identsym  followers: hole_OPTMORE_Picture hole_Picture Floatsym Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym trianglesym eofillsym Direction    followers: hole_OPTMORE_Picture hole_Picture Floatsym Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym linesym    followers: hole_OPTMORE_Picture hole_Picture Floatsym Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym arctopopsym Boolsym Boolsym        followers: hole_OPTMORE_Picture hole_Picture Floatsym Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym arcsym Floatsym Floatsym   followers: hole_OPTMORE_Picture hole_Picture Floatsym Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym circlesym  followers: hole_OPTMORE_Picture hole_Picture Floatsym Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym rectanglesym       followers: hole_OPTMORE_Picture hole_Picture Floatsym Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym    followers: hole_OPTMORE_Picture hole_Picture Floatsym Pictures_EOF 
+transitions
+  Floatsym => state 1
+  Picture => state 46
+
+
+state 1
+  Picture  ->  Floatsym . Floatsym Floatsym Floatsym MORE_Picture       followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  Floatsym . Floatsym Floatsym Floatsym ALTspacesym Picture Picture Boolsym ENDALTsym      followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  Floatsym . Floatsym Floatsym Floatsym ALT_ANDspacesym_Picture_SEP_Direction_ENDANDsym_NL followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  Floatsym . Floatsym Floatsym Floatsym ALT_ORspacesym_Picture_SEP_Direction_ENDORsym_NL   followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  Floatsym . Floatsym Floatsym Floatsym openparsym Stringsym closeparsym Identsym  followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  Floatsym . Floatsym Floatsym Floatsym trianglesym eofillsym Direction    followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  Floatsym . Floatsym Floatsym Floatsym linesym    followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  Floatsym . Floatsym Floatsym Floatsym arctopopsym Boolsym Boolsym        followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  Floatsym . Floatsym Floatsym Floatsym arcsym Floatsym Floatsym   followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  Floatsym . Floatsym Floatsym Floatsym circlesym  followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  Floatsym . Floatsym Floatsym Floatsym rectanglesym       followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  Floatsym . Floatsym Floatsym Floatsym    followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+transitions
+  Floatsym => state 2
+
+
+state 2
+  Picture  ->  Floatsym Floatsym . Floatsym Floatsym MORE_Picture       followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  Floatsym Floatsym . Floatsym Floatsym ALTspacesym Picture Picture Boolsym ENDALTsym      followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  Floatsym Floatsym . Floatsym Floatsym ALT_ANDspacesym_Picture_SEP_Direction_ENDANDsym_NL followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  Floatsym Floatsym . Floatsym Floatsym ALT_ORspacesym_Picture_SEP_Direction_ENDORsym_NL   followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  Floatsym Floatsym . Floatsym Floatsym openparsym Stringsym closeparsym Identsym  followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  Floatsym Floatsym . Floatsym Floatsym trianglesym eofillsym Direction    followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  Floatsym Floatsym . Floatsym Floatsym linesym    followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  Floatsym Floatsym . Floatsym Floatsym arctopopsym Boolsym Boolsym        followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  Floatsym Floatsym . Floatsym Floatsym arcsym Floatsym Floatsym   followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  Floatsym Floatsym . Floatsym Floatsym circlesym  followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  Floatsym Floatsym . Floatsym Floatsym rectanglesym       followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  Floatsym Floatsym . Floatsym Floatsym    followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+transitions
+  Floatsym => state 3
+
+
+state 3
+  Picture  ->  Floatsym Floatsym Floatsym . Floatsym MORE_Picture       followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  Floatsym Floatsym Floatsym . Floatsym ALTspacesym Picture Picture Boolsym ENDALTsym      followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  Floatsym Floatsym Floatsym . Floatsym ALT_ANDspacesym_Picture_SEP_Direction_ENDANDsym_NL followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  Floatsym Floatsym Floatsym . Floatsym ALT_ORspacesym_Picture_SEP_Direction_ENDORsym_NL   followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  Floatsym Floatsym Floatsym . Floatsym openparsym Stringsym closeparsym Identsym  followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  Floatsym Floatsym Floatsym . Floatsym trianglesym eofillsym Direction    followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  Floatsym Floatsym Floatsym . Floatsym linesym    followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  Floatsym Floatsym Floatsym . Floatsym arctopopsym Boolsym Boolsym        followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  Floatsym Floatsym Floatsym . Floatsym arcsym Floatsym Floatsym   followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  Floatsym Floatsym Floatsym . Floatsym circlesym  followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  Floatsym Floatsym Floatsym . Floatsym rectanglesym       followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  Floatsym Floatsym Floatsym . Floatsym    followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+transitions
+  Floatsym => state 4
+
+
+state 4
+  Picture  ->  Floatsym Floatsym Floatsym Floatsym . MORE_Picture       followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  Floatsym Floatsym Floatsym Floatsym . ALTspacesym Picture Picture Boolsym ENDALTsym      followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  Floatsym Floatsym Floatsym Floatsym . ALT_ANDspacesym_Picture_SEP_Direction_ENDANDsym_NL followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  Floatsym Floatsym Floatsym Floatsym . ALT_ORspacesym_Picture_SEP_Direction_ENDORsym_NL   followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  Floatsym Floatsym Floatsym Floatsym . openparsym Stringsym closeparsym Identsym  followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  Floatsym Floatsym Floatsym Floatsym . trianglesym eofillsym Direction    followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  Floatsym Floatsym Floatsym Floatsym . linesym    followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  Floatsym Floatsym Floatsym Floatsym . arctopopsym Boolsym Boolsym        followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  Floatsym Floatsym Floatsym Floatsym . arcsym Floatsym Floatsym   followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  Floatsym Floatsym Floatsym Floatsym . circlesym  followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  Floatsym Floatsym Floatsym Floatsym . rectanglesym       followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  Floatsym Floatsym Floatsym Floatsym .    followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  MORE_Picture  ->  . Picture MORE_Picture      followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  MORE_Picture  ->  . Picture   followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  ALT_ANDspacesym_Picture_SEP_Direction_ENDANDsym_NL  ->  . ANDspacesym Picture Direction ENDANDsym ALT_ANDspacesym_Picture_SEP_Direction_ENDANDsym_NL  followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  ALT_ANDspacesym_Picture_SEP_Direction_ENDANDsym_NL  ->  . ANDspacesym Picture followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  ALT_ORspacesym_Picture_SEP_Direction_ENDORsym_NL  ->  . ORspacesym Picture Direction ENDORsym ALT_ORspacesym_Picture_SEP_Direction_ENDORsym_NL        followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  ALT_ORspacesym_Picture_SEP_Direction_ENDORsym_NL  ->  . ORspacesym Picture    followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym MORE_Picture       followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym ALTspacesym Picture Picture Boolsym ENDALTsym      followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym ALT_ANDspacesym_Picture_SEP_Direction_ENDANDsym_NL followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym ALT_ORspacesym_Picture_SEP_Direction_ENDORsym_NL   followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym openparsym Stringsym closeparsym Identsym  followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym trianglesym eofillsym Direction    followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym linesym    followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym arctopopsym Boolsym Boolsym        followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym arcsym Floatsym Floatsym   followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym circlesym  followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym rectanglesym       followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym    followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+transitions
+  Floatsym => state 1
+  ORspacesym => state 5
+  ANDspacesym => state 15
+  Picture => state 20
+  rectanglesym => state 22
+  circlesym => state 23
+  arcsym => state 24
+  arctopopsym => state 27
+  linesym => state 30
+  trianglesym => state 31
+  openparsym => state 34
+  ALT_ORspacesym_Picture_SEP_Direction_ENDORsym_NL => state 38
+  ALT_ANDspacesym_Picture_SEP_Direction_ENDANDsym_NL => state 39
+  ALTspacesym => state 40
+  MORE_Picture => state 45
+
+
+state 5
+  ALT_ORspacesym_Picture_SEP_Direction_ENDORsym_NL  ->  ORspacesym . Picture Direction ENDORsym ALT_ORspacesym_Picture_SEP_Direction_ENDORsym_NL        followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  ALT_ORspacesym_Picture_SEP_Direction_ENDORsym_NL  ->  ORspacesym . Picture    followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym MORE_Picture       followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym ALTspacesym Picture Picture Boolsym ENDALTsym      followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym ALT_ANDspacesym_Picture_SEP_Direction_ENDANDsym_NL followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym ALT_ORspacesym_Picture_SEP_Direction_ENDORsym_NL   followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym openparsym Stringsym closeparsym Identsym  followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym trianglesym eofillsym Direction    followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym linesym    followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym arctopopsym Boolsym Boolsym        followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym arcsym Floatsym Floatsym   followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym circlesym  followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym rectanglesym       followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym    followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+transitions
+  Floatsym => state 1
+  Picture => state 6
+
+
+state 6
+  ALT_ORspacesym_Picture_SEP_Direction_ENDORsym_NL  ->  ORspacesym Picture . Direction ENDORsym ALT_ORspacesym_Picture_SEP_Direction_ENDORsym_NL        followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  ALT_ORspacesym_Picture_SEP_Direction_ENDORsym_NL  ->  ORspacesym Picture .    followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Direction  ->  . Csym followers: ENDORsym 
+  Direction  ->  . Dsym followers: ENDORsym 
+  Direction  ->  . Usym followers: ENDORsym 
+  Direction  ->  . Rsym followers: ENDORsym 
+  Direction  ->  . Lsym followers: ENDORsym 
+transitions
+  Lsym => state 7
+  Rsym => state 8
+  Usym => state 9
+  Dsym => state 10
+  Csym => state 11
+  Direction => state 12
+
+
+state 7
+  Direction  ->  Lsym . followers: ENDORsym ENDANDsym hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+transitions
+
+
+state 8
+  Direction  ->  Rsym . followers: ENDORsym ENDANDsym hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+transitions
+
+
+state 9
+  Direction  ->  Usym . followers: ENDORsym ENDANDsym hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+transitions
+
+
+state 10
+  Direction  ->  Dsym . followers: ENDORsym ENDANDsym hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+transitions
+
+
+state 11
+  Direction  ->  Csym . followers: ENDORsym ENDANDsym hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+transitions
+
+
+state 12
+  ALT_ORspacesym_Picture_SEP_Direction_ENDORsym_NL  ->  ORspacesym Picture Direction . ENDORsym ALT_ORspacesym_Picture_SEP_Direction_ENDORsym_NL        followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+transitions
+  ENDORsym => state 13
+
+
+state 13
+  ALT_ORspacesym_Picture_SEP_Direction_ENDORsym_NL  ->  ORspacesym Picture Direction ENDORsym . ALT_ORspacesym_Picture_SEP_Direction_ENDORsym_NL        followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  ALT_ORspacesym_Picture_SEP_Direction_ENDORsym_NL  ->  . ORspacesym Picture Direction ENDORsym ALT_ORspacesym_Picture_SEP_Direction_ENDORsym_NL        followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  ALT_ORspacesym_Picture_SEP_Direction_ENDORsym_NL  ->  . ORspacesym Picture    followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+transitions
+  ORspacesym => state 5
+  ALT_ORspacesym_Picture_SEP_Direction_ENDORsym_NL => state 14
+
+
+state 14
+  ALT_ORspacesym_Picture_SEP_Direction_ENDORsym_NL  ->  ORspacesym Picture Direction ENDORsym ALT_ORspacesym_Picture_SEP_Direction_ENDORsym_NL .        followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+transitions
+
+
+state 15
+  ALT_ANDspacesym_Picture_SEP_Direction_ENDANDsym_NL  ->  ANDspacesym . Picture Direction ENDANDsym ALT_ANDspacesym_Picture_SEP_Direction_ENDANDsym_NL  followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  ALT_ANDspacesym_Picture_SEP_Direction_ENDANDsym_NL  ->  ANDspacesym . Picture followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym MORE_Picture       followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym ALTspacesym Picture Picture Boolsym ENDALTsym      followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym ALT_ANDspacesym_Picture_SEP_Direction_ENDANDsym_NL followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym ALT_ORspacesym_Picture_SEP_Direction_ENDORsym_NL   followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym openparsym Stringsym closeparsym Identsym  followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym trianglesym eofillsym Direction    followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym linesym    followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym arctopopsym Boolsym Boolsym        followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym arcsym Floatsym Floatsym   followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym circlesym  followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym rectanglesym       followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym    followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+transitions
+  Floatsym => state 1
+  Picture => state 16
+
+
+state 16
+  ALT_ANDspacesym_Picture_SEP_Direction_ENDANDsym_NL  ->  ANDspacesym Picture . Direction ENDANDsym ALT_ANDspacesym_Picture_SEP_Direction_ENDANDsym_NL  followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  ALT_ANDspacesym_Picture_SEP_Direction_ENDANDsym_NL  ->  ANDspacesym Picture . followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Direction  ->  . Csym followers: ENDANDsym 
+  Direction  ->  . Dsym followers: ENDANDsym 
+  Direction  ->  . Usym followers: ENDANDsym 
+  Direction  ->  . Rsym followers: ENDANDsym 
+  Direction  ->  . Lsym followers: ENDANDsym 
+transitions
+  Lsym => state 7
+  Rsym => state 8
+  Usym => state 9
+  Dsym => state 10
+  Csym => state 11
+  Direction => state 17
+
+
+state 17
+  ALT_ANDspacesym_Picture_SEP_Direction_ENDANDsym_NL  ->  ANDspacesym Picture Direction . ENDANDsym ALT_ANDspacesym_Picture_SEP_Direction_ENDANDsym_NL  followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+transitions
+  ENDANDsym => state 18
+
+
+state 18
+  ALT_ANDspacesym_Picture_SEP_Direction_ENDANDsym_NL  ->  ANDspacesym Picture Direction ENDANDsym . ALT_ANDspacesym_Picture_SEP_Direction_ENDANDsym_NL  followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  ALT_ANDspacesym_Picture_SEP_Direction_ENDANDsym_NL  ->  . ANDspacesym Picture Direction ENDANDsym ALT_ANDspacesym_Picture_SEP_Direction_ENDANDsym_NL  followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  ALT_ANDspacesym_Picture_SEP_Direction_ENDANDsym_NL  ->  . ANDspacesym Picture followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+transitions
+  ANDspacesym => state 15
+  ALT_ANDspacesym_Picture_SEP_Direction_ENDANDsym_NL => state 19
+
+
+state 19
+  ALT_ANDspacesym_Picture_SEP_Direction_ENDANDsym_NL  ->  ANDspacesym Picture Direction ENDANDsym ALT_ANDspacesym_Picture_SEP_Direction_ENDANDsym_NL .  followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+transitions
+
+
+state 20
+  MORE_Picture  ->  Picture . MORE_Picture      followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  MORE_Picture  ->  Picture .   followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  MORE_Picture  ->  . Picture MORE_Picture      followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  MORE_Picture  ->  . Picture   followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym MORE_Picture       followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym ALTspacesym Picture Picture Boolsym ENDALTsym      followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym ALT_ANDspacesym_Picture_SEP_Direction_ENDANDsym_NL followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym ALT_ORspacesym_Picture_SEP_Direction_ENDORsym_NL   followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym openparsym Stringsym closeparsym Identsym  followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym trianglesym eofillsym Direction    followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym linesym    followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym arctopopsym Boolsym Boolsym        followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym arcsym Floatsym Floatsym   followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym circlesym  followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym rectanglesym       followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym    followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+transitions
+  Floatsym => state 1
+  Picture => state 20
+  MORE_Picture => state 21
+
+
+state 21
+  MORE_Picture  ->  Picture MORE_Picture .      followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+transitions
+
+
+state 22
+  Picture  ->  Floatsym Floatsym Floatsym Floatsym rectanglesym .       followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+transitions
+
+
+state 23
+  Picture  ->  Floatsym Floatsym Floatsym Floatsym circlesym .  followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+transitions
+
+
+state 24
+  Picture  ->  Floatsym Floatsym Floatsym Floatsym arcsym . Floatsym Floatsym   followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+transitions
+  Floatsym => state 25
+
+
+state 25
+  Picture  ->  Floatsym Floatsym Floatsym Floatsym arcsym Floatsym . Floatsym   followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+transitions
+  Floatsym => state 26
+
+
+state 26
+  Picture  ->  Floatsym Floatsym Floatsym Floatsym arcsym Floatsym Floatsym .   followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+transitions
+
+
+state 27
+  Picture  ->  Floatsym Floatsym Floatsym Floatsym arctopopsym . Boolsym Boolsym        followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+transitions
+  Boolsym => state 28
+
+
+state 28
+  Picture  ->  Floatsym Floatsym Floatsym Floatsym arctopopsym Boolsym . Boolsym        followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+transitions
+  Boolsym => state 29
+
+
+state 29
+  Picture  ->  Floatsym Floatsym Floatsym Floatsym arctopopsym Boolsym Boolsym .        followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+transitions
+
+
+state 30
+  Picture  ->  Floatsym Floatsym Floatsym Floatsym linesym .    followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+transitions
+
+
+state 31
+  Picture  ->  Floatsym Floatsym Floatsym Floatsym trianglesym . eofillsym Direction    followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+transitions
+  eofillsym => state 32
+
+
+state 32
+  Picture  ->  Floatsym Floatsym Floatsym Floatsym trianglesym eofillsym . Direction    followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Direction  ->  . Csym followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Direction  ->  . Dsym followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Direction  ->  . Usym followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Direction  ->  . Rsym followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Direction  ->  . Lsym followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+transitions
+  Lsym => state 7
+  Rsym => state 8
+  Usym => state 9
+  Dsym => state 10
+  Csym => state 11
+  Direction => state 33
+
+
+state 33
+  Picture  ->  Floatsym Floatsym Floatsym Floatsym trianglesym eofillsym Direction .    followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+transitions
+
+
+state 34
+  Picture  ->  Floatsym Floatsym Floatsym Floatsym openparsym . Stringsym closeparsym Identsym  followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+transitions
+  Stringsym => state 35
+
+
+state 35
+  Picture  ->  Floatsym Floatsym Floatsym Floatsym openparsym Stringsym . closeparsym Identsym  followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+transitions
+  closeparsym => state 36
+
+
+state 36
+  Picture  ->  Floatsym Floatsym Floatsym Floatsym openparsym Stringsym closeparsym . Identsym  followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+transitions
+  Identsym => state 37
+
+
+state 37
+  Picture  ->  Floatsym Floatsym Floatsym Floatsym openparsym Stringsym closeparsym Identsym .  followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+transitions
+
+
+state 38
+  Picture  ->  Floatsym Floatsym Floatsym Floatsym ALT_ORspacesym_Picture_SEP_Direction_ENDORsym_NL .   followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+transitions
+
+
+state 39
+  Picture  ->  Floatsym Floatsym Floatsym Floatsym ALT_ANDspacesym_Picture_SEP_Direction_ENDANDsym_NL . followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+transitions
+
+
+state 40
+  Picture  ->  Floatsym Floatsym Floatsym Floatsym ALTspacesym . Picture Picture Boolsym ENDALTsym      followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym MORE_Picture       followers: hole_Picture Floatsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym ALTspacesym Picture Picture Boolsym ENDALTsym      followers: hole_Picture Floatsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym ALT_ANDspacesym_Picture_SEP_Direction_ENDANDsym_NL followers: hole_Picture Floatsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym ALT_ORspacesym_Picture_SEP_Direction_ENDORsym_NL   followers: hole_Picture Floatsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym openparsym Stringsym closeparsym Identsym  followers: hole_Picture Floatsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym trianglesym eofillsym Direction    followers: hole_Picture Floatsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym linesym    followers: hole_Picture Floatsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym arctopopsym Boolsym Boolsym        followers: hole_Picture Floatsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym arcsym Floatsym Floatsym   followers: hole_Picture Floatsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym circlesym  followers: hole_Picture Floatsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym rectanglesym       followers: hole_Picture Floatsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym    followers: hole_Picture Floatsym 
+transitions
+  Floatsym => state 1
+  Picture => state 41
+
+
+state 41
+  Picture  ->  Floatsym Floatsym Floatsym Floatsym ALTspacesym Picture . Picture Boolsym ENDALTsym      followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym MORE_Picture       followers: Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym ALTspacesym Picture Picture Boolsym ENDALTsym      followers: Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym ALT_ANDspacesym_Picture_SEP_Direction_ENDANDsym_NL followers: Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym ALT_ORspacesym_Picture_SEP_Direction_ENDORsym_NL   followers: Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym openparsym Stringsym closeparsym Identsym  followers: Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym trianglesym eofillsym Direction    followers: Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym linesym    followers: Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym arctopopsym Boolsym Boolsym        followers: Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym arcsym Floatsym Floatsym   followers: Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym circlesym  followers: Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym rectanglesym       followers: Boolsym 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym    followers: Boolsym 
+transitions
+  Floatsym => state 1
+  Picture => state 42
+
+
+state 42
+  Picture  ->  Floatsym Floatsym Floatsym Floatsym ALTspacesym Picture Picture . Boolsym ENDALTsym      followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+transitions
+  Boolsym => state 43
+
+
+state 43
+  Picture  ->  Floatsym Floatsym Floatsym Floatsym ALTspacesym Picture Picture Boolsym . ENDALTsym      followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+transitions
+  ENDALTsym => state 44
+
+
+state 44
+  Picture  ->  Floatsym Floatsym Floatsym Floatsym ALTspacesym Picture Picture Boolsym ENDALTsym .      followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+transitions
+
+
+state 45
+  Picture  ->  Floatsym Floatsym Floatsym Floatsym MORE_Picture .       followers: hole_OPTMORE_Picture Pictures_EOF hole_MORE_Picture hole_Picture Floatsym hole_Direction Csym Dsym Usym Rsym Lsym Boolsym 
+transitions
+
+
+state 46
+  OPTMORE_Picture  ->  Picture . OPTMORE_Picture        followers: Pictures_EOF 
+  OPTMORE_Picture  ->  . Picture OPTMORE_Picture        followers: Pictures_EOF 
+  OPTMORE_Picture  ->  .        followers: Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym MORE_Picture       followers: hole_OPTMORE_Picture hole_Picture Floatsym Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym ALTspacesym Picture Picture Boolsym ENDALTsym      followers: hole_OPTMORE_Picture hole_Picture Floatsym Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym ALT_ANDspacesym_Picture_SEP_Direction_ENDANDsym_NL followers: hole_OPTMORE_Picture hole_Picture Floatsym Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym ALT_ORspacesym_Picture_SEP_Direction_ENDORsym_NL   followers: hole_OPTMORE_Picture hole_Picture Floatsym Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym openparsym Stringsym closeparsym Identsym  followers: hole_OPTMORE_Picture hole_Picture Floatsym Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym trianglesym eofillsym Direction    followers: hole_OPTMORE_Picture hole_Picture Floatsym Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym linesym    followers: hole_OPTMORE_Picture hole_Picture Floatsym Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym arctopopsym Boolsym Boolsym        followers: hole_OPTMORE_Picture hole_Picture Floatsym Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym arcsym Floatsym Floatsym   followers: hole_OPTMORE_Picture hole_Picture Floatsym Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym circlesym  followers: hole_OPTMORE_Picture hole_Picture Floatsym Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym rectanglesym       followers: hole_OPTMORE_Picture hole_Picture Floatsym Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym    followers: hole_OPTMORE_Picture hole_Picture Floatsym Pictures_EOF 
+transitions
+  Floatsym => state 1
+  Picture => state 46
+  OPTMORE_Picture => state 47
+
+
+state 47
+  OPTMORE_Picture  ->  Picture OPTMORE_Picture .        followers: Pictures_EOF 
+transitions
+
+
+state 48
+  Pictures  ->  . OPTMORE_Picture       followers: Pictures_EOF 
+  OPTMORE_Picture  ->  . Picture OPTMORE_Picture        followers: Pictures_EOF 
+  OPTMORE_Picture  ->  .        followers: Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym MORE_Picture       followers: hole_OPTMORE_Picture hole_Picture Floatsym Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym ALTspacesym Picture Picture Boolsym ENDALTsym      followers: hole_OPTMORE_Picture hole_Picture Floatsym Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym ALT_ANDspacesym_Picture_SEP_Direction_ENDANDsym_NL followers: hole_OPTMORE_Picture hole_Picture Floatsym Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym ALT_ORspacesym_Picture_SEP_Direction_ENDORsym_NL   followers: hole_OPTMORE_Picture hole_Picture Floatsym Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym openparsym Stringsym closeparsym Identsym  followers: hole_OPTMORE_Picture hole_Picture Floatsym Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym trianglesym eofillsym Direction    followers: hole_OPTMORE_Picture hole_Picture Floatsym Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym linesym    followers: hole_OPTMORE_Picture hole_Picture Floatsym Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym arctopopsym Boolsym Boolsym        followers: hole_OPTMORE_Picture hole_Picture Floatsym Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym arcsym Floatsym Floatsym   followers: hole_OPTMORE_Picture hole_Picture Floatsym Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym circlesym  followers: hole_OPTMORE_Picture hole_Picture Floatsym Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym rectanglesym       followers: hole_OPTMORE_Picture hole_Picture Floatsym Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym    followers: hole_OPTMORE_Picture hole_Picture Floatsym Pictures_EOF 
+transitions
+  Floatsym => state 1
+  Picture => state 46
+  OPTMORE_Picture => state 49
+
+
+state 49
+  Pictures  ->  OPTMORE_Picture .       followers: Pictures_EOF 
+transitions
+
+
+state 50
+  Direction  ->  . Csym followers: Pictures_EOF 
+  Direction  ->  . Dsym followers: Pictures_EOF 
+  Direction  ->  . Usym followers: Pictures_EOF 
+  Direction  ->  . Rsym followers: Pictures_EOF 
+  Direction  ->  . Lsym followers: Pictures_EOF 
+transitions
+  Lsym => state 7
+  Rsym => state 8
+  Usym => state 9
+  Dsym => state 10
+  Csym => state 11
+
+
+state 51
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym MORE_Picture       followers: Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym ALTspacesym Picture Picture Boolsym ENDALTsym      followers: Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym ALT_ANDspacesym_Picture_SEP_Direction_ENDANDsym_NL followers: Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym ALT_ORspacesym_Picture_SEP_Direction_ENDORsym_NL   followers: Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym openparsym Stringsym closeparsym Identsym  followers: Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym trianglesym eofillsym Direction    followers: Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym linesym    followers: Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym arctopopsym Boolsym Boolsym        followers: Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym arcsym Floatsym Floatsym   followers: Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym circlesym  followers: Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym rectanglesym       followers: Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym    followers: Pictures_EOF 
+transitions
+  Floatsym => state 1
+
+
+state 52
+  MORE_Picture  ->  . Picture MORE_Picture      followers: Pictures_EOF 
+  MORE_Picture  ->  . Picture   followers: Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym MORE_Picture       followers: hole_MORE_Picture hole_Picture Floatsym Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym ALTspacesym Picture Picture Boolsym ENDALTsym      followers: hole_MORE_Picture hole_Picture Floatsym Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym ALT_ANDspacesym_Picture_SEP_Direction_ENDANDsym_NL followers: hole_MORE_Picture hole_Picture Floatsym Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym ALT_ORspacesym_Picture_SEP_Direction_ENDORsym_NL   followers: hole_MORE_Picture hole_Picture Floatsym Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym openparsym Stringsym closeparsym Identsym  followers: hole_MORE_Picture hole_Picture Floatsym Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym trianglesym eofillsym Direction    followers: hole_MORE_Picture hole_Picture Floatsym Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym linesym    followers: hole_MORE_Picture hole_Picture Floatsym Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym arctopopsym Boolsym Boolsym        followers: hole_MORE_Picture hole_Picture Floatsym Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym arcsym Floatsym Floatsym   followers: hole_MORE_Picture hole_Picture Floatsym Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym circlesym  followers: hole_MORE_Picture hole_Picture Floatsym Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym rectanglesym       followers: hole_MORE_Picture hole_Picture Floatsym Pictures_EOF 
+  Picture  ->  . Floatsym Floatsym Floatsym Floatsym    followers: hole_MORE_Picture hole_Picture Floatsym Pictures_EOF 
+transitions
+  Floatsym => state 1
+  Picture => state 20
+
+

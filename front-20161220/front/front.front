@@ -1,0 +1,340 @@
+/*
+ * Copyright (C) 2000-2005 Philips Electronics N.V.
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * 
+ */
+USE Types, grammar, cpp
+
+front ::= 		uses : [ "USE" SP IdentList NL NL ]
+                       	namespaces :  [ "NAMESPACE" SP NameSpaceList NL NL ]
+                        imports : {Import}
+                       	rules : [NonTerminals]
+			CHECKS
+			  IF front_rules(me) == NULL
+			    THEN "Rule(s) expected" ;
+
+Import ::=              "FROM" SP grammar: Ident ":" NL nts: ImportedNonTerminals NL;
+ImportedNonTerminals = ImportedNonTerminal // ",";
+ImportedNonTerminal ::=  id: DEFINING Ident [ ":" type: Ident ]
+                         grammar: Ident = NULL;
+
+NonTerminals =		rules : { NonTerminal }+ ;
+
+NonTerminal ::= 	SCOPE 
+                       	is_root : [ "ROOT" SP ]
+			scan  : [ ScanInfo ]
+			id    : DEFINING Ident
+		       	super : [ SP Super SP ] NL
+			meemo : [ "MEMO" ]
+			enumerate : [ "ENUM" ]
+                        skip : [ "SKIP" ]     %% skip_children by default
+                       	SP SP alias : Defines
+		       	TAB rhs : Rhs 
+		       	SP ";" NL NL NL 
+			alt : Alternative 
+			    = Create_LabeledAlt (NonTerminal_src_info(me), 
+			                       NonTerminal_id(me), 
+					       NonTerminal_meemo(me), 
+					       NonTerminal_skip(me), 
+					       Create_Ident("="), 
+					       NonTerminal_rhs(me))		
+			reachable : Bool = FALSE
+		       	;
+			
+Super ::= 		< SubType ::= x : '<' TYPE Ident %% Declares a sub-type
+                        | NoType  ::= ':'		 %% Does not declare a new type
+			>
+			id : Ident
+			super : APPLIED NonTerminal FIELD id
+			CHECKS
+			  IF Super_super(me)==NULL && !TermType(Super_id(me))
+			     THEN "Super-type not declared" ;
+
+Rhs ::= 		{ sc : Scoping NL NL } NL 
+		       	syms1 : Symbol1
+                       	[ Choices ]
+		       	checklist : [ "CHECKS" NL {Check} ]
+			fields : List_field = NULL
+		       	;
+
+Scoping ::=		< NewScope   ::= "SCOPE"      
+                        | OpenScope  ::= "OPENSCOPE" 
+			| CloseScope ::= "CLOSESCOPE"
+			> ;
+			
+Choices = 		x : "<" TYPE Ident ChoiceList y : ">" TYPE Ident NL 
+                        syms2 : Symbol1 ;
+
+ChoiceList = 		alts : Alternative // ops : Or ;
+
+Alternative        
+  ::= sp : SP
+      < LabeledAlt ::=
+       	 id : DEFINING Ident SCOPE front_Scope_next(Alternative_scope(me))
+      	 meemo : ["MEMO"]
+         skip : ["SKIP"]
+	 SP def : "::=" NAME defines TYPE Ident NL
+	 TAB rhs : Rhs
+	 fields : List_field = NULL
+      | UnLabeledAlt ::= syms : Symbol1 NL
+      > 
+      type : struct_type = NULL
+      re : grammar_RegExpr = NULL
+      ;
+
+Symbol              
+  ::= < LabeledSym ::= 	id : Ident SP ":" SP
+		        sym : Symbol2 NL NL
+      | me : Symbol2
+      > 
+      fields : List_field = NULL
+      empty : Bool = FALSE
+      ;
+
+Symbol1 : Symbol ::=	< AltSymbol
+                        | SymbolSeq
+			> ;
+
+AltSymbol < Symbol ::=  syms1 : SymbolSeq SP alt : Alternator SP syms : {Symbol}+ ;
+
+SymbolSeq < Symbol ::=	[ ((symbols : Symbol | my_fields : Field)) // ands : And ] ;
+%%SymbolSeq < Symbol ::= { symbols : Symbol | my_fields : Field } ;
+
+And 
+  ::= < AndTranspose  ::= "\\ " NAME Newline 
+      | AndLeft       ::= "\\<" NAME LeftAnd 
+      | AndRight      ::= "\\>" NAME RightAnd
+      | AndCenter     ::=
+      > ;
+
+Or
+  ::= < OrCenter     ::= "|" 
+      | OrLeft       ::= "|<"  NAME LeftOr 
+      | OrRight      ::= "|>"  NAME RightOr
+      | OrTranspose  ::= "\\|" NAME Xor
+      > ;
+
+Symbol2 < Symbol
+  ::= < CompareSym ::= sym : SimpleSymbol SP
+                       "COMPARE" SP comp : Ident 
+      | me : SimpleSymbol
+      > ;
+
+SimpleSymbol < Symbol
+  ::=   < DefiningSym
+	| IdSym 
+	| AppliedSym ::= "APPLIED" SP 
+			  nt_id : Ident SP
+		          nt  : APPLIED NonTerminal FIELD nt_id
+		          alt : APPLIED Alternative FIELD nt_id
+			  field : NameOrField SP
+			  name : Ident 
+			  sc : [ SP ScopeExpr ]
+		          warn : [ SP "WARNING" ]
+			  SP
+	| StringSymbol ::= string : String SP
+		          [ "NAME" SP n : Ident ]
+		 	  type : OptType sp : SP
+	| CharSymbol ::=  chr : Char TYPE String
+		          type : OptType sp : SP
+	| KeywordSymbol ::= keyword : Keyword TYPE String
+		          type : OptType sp :	SP
+	| CompoundSym
+          ::= < OnceSymbol    ::= "((" NAME open2sym 
+	                               SP Alternatives 
+				  ")" x : ")"
+	      | OptSymbol     ::= "[" SP Alternatives"]" in_line : [ "!" ]
+	      | OptMoreSymbol ::= "{" SP Alternatives "}" 
+	      | MoreSymbol    ::= "{" SP Alternatives "}" more : "+" TYPE Ident
+	      >
+	      sp : SP
+	| EmptySym ::= 	empty   : "EMPTY" sp : SP
+	| LayoutString ::= "\\" layout : StringOrKeyword sp : SP
+     %% | ForceLayout  ::= e : '!' TYPE Ident layout : StringOrKeyword sp : SP
+	| LayoutAction ::= "LAYOUT" SP layout : Expr sp : SP
+	>
+;
+
+IdSym < Symbol ::= 	id : Ident 
+		        type : OptType SP
+			nt : APPLIED NonTerminal FIELD id
+			import : APPLIED ImportedNonTerminal FIELD id
+			;
+
+Alternatives = 		sym : Symbol1 // ops : Or SP ;
+		  
+OptType = 		type : [ SP "TYPE" SP type : Type ] ;
+
+DefiningSym < Symbol ::= forward : [ "FORWARD" ] SP
+                         def : Define SP
+                         id : Defining_id 
+                     	 [ "NAMESPACE" SP
+                     	   ns : APPLIED NameSpace NAME Ident 
+		     	 ] 
+			 sc : [ ScopeExpr ]
+			 ;
+
+ScopeExpr =		"SCOPE" SP sc : Expr ;
+
+Defining_id ::=		< DefId   ::= id : IdSym
+			| DefExpr ::= "(" e : Expr ")"
+			> ;
+			
+Define		    ::= < Defining    ::= "DEFINING"    NL
+                        | Redefining  ::= "REDEFINING"  NL
+			| Overloading ::= "OVERLOADING" NL
+			> ;
+
+Field ::= 		id : Ident SP ":"
+                       	SP type : Type 
+		       	SP assign : "=" TYPE Ident 
+			SP when :  FieldInits
+			traverse   : [ SP "TRAVERSE" ]
+			clear      : [ SP "CLEAR" ]
+			dont_clear : [ SP "DONT_CLEAR" ]
+			NL ;
+FieldInits  = FieldInit // ",";
+FieldInit ::=		< WhenCreate   ::= c: [ "CREATE" ]
+			| WhenScope    ::= "SCOPE" 
+			| WhenDefining ::= "DEFINING" 
+			| WhenApplied  ::= "APPLIED" 
+			| WhenChecks   ::= "CHECKS" 
+			> SP
+                        expr: Expr;
+
+Type ::= 		id   : Ident
+                        args : [ "(" TypeList ")" ]
+                        nt   : APPLIED NonTerminal FIELD id
+                        import: APPLIED ImportedNonTerminal FIELD id
+                        alt  : APPLIED LabeledAlt FIELD id;
+
+Expr ::= < BinExpr ::=	args : MonExpr1 // SP ops : Oper > ;
+
+MonExpr1 < Expr ::= < MonExpr ::= ops : { Oper } arg : SimpleExpr > ;
+
+SimpleExpr < Expr
+  ::= < IdentExpr ::= 	id : Ident
+      | QualExpr ::= 	prefix : SimpleExpr "."  id : Ident
+      | IntExpr ::= 	i : Int
+      | BoolExpr ::= 	b : Bool
+      %% | ParExpr ::= 	"(" expr : Expr ")"
+      | StringExpr ::= 	string : StringOrKeyword
+      | NilExpr ::= 	x : "NULL"
+      | CallExpr ::= 	func : SimpleExpr SP "(" args : [ ExprList ] x : ")"
+      > ;
+
+StringOrKeyword =	< s : String 
+			| s : Keyword TYPE String 
+			| s : Char    TYPE String 
+			> ;
+
+Check ::= 		SP SP
+			"IF" SP cond : Expr SP "THEN" 
+                    	warn    : [SP "WARNING"] 
+		    	message : { SP MonExpr1 }+ NL ;
+
+NameSpaceList = 	namespace : NameSpace // "," SP ;
+
+ExprList = 		exprs : Expr // "," SP ;
+
+IdentList = 		ids : Ident // "," SP ;
+
+TypeList = 		types : Type // "," SP ;
+
+Alternator ::= 		< "\\\\" NAME alternate_left
+     			| "//" NAME alternate_right
+     			> ;
+
+ScanInfo ::=		"SCAN" 
+			type : OptType 
+			comment  : [ SP "COMMENT" ]
+		     %% shortest : [ SP "SHORTEST" ]
+			NL
+			;
+			
+Defines ::= 		< PlainDef ::= id : "::=" NAME defines TYPE Ident 
+                        | MacroDef ::= id : "=" TYPE Ident 
+			> ;
+
+NameSpace ::= 		id : DEFINING Ident ; 
+
+Oper =	 		< op : "~"  TYPE Ident 
+		        | op : "!"  TYPE Ident 
+			| op : "==" TYPE Ident 
+			| op : "!=" TYPE Ident 
+		     %% | op : "<"  TYPE Ident 
+			| op : "<=" TYPE Ident 
+		     %% | op : ">"  TYPE Ident 
+			| op : ">=" TYPE Ident 
+			| op : "&"  TYPE Ident 
+			| op : "&&" TYPE Ident 
+		     %% | op : "|"  TYPE Ident 
+			| op : "||" TYPE Ident 
+			| op : "^"  TYPE Ident 
+			| op : "+"  TYPE Ident 
+			| op : "-"  TYPE Ident 
+			| op : "*"  TYPE Ident 
+			| op : "/"  TYPE Ident 
+			| op : "%"  TYPE Ident 
+			| op : "<<" TYPE Ident 
+			| op : ">>" TYPE Ident 
+			>
+			SP ;
+
+Opers = 		{ ops : Oper } ;
+
+NameOrField ENUM ::=	< AppliedName ::= "NAME" | AppliedField ::= "FIELD" > ;
+
+
+/******* Terminal symbols *******/
+
+SCAN
+non_digit =		< Non_digit | '$' > ;
+
+SCAN TYPE Bool
+Bool    ::= 		< "FALSE" | "TRUE" > ;
+
+SCAN TYPE Ident
+Ident   ::= 		non_digit {Alphanum} ;
+
+SCAN TYPE Int
+Int     ::= 		{Digit}+ ;
+
+SCAN COMMENT comment1 	::= "/" "*" { Any } "*" "/" ;
+SCAN COMMENT comment2 	::= "(" "*" { Any } "*" ")" ;
+SCAN COMMENT comment3 	::= "%" "%" { Any } Feed ;
+
+SCAN TYPE String
+Keyword ::= 		< Double_quote Non_digit {Alphanum} Double_quote 
+                        | Quote  Non_digit {Alphanum} Quote
+			> ;
+
+SCAN TYPE String
+Char ::= 		< "\'" Any "\'" 
+			| "\"" Any "\""
+			> ;
+
+SCAN TYPE String
+String  ::= 		"\"" { NOT_DQ_BS_CR | Bs Esc | Bs ReChar } "\"" ;
+
+dummy ::=		x : List(List(Symbol)) = NULL ;
+
+/*********/
+
+NL  = \"\n" ;
+TAB = \"\t" ;
+SP  = \" " ;
+

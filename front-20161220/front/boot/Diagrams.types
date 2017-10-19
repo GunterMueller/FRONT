@@ -1,0 +1,8 @@
+#include "Basic.types"
+
+Diagrams_Diagrams	"Diagrams_Diagrams"	"Diagrams"	"NULL"
+Diagrams_Picture	"Diagrams_Picture"	"Picture"	"NULL"
+Diagrams_Scope	"Diagrams_Scope"	"Scope"	"NULL"
+List_Diagrams_Direction	"List_Diagrams_Direction"	"List_Direction"	"NULL"
+List_Diagrams_Picture	"List_Diagrams_Picture"	"List_Picture"	"NULL"
+Diagrams_Direction	"Diagrams_Direction"	"Direction"	"Left"

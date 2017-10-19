@@ -1,0 +1,45 @@
+/*
+ * Copyright (C) 2000-2005 Philips Electronics N.V.
+ * 
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+#ifndef _BASIC_TYPES
+#define _BASIC_TYPES
+
+#ifndef DEP_DEFINED
+dep                          "Pointer"                      "D"                            "NULL"
+#endif
+int                          "Int"                          "I"                            "0"
+String                       "String"                       "String"                       "NULL"
+Ident                        "Ident"                        "Ident"                        "NULL"
+Bool                         "Bool"                         "Bool"                         "FALSE"
+Float                        "Float"                        "Float"                        "0.0"
+Int                          "Int"                          "I"                            "0"
+Oct                          "Int"                          "I"                            "0"
+Hex                          "Int"                          "I"                            "0"
+Char                         "Char"                         "Char"                            "0"
+
+List_Ident		     "List_Ident"		    "List_Ident"		   "NULL"
+List_Int		     "List_Int"			    "List_Int"			   "NULL"
+List_String		     "List_String"		    "List_String"		   "NULL"
+List_Bool		     "List_Bool"		    "List_Bool"			   "NULL"
+List_Char		     "List_Char"		    "List_Char"			   "NULL"
+
+Optional_Int		     "Optional_Int"		    "Optional_Int"			   "NULL"
+Optional_Bool		     "Optional_Bool"		    "Optional_Bool"			   "NULL"
+Optional_Char		     "Optional_Char"		    "Optional_Char"			   "NULL"
+
+#endif /* _BASIC_TYPES */
+

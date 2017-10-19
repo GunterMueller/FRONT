@@ -1,0 +1,462 @@
+/*
+ * Copyright (C) 2000-2005 Philips Electronics N.V.
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * 
+ */
+/* Mapping of a front grammar onto struct_type's
+*/
+
+TYPES
+
+#include "front.types"
+#include "Types.types"
+
+MACHINE DESCRIPTION front_md
+
+#include "front.md"
+#include "Types.md"
+
+EXTERNAL
+
+extern Alternative 	NonTerminal_alt (NonTerminal);
+extern Ident 		Create_Ident (String);
+extern String		Ident_name (Ident);
+extern NonTerminal 	IdSym_nt (Symbol);
+extern ImportedNonTerminal IdSym_import (Symbol);
+extern Ident            ImportedNonTerminal_grammar (ImportedNonTerminal);
+extern Rhs 		NonTerminal_rhs (NonTerminal);
+extern String		Front_StrAllocf (String,String,String);
+extern Int		List_Ident_size (List_Ident);
+extern Int		List_TypeName_size (List_TypeName);
+extern field		add_create (field, String);
+extern field		add_expr (field, List_FieldInit, Bool, Bool, Bool);
+extern field		rename_field (field, Ident);
+extern field		retype_field (field, List_TypeName);
+extern field		add_field_defining (field, Symbol);
+extern field		add_field_applied  (field, Symbol, Ident);
+extern field		field_set_grammar  (field, Ident);
+extern struct_type	set_scope (struct_type, Alternative);
+extern String		field_expr (field);
+extern Bool		empty_struct (struct_type);
+extern struct_type	set_checks (struct_type, List_Check);
+extern struct_type	set_type_props (struct_type, struct_type);
+extern List_Check	Rhs_checklist (Rhs);
+extern List_Check	struct_type_checks (struct_type);
+extern List_struct_type	struct_type_sub_types (struct_type);
+extern List_field	set_sym_fields (Symbol, List_field);
+extern List_field	set_rhs_fields (Rhs,    List_field);
+extern List_field	add_compare (List_field, Ident);
+extern Bool		is_macro (NonTerminal);
+extern Bool		no_nt_type (NonTerminal);
+extern Ident		user ();
+extern Ident		struct_type_name (struct_type);
+extern Ident		prefix_type (Ident);
+extern Bool		TermType (Ident);
+extern Bool		applied_overloaded (Symbol);
+extern NonTerminal	Super_super (Super);
+extern Bool		is_list_field (field);
+extern NonTerminal      Type_nt(Type);
+extern Alternative      Type_alt(Type);
+extern TypeName         make_TypeName(Ident, Ident);
+extern Ident            abbreviate_id(String, Ident, String);
+extern Ident		bind_id(field);
+extern Ident            Rootid;
+
+FUNCTIONS
+
+/* Find id in l */
+Bool contains_type
+  (l = List_struct_type(hd=struct_type(_,_,_,sub,_,_), tl), Ident id)
+  -> struct_type_name(hd) == id ||
+     contains_type (sub, id) ||
+     contains_type (tl, id);
+
+/* Insert the types in t into l under type super */
+List_struct_type insert_types 
+  (List_struct_type l, List_struct_type t=hd::tl, Ident super)
+  -> insert_types (insert_type (l, hd, super), tl, super),
+  
+  (List_struct_type l, List_struct_type t=NULL, Ident super)
+  -> l;
+  
+/* Insert the type t into l under type super */
+List_struct_type insert_type 
+  (List_struct_type l, struct_type t, Ident super)
+  | l==NULL
+  -> t :: l,
+  
+  (List_struct_type l=hd::tl, struct_type t, Ident super)
+  | super==NULL
+  -> hd::insert_type(tl, t, super),
+  
+  (l = List_struct_type(t0=struct_type(_, u, f1, sub, f2, id), tl), 
+   struct_type t, Ident super)
+  | tg == super
+    || contains_type (sub, super)
+  -> t2 :: tl
+  WHERE struct_type t1 = struct_type (tg, u, f1, insert_type(sub, t, super),f2,id)
+        struct_type t2 = set_type_props (t1, t0)
+	Ident tg = struct_type_name(t0),
+  
+  (List_struct_type l=hd::tl, struct_type t, Ident super)
+  -> hd::insert_type(tl, t, super) ;
+
+/* Compile NonTerminal into struct_types */
+
+List_struct_type map_nonterm 
+  (nt=NonTerminal (_,_,id,_,_,_,_,PlainDef(_),_), 
+   List_struct_type l) 
+  | contains_type (l, id) -> l,
+  
+  (nt=NonTerminal (_,scan,_,s,_,_,_,PlainDef(_),_), 
+   List_struct_type l) 
+  | scan == NULL && !no_nt_type(nt)
+  -> insert_type (l2, t, super)
+  WHERE Alternative alt = NonTerminal_alt(nt)
+        struct_type t = set_scope (alt_type (alt), alt)
+	Ident super = get_super(s)
+	List_struct_type l2 = map_nonterm (super_nt(s), l),
+  
+  (nt=NonTerminal (_,scan,_,s,_,_,_,PlainDef(_),_), 
+   List_struct_type l) 
+  | scan == NULL && (!no_nt_type(nt) || sub != NULL)
+  -> insert_types (l2, sub, super)
+  WHERE Alternative alt = NonTerminal_alt(nt)
+        struct_type t = alt_type (alt)
+	List_struct_type sub = struct_type_sub_types(t)
+	Ident super = get_super(s)
+	List_struct_type l2 = map_nonterm (super_nt(s), l),
+  
+  (NonTerminal nt, List_struct_type l)
+  | nt != NULL
+  -> l
+  WHERE Alternative alt = NonTerminal_alt(nt)
+        struct_type t = alt_type (alt)  /* required for side-effect */,
+
+  (NonTerminal nt, List_struct_type l) -> l;
+  
+/* Compile Rhs into struct_types */
+
+List_struct_type sub_types 
+  (r=Rhs(_,_,_,alts,_,_,_,_)) 
+  -> alt_sub_types (alts) ;
+
+/* Alternative => struct_type */
+
+struct_type alt_type
+  (a = LabeledAlt(id,_,_,_,rhs)) 
+  -> set_checks (struct_type (id, user(), f1, sub, f2, id), Rhs_checklist(rhs))
+  WHERE List_struct_type sub = sub_types (rhs)
+	List_field f1 = rhs_fields (rhs, NULL,id,TRUE)
+	List_field f2 = rhs_fields (rhs, NULL,id,FALSE),
+  (a = UnLabeledAlt(syms))
+  -> struct_type (NULL, user(), f,  NULL, NULL, NULL)
+  WHERE List_field f = sym_fields (syms, NULL, NULL);
+
+/* Alternatives => struct_types */
+List_struct_type alt_sub_types 
+  (List_Alternative l = hd :: tl) | t != NULL
+  -> t :: alt_sub_types (tl)
+  WHERE struct_type t = set_scope (alt_type (hd), hd),
+
+  (List_Alternative l = _ :: tl) 
+  -> alt_sub_types (tl) ;
+
+/* Alternative => fields */
+List_field alt_fields
+  (a = LabeledAlt(id,_,_,_,rhs), Ident l, Ident alt) 
+  -> append_fields (f1, append_fields (sub, f2))
+  WHERE List_field sub = sub_fields (rhs, l, alt)
+	List_field f1 = rhs_fields (rhs, NULL,id,TRUE)
+	List_field f2 = rhs_fields (rhs, NULL,id,FALSE),
+  (a = UnLabeledAlt(syms), Ident l, Ident alt)
+  -> sym_fields (syms, l, alt);
+
+/* Alternatives => fields */
+List_field alt_sub_fields
+  (l = List_Alternative(hd=UnLabeledAlt(_), tl), Ident lab, Ident alt) 
+  | tl != NULL -> alt_sub_fields (tl, lab, alt)
+  WHERE List_field t = alt_fields (hd, lab, alt),
+  
+  (List_Alternative l = hd :: tl, Ident lab, Ident alt) | t != NULL
+  -> append_fields (t, alt_sub_fields (tl, lab, alt))
+  WHERE List_field t = alt_fields (hd, lab, alt),
+
+  (List_Alternative l = hd :: tl, Ident lab, Ident alt) 
+  -> alt_sub_fields (tl, lab, alt)
+  WHERE List_field t = alt_fields (hd, lab, alt);
+
+/* Rhs => fields */
+List_field sub_fields
+  (r=Rhs(_,_,_,alts,_,_,_,_), Ident l, Ident alt) 
+  -> alt_sub_fields (alts, l, alt) ;
+
+/* Get the super-type of a non-terminal */
+Ident get_super (s=SubType (_, id)) -> id,
+                (s=NoType     (id)) -> id ;
+
+NonTerminal super_nt (s=SubType (_,_)) -> Super_super(s);
+
+/* Get the type of a non-terminal */
+Ident type_id 
+  (nt = NonTerminal (_,ScanInfo(Type(id,_),_),_,_,_,_,_,_,_), Ident id2) 
+    -> id,
+  (nt = NonTerminal (_,_,id,s,_,_,_,_,_), Ident id2) 
+    -> IF super != NULL THEN super ELSE id FI
+    WHERE Ident super = get_super(s),
+  (NonTerminal nt, Ident id2) 
+    -> id2;
+
+/* Get the type of an imported non-terminal */
+Ident imported_type_id
+  (imp = ImportedNonTerminal (_,type)) | type!=NULL -> type,
+  (imp = ImportedNonTerminal (id,_))   -> id;
+
+/* Create a field with type t and name id */
+field make_field (Ident t, Ident id, Ident gram)
+-> field_set_grammar (field (make_TypeName(t, prefix_type(t))::NULL, id), gram) ;
+
+/* Create a field with type t and name id */
+field make_bind_field (Ident t, Ident id)
+-> add_expr (field_set_grammar (field (make_TypeName(t, prefix_type(t))::NULL, id),
+                                Rootid),
+             NULL, FALSE, FALSE, TRUE);
+
+
+/*********************/
+
+/* Some list append functions */
+List_field append_fields
+  (List_field l, List_field m=NULL) -> l,
+  (List_field l=NULL, List_field m) -> m,
+  (List_field l=hd::tl, List_field m) -> hd :: append_fields(tl,m);
+  
+List_TypeName append_typenames
+  (List_TypeName l, List_TypeName m=NULL) -> l,
+  (List_TypeName l=NULL, List_TypeName m) -> m,
+  (List_TypeName l=hd::tl, List_TypeName m) -> hd :: append_typenames(tl,m);
+  
+List_Ident append_idents
+  (List_Ident l, List_Ident m=NULL) -> l,
+  (List_Ident l=NULL, List_Ident m) -> m,
+  (List_Ident l=hd::tl, List_Ident m) -> hd :: append_idents(tl,m);
+  
+/* Return the fields from the Symbol list l */
+List_field syms_fields
+  (List_Symbol l=hd::tl, Ident id, Ident alt)
+   -> append_fields (sym_fields (hd, id, alt), syms_fields (tl, id, alt)) ;
+ 
+/* Return the field for the Field f */
+field field_fields (Field f=Field(id,t,_,when,trav,clear,dont)) 
+  -> add_expr(field_set_grammar (field (t,id),Rootid), when, trav, clear,dont);
+
+/* Return the fields from the Field list l */
+List_field fields_fields
+  (List_Field l=hd::tl, Ident id) | hd == NULL
+   -> fields_fields (tl, id),
+  (List_Field l=hd::tl, Ident id)
+   -> field_fields (hd) :: fields_fields (tl, id) ;
+
+/* Conversion functions */
+List_FieldInit CONVERT_front_FieldInit_TO_List_front_FieldInit
+  (FieldInit i) -> i::NULL;
+
+List_TypeName CONVERT_front_Type_TO_List_Types_TypeName 
+  (Type t=Type(id,args))  | Type_nt(t)!=NULL || Type_alt(t)!=NULL
+  -> make_TypeName (id, prefix_type(id)) :: CONVERT_List_front_Type_TO_List_Types_TypeName(args),
+  (Type t=Type(id,args))
+  -> make_TypeName(id, id) :: CONVERT_List_front_Type_TO_List_Types_TypeName(args);
+
+List_TypeName CONVERT_List_front_Type_TO_List_Types_TypeName
+  (List_Type l=hd::tl) -> append_typenames (hd, tl);
+ 
+
+/* Rhs => fields */
+List_field _rhs_fields 
+  (r=Rhs(_,s1,_,_,_,_,_,_), Ident id, Ident alt, Bool pre) | pre
+    -> sym_fields (s1, id, alt),
+  (r=Rhs(_,_,_,_,_,_,s2,_), Ident id, Ident alt, Bool pre)
+    -> sym_fields (s2, id, alt);
+
+/* Rhs => fields */
+List_field rhs_fields (Rhs r, Ident id, Ident alt, Bool pre) 
+    -> IF pre THEN set_rhs_fields (r, f) ELSE f FI
+    WHERE List_field f = _rhs_fields (r, id, alt, pre) ;
+
+/* Fields for a defining symbol 
+   Add a bind field for each field in l
+*/
+List_field defining (List_field l=hd::tl, Ident alt, Symbol def)
+  -> add_field_defining(hd, def) :: 
+     add_create(b, "NULL") :: 
+     defining(tl, alt, def)
+  WHERE //Ident bid = Create_Ident(append_string(id, "_bind"))
+        Ident bid = bind_id(hd)
+        field b1 = ExtendType (make_bind_field (alt, bid), "Bind")
+	field b = Overload (b1, is_list_field (hd));
+
+/* Change the name of a singleton field in l */
+List_field set_label 
+  (List_field l = hd::NULL, Ident lab) | lab != NULL 
+  -> rename_field (hd,lab) :: NULL,
+  (List_field l, Ident lab) -> l;
+
+/* Return the fields for symbol s 
+   alt is the current alternative name, l is the label for the field
+*/
+List_field _sym_fields 
+  (s=LabeledSym(id,s1), Ident l, Ident alt) -> set_label(sym_fields(s1,id,alt), id),
+  (s=CompareSym(s1,c), Ident l, Ident alt) -> add_compare (sym_fields(s1,l,alt), c),
+  (s=AppliedSym(n,AppliedName(),id,_,_), Ident l, Ident alt)
+    -> f::Overload (f2, o)::Overload (f3, o)::NULL
+    WHERE field f = make_field (id, Create_Ident(append_string(l, "_id")), Rootid)
+          field b = ExtendType (make_field (n,Create_Ident(append_string(l, "_bind")), Rootid), "Bind")
+          field a = make_field (n,l,Rootid)
+	  field f2 = add_field_applied(add_create(b,"NULL"), s, l)
+	  field f3 = add_create(a,"NULL")
+	  Bool o = applied_overloaded (s),
+  (s=AppliedSym(n,AppliedField(),_,_,_), Ident l, Ident alt)
+    -> Overload (f2, o)::Overload (f3, o)::NULL
+    WHERE field b = ExtendType (make_field (n,Create_Ident(append_string(l, "_bind")),Rootid), "Bind")
+          field a = make_field (n,l,Rootid)
+	  field f2 = add_field_applied(add_create(b,"NULL"), s, l)
+	  field f3 = add_create(a,"NULL")
+	  Bool o = applied_overloaded (s),
+  (s=StringSymbol (_,_,t), Ident l, Ident alt) | t != NULL -> field_set_grammar (field (t, l), Rootid) :: NULL,
+  (s=CharSymbol   (_,t),   Ident l, Ident alt) | t != NULL -> field_set_grammar (field (t, l), Rootid) :: NULL,
+  (s=KeywordSymbol(_,t),   Ident l, Ident alt) | t != NULL -> field_set_grammar (field (t, l), Rootid) :: NULL,
+#ifdef FRONT2
+  (s=SymbolSeq(t,f,_), Ident l, Ident alt)
+#else
+  (s=SymbolSeq(t,f), Ident l, Ident alt) 
+#endif
+    -> append_fields (syms_fields (t, l, alt), fields_fields (f, l)),
+  (s=IdSym(id,NULL), Ident l, Ident alt)
+    -> IF is_macro(nt) THEN 
+         remove_void_fields (alt_fields (NonTerminal_alt(nt), l, alt))
+       ELSIF imp!=NULL THEN
+         make_field (imptype, l, ImportedNonTerminal_grammar (imp)) :: NULL
+       ELSIF nt != NULL || TermType(type) THEN
+         make_field (type, l, Rootid) :: NULL
+       ELSE
+         NULL
+       FI
+    WHERE NonTerminal nt = IdSym_nt(s)
+          ImportedNonTerminal imp = IdSym_import(s)
+          Ident type = type_id (nt, id)
+          Ident imptype = imported_type_id (imp),
+  (s=IdSym(_,t), Ident l, Ident alt) -> field_set_grammar (field (t, l), Rootid) :: NULL,
+  (s=OnceSymbol(alts,_),   Ident l, Ident alt) -> Once (syms_fields (alts, l, alt), l),
+  (s=OptSymbol (alts,_,i),   Ident l, Ident alt) -> Opt  (syms_fields (alts, l, alt), l),
+  (s=MoreSymbol(alts,_,_), Ident l, Ident alt) -> More (syms_fields (alts, l, alt), l),
+  (s=OptMoreSymbol(alts,_), Ident l, Ident alt) -> More (syms_fields (alts, l, alt), l),
+  (s=DefiningSym(_,_,DefId(s1),_,_), Ident l, Ident alt) 
+    -> defining (sym_fields (s1,l,alt),alt, s),
+  (s=DefiningSym(_,_,DefExpr(e),_,_), Ident l, Ident alt) 
+    -> defining (g::NULL,alt, s) 
+    WHERE field f = make_field (Create_Ident ("Ident"), Create_Ident ("_id"), Rootid) 
+          field g = add_expr(f, WhenCreate(TRUE, e), FALSE, FALSE, FALSE),
+  (s=AltSymbol(s1,_,s2), Ident l, Ident alt)
+    -> More( append_fields ( sym_fields (s1, l, alt), syms_fields (s2, l, alt)), l);
+
+/* Return and fill in the fields for s */
+List_field sym_fields 
+  (Symbol s, Ident l, Ident alt) 
+  -> set_sym_fields (s, _sym_fields (s, l, alt)) ;
+  
+/* Make the fields in l optional, if l is non-singleton */
+List_field Once
+  (List_field l=_::NULL, Ident id) -> l,
+  (List_field l, Ident id) -> Opt (l, id) ;
+
+/* Make the fields in l optional */
+List_field Opt
+  (List_field l=NULL, Ident id)  -> make_field (Create_Ident("Bool"), id, Rootid) :: NULL,
+  (List_field l=hd::tl, Ident id)
+  -> f
+  WHERE List_field f = ExtendType (hd, "Optional") :: IF tl==NULL THEN NULL ELSE Opt(tl, id) FI ;
+
+/* Turn the fields in l into lists */
+List_field More
+  (List_field l=NULL, Ident id)  -> make_field (Create_Ident("Int"), id, Rootid) :: NULL,
+  (List_field l=hd::tl, Ident id) 
+  -> ExtendType (hd, "List") :: IF tl==NULL THEN NULL ELSE More(tl, id) FI ;
+  
+/* String concatenation */
+extern String append_string (String a, String b)
+ -> Front_StrAllocf("%s%s", a, b);
+ 
+/* Prefix the type of f with s */
+field ExtendType (f=field(t,_), String s) 
+  -> retype_field (f, t1)
+  WHERE List_TypeName t1 = make_TypeName(s, s) :: t;
+
+Ident CONVERT_String_TO_Ident (String s) -> Create_Ident(s);
+String CONVERT_Ident_TO_String (Ident s) -> Ident_name(s);
+
+/****************/
+
+/* Create an EnumType for a struct_type */
+EnumType Make_Enum
+  (t=struct_type (_,_,_,u,_,_)) | no_fields(t) 
+    -> EnumType (e, id, id, id, List_TypeName_size(e)) 
+    WHERE List_TypeName e = get_enums(u, "", TRUE)
+          Ident id = struct_type_name (t);
+  
+/* Create a tag enum type for the sub-types of t */
+EnumType Make_Tag
+  (t=struct_type (_,_,_,u,_,_)) | e != NULL
+    -> EnumType (e, id, id, id, List_TypeName_size(e)) 
+    WHERE List_TypeName e = get_enums(u, "_kind", FALSE)
+          Ident id1 = struct_type_name(t)
+          Ident id = Create_Ident(append_string (id1, "_tag"));
+  
+/* Get the enum elements for the sub-types in l */
+List_TypeName get_enums (List_struct_type l=hd::tl, String p, Bool e) 
+  -> append_typenames (get_enum(hd, p, e), get_enums(tl, p, e)) ;
+
+/* Get the enum elements for the sub-type t */
+List_TypeName get_enum 
+  (t=struct_type (_,_,_,NULL,_,_), String p, Bool e) 
+  | e || !empty_struct(t)
+  -> make_TypeName(s, abbreviate_id("",s,""))::NULL
+  WHERE Ident s = Create_Ident (append_string(struct_type_name(t),p)),
+  
+  (t=struct_type (_,_,_,u,_,_), String p, Bool e) 
+  -> get_enums(u, p, e);
+
+/* Check whether t has no fields */
+Bool no_fields 
+  (t=struct_type (_,_,NULL,NULL,NULL,_)) -> TRUE,
+  (t=struct_type (_,_,NULL,u,NULL,_)) -> no_fieldss (u);
+ 
+/* Check whether no t in l has any fields */
+Bool no_fieldss
+  (List_struct_type l=hd::tl) -> no_fields(hd) && no_fieldss(tl),
+  (List_struct_type l=NULL) -> TRUE;
+
+/* Optionally, make a list type */
+field Overload 
+  (field f, Bool o) | o -> ExtendType (f, "List"),
+  (field f, Bool o) -> f;
+
+List_field remove_void_fields
+  (List_field f = hd::tl) | is_void_field(hd) -> remove_void_fields (tl),
+  (List_field f = hd::tl) -> hd :: remove_void_fields (tl);
+
+Bool is_void_field 
+  (f=field (List_TypeName(TypeName(id),_), _)) 
+  -> id == Create_Ident("VOID") ;

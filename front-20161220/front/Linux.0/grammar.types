@@ -1,0 +1,11 @@
+#include "front/Basic.types"
+
+grammar_grammar	"grammar_grammar"	"grammar"	"NULL"
+grammar_Scanner	"grammar_Scanner"	"Scanner"	"NULL"
+grammar_Token	"grammar_Token"	"Token"	"NULL"
+grammar_RegExpr	"grammar_RegExpr"	"RegExpr"	"NULL"
+grammar_Parser	"grammar_Parser"	"Parser"	"NULL"
+grammar_ProdRule	"grammar_ProdRule"	"ProdRule"	"NULL"
+grammar_Scope	"grammar_Scope"	"Scope"	"NULL"
+List_grammar_ProdRule	"List_grammar_ProdRule"	"List_ProdRule"	"NULL"
+List_grammar_Token	"List_grammar_Token"	"List_Token"	"NULL"

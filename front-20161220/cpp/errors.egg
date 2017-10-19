@@ -1,0 +1,106 @@
+/*
+ * Copyright (C) 2000-2005 Philips Electronics N.V.
+ * 
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+
+uses "token.h";
+
+no_loc_group {
+  error = "error: ";
+  warning = "warning: ";
+  key = locater;
+  missing_argument
+    error "Missing argument for option %s";
+}
+
+cpp (token)
+group {
+#if VISUAL_STUDIO
+  error   = token_file(locater) "(" token_line(locater) "," token_col(locater) "): ";
+  warning = token_file(locater) "(" token_line(locater) "," token_col(locater) "): warning: ";
+#else
+  error   = token_file(locater) ":" token_line(locater) ":" token_col(locater) ": error: ";
+  warning = token_file(locater) ":" token_line(locater) ":" token_col(locater) ": warning: ";
+#endif
+  key     = token_loc(locater);
+  
+  garbage_after_include
+    warning "garbage at end of #include directive";
+
+  garbage_after_line
+    warning "garbage at end of #line";
+    
+  garbage_after_directive
+    warning "garbage at end of preprocessing directive";
+
+  fatal badly_formed group {
+    badly_formed_include
+      error "badly formed #include directive";
+
+    badly_formed_define
+      error "badly formed argument list";
+
+    badly_formed_defined
+      error "badly formed defined() expression";
+
+    badly_formed_line_number
+      error "badly formed line number";
+
+    badly_formed_file_name
+      error "badly formed file name";
+
+  }
+
+  
+  fatal could_not_include
+    error "could not find include %s";
+
+  fatal invalid_argument
+    error "macro argument must be an identifier";
+
+  fatal unbalanced_if
+    error "unbalanced #if statement";
+
+  fatal unexpected_endif
+    error "unexpected #endif statement";
+  
+  fatal invalid_expression
+    error "could not evaluate expression";
+
+  invalid_directive
+    error "invalid preprocessing directive #%s";
+
+  fatal unterminated_arglist
+    error "unterminated argument list";
+
+  fatal too_few_arguments
+    error "too few arguments in call to macro \"%s\"";
+
+  too_many_arguments
+    error "too many arguments in call to macro \"%s\"";
+
+  redefinition
+    warning "redefinition of \"%s\"";
+
+  fatal hash_warning
+    warning "%s";
+  
+  fatal hash_error
+    error "%s";
+
+  space_after_backslash
+    warning "white space between backslash and newline";
+}

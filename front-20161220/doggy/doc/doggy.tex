@@ -1,0 +1,67 @@
+\documentclass[11pt]{article}
+
+\input{title}
+\input{preamble}
+
+% Added by Lex Augusteijn
+\raggedbottom
+
+\begin{document}
+
+%\input{psfig}
+% -----------------------------------------------------------------------
+% FRONT PAGE WITH REPORT NUMBER, AUTHOR NAME, AND REPORT TITLE
+\begin{titlepage}
+\begin{center}
+\vspace*{5.0cm}
+\parbox{10cm}{%
+		\begin{center}
+		\vspace{3ex}
+		\AUTHOR \vspace{3ex} \\
+		{\large\bf\TITLE} \\
+		\vspace{3ex}
+		\end{center}
+		}
+\end{center}
+\end{titlepage}
+\begin{titlepage}
+
+
+% -----------------------------------------------------------------------
+% FIRST PAGE WITH FULL TITLE, AUTHOR AND ABSTRACT
+%
+\pagestyle{empty}
+\newlength{\half}
+\addtolength{\half}{.5\textwidth}
+\begin{flushright}
+\noindent
+\parbox{\half}{%
+	\vspace*{2ex}}
+\parbox{\half}{\AUTHOR} \vspace*{2ex}\\
+\end{flushright}
+\begin{center} {\bf\TITLE} \end{center}
+\vspace*{2ex}
+{\bf ABSTRACT} \\[2ex]
+\input{abstract}
+
+%\bigskip\noindent
+%Keywords:
+% A list of keywords should be submitted below. Refer for keywords the
+% INSPEC Thesaurus, available at the Bib & Info department.
+%
+%\KEYWORDS
+%
+\end{titlepage}
+
+\pagestyle{technote}%		Report number at the top of each page
+
+% -----------------------------------------------------------------------
+% NORMAL TEXT
+\cleardoublepage % Start toc on odd page
+% Position here the table of contents in case you need one:
+\tableofcontents 
+\cleardoublepage % Start document on odd page
+\input{contents}
+
+\end{document}
+

@@ -1,0 +1,16 @@
+#! /bin/csh -f
+
+set ELEGANTROOT=/home/lex/elegant
+set BIN = $ELEGANTROOT/bin/$ARCH
+
+if ($?TEXINPUTS)  setenv TEXINPUTS  $ELEGANTROOT/latex:$TEXINPUTS
+if ($?TEX_INPUTS) setenv TEX_INPUTS $ELEGANTROOT/latex:$TEX_INPUTS
+setenv BIBINPUTS $ELEGANTROOT/latex
+
+set path = ($BIN $BIN/.. $path)
+
+set scale="80"
+set diagrams = "$BIN/Diagrams -landscape -columns 2 -scale $scale 100 -fontlib $ELEGANTROOT/lib/afm"
+
+/bin/rm doggy[0-9]*.ps
+$diagrams -multifiles doggy.dbnf

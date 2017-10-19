@@ -1,0 +1,166 @@
+/*
+ * Copyright (C) 2000-2005 Philips Electronics N.V.
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * 
+ */
+/* Model of the type structure.
+   It has the syntax of the C text to be generated which is used for 
+   pretty printing the target code.
+*/
+
+USE front, GenTypes
+
+Types       ::= inc1 : includes1
+		{ enums : EnumType }
+		{ pointers : PointerType }
+		subs : { subtypedef }
+		inc2 : includes2
+		impdefs : { subtypedef }
+                { binds : BindType }
+		r : RootDecl
+		{ types : StructType  } 
+		;
+
+%% Includes before typedefs
+includes1     = "#include <stdarg.h>" NL
+		"#include <stddef.h>" NL
+		"#include <front/basic_types.h>" NL NL;
+
+%% Includes after typedefs
+includes2   ::= "#include <front/scan_support.h>" NL
+		"#include <front/print_support.h>" NL
+		"#include <front/SymTab.h>" NL  
+		[ "#include \"" id1 : Ident "_parse.h\"" NL ]
+		"#include \"" id2 : Ident "_defs.h\"" NL NL
+                { "#include \"" uses : Ident ".h\"" NL };
+
+EnumType ::= "typedef" SP "enum" SP "{" NL
+		SP SP enums : Enums NL
+	     "}" SP id : Ident ";" NL 
+	     "extern char *" str : Ident "_names[];" NL 
+	     "#define NUM_" tag : Ident SP num : Int NL NL
+	     is_tag : Bool = FALSE
+	     str_type : struct_type = NULL
+             name : Ident = EnumType_id (me)
+             xxx : VOID = enum_set_name (me);
+Enums  = tns: TypeName // "," NL;
+
+%% Bind_T type, which is an alias for Bin
+BindType ::= "typedef Bind Bind_" id1 : Ident ";" NL
+	     "typedef List_Bind List_Bind_" id2 : Ident ";" NL
+	     "#define List_Bind_" id3 : Ident "_data(x)" SP
+	         "(Bind_"id4 : Ident ")Front_List_data((Front_List)(x))" NL
+	     "#define List_Bind_" id5 : Ident "_next(x)" SP
+	         "(List_Bind_"id6 : Ident ")Front_List_next((Front_List)(x))" NL
+	     "#define Bind_" id7 : Ident "_kind" SP num : Int NL NL 
+             abbrev : Ident = NULL;
+	     
+%% Pointer typed declaration
+PointerType ::= "#ifndef DEF_TYPE_" id1 : Ident NL
+		"#define DEF_TYPE_" id2 : Ident NL
+		"typedef struct s_" id3 : Ident TAB "*" id : Ident ";" NL
+		subs : { subtypedef }
+		"#endif" NL NL ;
+
+subtypedef ::= "typedef " super : Ident SP id : Ident ";" NL ;
+
+%% Root variable
+RootDecl     = "extern" SP r1 : Ident SP r2 : Ident "_root;" NL NL ;
+
+%% Structure type, this represents the root of type tree
+StructType ::= "#ifndef DEF_STRUCT_" id1 : Ident NL
+	       "#define DEF_STRUCT_" id2 : Ident NL NL
+               type : struct_type NL
+               macros : { macro } NL 
+	       creates : { CreateFunction } NL 
+	       "#endif /* DEF_STRUCT_" id3 : Ident " */" NL NL ;
+
+%% structure type representing a sub-type
+struct_type ::= SCOPE
+                "struct" SP "s_" tag : DEFINING Ident SCOPE NULL SP "{" NL
+		  user : [ SP SP Ident "_USER_FIELDS" NL ]
+                  fields1   : { SP SP field NL }
+		  sub_types : [ SP SP sub_union ]
+                  fields2   : { SP SP field NL }
+                "}" SP id : [Ident] ";" NL 
+		name         : Ident = struct_type_tag(me)
+		checks       : List_Check = NULL
+		is_list      : Bool = FALSE 
+		is_bind      : Bool = FALSE 
+		is_optional  : Bool = FALSE 
+		is_scope     : Bool = FALSE 
+		uses_scope   : Bool = FALSE
+		opens_scope  : Bool = FALSE
+		closes_scope : Bool = FALSE
+		in_lib       : Bool = FALSE
+	        alt : Alternative = NULL
+		create : CreateFunction = NULL
+		enumtype : EnumType = NULL
+		xxx : VOID = set_name(me)
+		;
+
+%% union of sub-types 
+sub_union = "union {" NL
+		 SP SP sub_types : { struct_type }
+              "} sub;" NL ;
+
+%% macro for field access
+macro ::= "#define" SP type : Ident "_" id : Ident "(_p)" TAB 
+          "("
+	  < plain_macro  ::= "(*_p)" 
+	  | access_macro ::= r : Ident "_USER_ACCESS(_p)"
+	  >
+	  { ".sub." types : Ident } "." f : Ident ")" NL ;
+
+%% field declaration
+field ::= type : TypeNames
+	  TAB id : Ident ";" SP SP
+          grammar_id  : Ident     = NULL
+	  uses_scope  : Bool      = FALSE	%% Needs scope
+	  is_defining : Symbol    = NULL	%% Corresponding defining symbol
+	  is_applied  : Symbol    = NULL	%% Corresponding applied symbol
+	  applied_id  : Ident     = NULL	%% Name of applied field
+	  is_tag      : Bool      = FALSE	%% Field is tag
+	  init        : List_FieldInit = NULL	%% Time of initialization
+	  trav        : Bool      = FALSE	%% Field is traversed
+	  clear       : Bool      = FALSE	%% Always clear field in copy
+	  dont_clear  : Bool      = FALSE	%% Do not clear field in copy
+	  compare     : Ident     = NULL	%% Compare fuction for memo types
+	  ;
+
+%% Name of a struct type
+TypeName ::= full : Ident                       %% Prefixed name
+             id : Ident = TypeName_full(me)
+             type : APPLIED struct_type FIELD full ;
+
+/****************/
+
+%% Create function for a type with arguments in fields
+CreateFunction ::= "CREATE" type : struct_type = NULL
+	           fields : { field };
+
+/****************/
+
+TypeNames = ids : TypeName // "_" ;
+
+Idents = ids : Ident // "," NL ;
+
+/*********/
+
+NL  = \"\n" ;
+TAB = \"\t" ;
+SP  = \" " ;
+

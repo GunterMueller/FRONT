@@ -1,0 +1,47 @@
+PREREQUISITES
+
+    * gcc              : GNU Compiler Collection.
+    * GNU make         : GNU make
+    * flex             : A tool for creating scanners (text pattern recognizers)
+    * bison            : A GNU general-purpose parser generator
+
+    On 64 bit Linux (tested on Fedora 24):
+
+    * glibc-devel.i686 : 32 bit C development libraries.
+    * libgcc.i686      : 32 bit GCC shared support library (libgcc_s).
+
+
+
+BASIC INSTALLATION
+
+    To build Front type:
+
+        make
+
+    To build Front verbose (commands are printed):
+
+        make VERBOSE=true
+
+    To install:
+
+        make install
+
+    Clean:
+
+        make clean
+
+
+INSTALLATION NAMES
+
+    By default the 'install' target will install the libraries in
+    ${PWD}/`uname -s`/lib, and the header files in ${PWD}/`uname -s`/include.
+    You can specify an installation prefix other than ${PWD}/`uname -s` by
+    modifying the 'PREFIX' variable. An Example:
+
+        make install PREFIX=$HOME
+
+
+64 BIT
+
+    Front does not compile for 64 bit.
+

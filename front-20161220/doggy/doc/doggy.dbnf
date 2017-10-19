@@ -1,0 +1,224 @@
+doggy               ::= [ Typedefs NL ] \<
+                        (machine_description NL [ machine_description NL ]) \<
+			[ externals ] \<
+			{ Section } .
+ 
+Typedefs              = "TYPES" NL NL { Typedef } NL .
+ 
+Typedef             ::= Ident [ SP String SP String SP String SP ] \<
+                        [ Attributes ] NL .
+ 
+externals             = "EXTERNAL" NL NL { External } NL .
+ 
+External            ::= "extern" SP Type TAB Ident [SP ArgTypes] ";" NL .
+ 
+machine_description ::= ("MACHINE" SP "DESCRIPTION" SP Ident NL NL) |< 
+                        { Operation_def } \<
+                        [ "SUPPORTS" { Applied_formal } ] .
+ 
+Operation_def       ::= (Ident SP "(" [ Types ] ")" [ SP ":" SP Type ]) \<
+                        (TAB Ident "(" [ Ints ] ")" TAB) \<
+			[ Attributes ] \<
+			({ Property SP } NL) .
+
+Attributes	    ::= "ATTRIBUTES" "{" Attrs "}" .
+
+Attrs		      = {Attribute}+ // "," .
+
+Attribute	      = Ident | "OPR" | Int .
+
+Section             ::= ( Funcs
+                        |< Rules
+                        ) .
+ 
+Rules                 = "RULES" [ SP ":" SP Ident ] NL NL { Rule NL } NL .
+ 
+Rule                  = Lhs NL SP SP Rhs ";" NL .
+ 
+Lhs                 ::= ( Ident ":" NL
+                        | 
+                        )
+                        UnTypedPattern .
+ 
+Funcs                 = "FUNCTIONS" NL NL { Func NL } .
+ 
+Func                ::= ([ "extern" SP ] Type SP Ident NL SP SP) \<
+                        ( FuncRules ";" NL) .
+ 
+FuncRules             = FuncRule NL // "," .
+ 
+FuncRule              = "(" Arguments ")" NL Rhs .
+ 
+Arguments             = Argument // "," .
+ 
+Argument            ::= ( Type SP
+                        | 
+                        )
+                        Ident [ "=" ArgPat] .
+  
+ArgPat                = (UnTypedPattern | ParPattern) .
+ 
+Pattern             ::= ( [BasicType] SP UnTypedPattern ) .
+ 
+UnTypedPattern      ::= SimplePattern // "::" .
+  
+SimplePattern       ::= ( Ident [ "=" (BinPattern | ParPattern) ]
+                        | BinPattern
+                        ) .
+ 
+BinPattern          ::= ( BasicPattern [ IdOp SimplePattern ]
+                        ) .
+ 		    
+BasicPattern        ::= ( Applied_operation "(" [Patterns] ")" 
+			|< Int
+                        |< "NULL"
+			|< "_"  [ "=" SimpleExpr ]
+			) .
+ 
+ParPattern            = "(" Pattern ")" .
+
+Rhs                 ::= ( { Guard [ NL SP SP Wherepart ] NL }+
+                        | "{" SP Rhs "}" [ Wherepart ] NL
+                        ) .
+ 
+Guard               ::= ( "|" SP Condition NL "{" SP Rhs "}"
+                        | [ "|" SP Condition NL ] "->" SP ExprSeq
+                        ) .
+ 
+ExprSeq             = ( Expr
+                        | "{" Exprs "}"
+                        ) .
+ 
+Wherepart           ::= ["WHERE" SP SP [(Definition // )]] .
+ 
+Definition            = Type SP Ident SP "=" SP Expr .
+ 
+Applied_operation   ::= ( "ANY"
+                        | "[" Applied_formals "]"
+                        | Applied_formal
+                        ) .
+ 
+Applied_formals       = Applied_formal // "," .
+ 
+Applied_formal        = Ident  .
+ 
+Expr                ::= (SimpleExpr // Operator) .
+ 
+SimpleExpr          ::= {MonOp} ( Ident    
+                        |< Constant
+                        |< Ident SP "(" [ Exprs ] ")"    
+                        |< "(" Expr ")"
+                        |< ("IF" SP ((Condition SP "THEN" SP Expr) // "ELSIF")) \<
+			  ("ELSE" SP Expr SP "FI")
+                        ) .
+ 
+Condition             = Expr .
+ 
+Constant            ::= ( Int
+                        | Bool
+                        | String
+			| "NULL"
+                        ) .
+ 
+Operator            ::= SP
+                        ( "&&"
+                        \| "||"
+                        \| "^"
+                        \| "=="
+                        \| "!="
+                        \| "<="
+                        \| ">="
+                        \| "<"
+                        \| ">"
+			) |<
+                        ( "<<"
+                        \| ">>"
+                        \| "/"
+                        \| "%"
+                        \| "*"
+                        \| "&"
+                        \| "+"
+                        \| "-"
+			\| "::"
+			\| IdOp
+                        )
+                        SP .
+
+IdOp                  = "`" Ident .
+
+MonOp               ::= ( "!"
+                        \| "~"
+                        \| "&"
+                        \| "*"
+                        \| "+"
+                        \| "-"
+                        )
+                        SP .
+ 
+Type                ::= BasicType // "|" .
+ 
+BasicType           ::= ( Ident
+                        | "OPR" [ ArgTypes ]
+                        | "[" Num ".." Num [ "STEP" Num ] "]"
+                        ) { "*" }.
+ 
+Property              = "COMMUTATIVE" .
+ 
+ArgTypes              = "(" [ Types ] ")" .
+ 
+Patterns              = Pattern // "," .
+ 
+Exprs                 = Expr // "," .
+ 
+Types                 = Type // "," .
+ 
+Idents                = Ident // "," .
+ 
+Ints                  = Num // "," .
+ 
+Num                 ::= [ "-" ] Int .
+ 
+IdInt                 = ( Ident
+                        | Int
+                        ) .
+ 
+comment1            ::= "/" "*" { Any } "*" "/" .
+ 
+comment2            ::= "/" "/" { Any } "\\n" .
+ 
+Ident               ::= { Alphanum } Non_digit { Alphanum } .
+ 
+SP                    =  .
+ 
+TAB                   =  .
+ 
+NL                    =  .
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

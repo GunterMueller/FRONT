@@ -1,0 +1,1701 @@
+Terminals unused in grammar
+
+   NONSENSE
+   commentsym
+
+
+Grammar
+
+    0 $accept: egg $end
+
+    1 egg: Uses OPTMORE_Group
+
+    2 Uses: usessym Strings semicolonsym
+
+    3 Strings: ALT_Stringsym_SEP_commasym
+
+    4 Declarations: OPTMORE_Declaration
+
+    5 Declaration: MessageKind equalssym MORE_Expression semicolonsym
+
+    6 Expression: Stringsym
+    7           | Identsym openparsym Params closeparsym
+    8           | Identsym
+
+    9 Params: ALT_Expression_SEP_commasym
+
+   10 Statements: OPTMORE_Statement
+
+   11 Statement: Message
+   12          | Group
+
+   13 MessageKind: errorsym
+   14            | warningsym
+   15            | disabledsym
+   16            | keysym
+   17            | postsym
+
+   18 Message: OPT_fatalsym Identsym SubMessages semicolonsym
+
+   19 SubMessages: ALT_SubMessage_SEP_commasym
+
+   20 SubMessage: MessageKind Stringsym
+
+   21 Group: OPT_fatalsym Identsym OPT_openparsym_Identsym_closeparsym OPT_groupsym openchainsym Declarations Statements closechainsym
+
+   22 OPTMORE_Group: %empty
+   23              | Group OPTMORE_Group
+
+   24 ALT_Stringsym_SEP_commasym: Stringsym
+   25                           | Stringsym commasym ALT_Stringsym_SEP_commasym
+
+   26 OPTMORE_Declaration: %empty
+   27                    | Declaration OPTMORE_Declaration
+
+   28 MORE_Expression: Expression
+   29                | Expression MORE_Expression
+
+   30 ALT_Expression_SEP_commasym: Expression
+   31                            | Expression commasym ALT_Expression_SEP_commasym
+
+   32 OPTMORE_Statement: %empty
+   33                  | Statement OPTMORE_Statement
+
+   34 OPT_fatalsym: %empty
+   35             | fatalsym
+
+   36 ALT_SubMessage_SEP_commasym: SubMessage
+   37                            | SubMessage commasym ALT_SubMessage_SEP_commasym
+
+   38 OPT_openparsym_Identsym_closeparsym: %empty
+   39                                    | openparsym Identsym closeparsym
+
+   40 OPT_groupsym: %empty
+   41             | groupsym
+
+   42 egg: hole_egg
+   43    | start_egg egg
+
+   44 Uses: hole_Uses
+
+   45 egg: start_Uses Uses
+
+   46 Strings: hole_Strings
+
+   47 egg: start_Strings Strings
+
+   48 Declarations: hole_Declarations
+
+   49 egg: start_Declarations Declarations
+
+   50 Declaration: hole_Declaration
+
+   51 egg: start_Declaration Declaration
+
+   52 Expression: hole_Expression
+
+   53 egg: start_Expression Expression
+
+   54 Params: hole_Params
+
+   55 egg: start_Params Params
+
+   56 Statements: hole_Statements
+
+   57 egg: start_Statements Statements
+
+   58 Statement: hole_Statement
+
+   59 egg: start_Statement Statement
+
+   60 MessageKind: hole_MessageKind
+
+   61 egg: start_MessageKind MessageKind
+
+   62 Message: hole_Message
+
+   63 egg: start_Message Message
+
+   64 SubMessages: hole_SubMessages
+
+   65 egg: start_SubMessages SubMessages
+
+   66 SubMessage: hole_SubMessage
+
+   67 egg: start_SubMessage SubMessage
+
+   68 Group: hole_Group
+
+   69 egg: start_Group Group
+
+   70 OPTMORE_Group: hole_OPTMORE_Group
+
+   71 egg: start_OPTMORE_Group OPTMORE_Group
+
+   72 ALT_Stringsym_SEP_commasym: hole_ALT_Stringsym_SEP_commasym
+
+   73 egg: start_ALT_Stringsym_SEP_commasym ALT_Stringsym_SEP_commasym
+
+   74 OPTMORE_Declaration: hole_OPTMORE_Declaration
+
+   75 egg: start_OPTMORE_Declaration OPTMORE_Declaration
+
+   76 MORE_Expression: hole_MORE_Expression
+
+   77 egg: start_MORE_Expression MORE_Expression
+
+   78 ALT_Expression_SEP_commasym: hole_ALT_Expression_SEP_commasym
+
+   79 egg: start_ALT_Expression_SEP_commasym ALT_Expression_SEP_commasym
+
+   80 OPTMORE_Statement: hole_OPTMORE_Statement
+
+   81 egg: start_OPTMORE_Statement OPTMORE_Statement
+
+   82 OPT_fatalsym: hole_OPT_fatalsym
+
+   83 egg: start_OPT_fatalsym OPT_fatalsym
+
+   84 ALT_SubMessage_SEP_commasym: hole_ALT_SubMessage_SEP_commasym
+
+   85 egg: start_ALT_SubMessage_SEP_commasym ALT_SubMessage_SEP_commasym
+
+   86 OPT_openparsym_Identsym_closeparsym: hole_OPT_openparsym_Identsym_closeparsym
+
+   87 egg: start_OPT_openparsym_Identsym_closeparsym OPT_openparsym_Identsym_closeparsym
+
+   88 OPT_groupsym: hole_OPT_groupsym
+
+   89 egg: start_OPT_groupsym OPT_groupsym
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+NONSENSE (258)
+usessym (259) 2
+commasym (260) 25 31 37
+semicolonsym (261) 2 5 18
+fatalsym (262) 35
+errorsym (263) 13
+warningsym (264) 14
+disabledsym (265) 15
+keysym (266) 16
+postsym (267) 17
+openparsym (268) 7 39
+closeparsym (269) 7 39
+groupsym (270) 41
+openchainsym (271) 21
+equalssym (272) 5
+closechainsym (273) 21
+commentsym (274)
+Stringsym (275) 6 20 24 25
+Identsym (276) 7 8 18 21 39
+hole_egg (277) 42
+start_egg (278) 43
+hole_Uses (279) 44
+start_Uses (280) 45
+hole_Strings (281) 46
+start_Strings (282) 47
+hole_Declarations (283) 48
+start_Declarations (284) 49
+hole_Declaration (285) 50
+start_Declaration (286) 51
+hole_Expression (287) 52
+start_Expression (288) 53
+hole_Params (289) 54
+start_Params (290) 55
+hole_Statements (291) 56
+start_Statements (292) 57
+hole_Statement (293) 58
+start_Statement (294) 59
+hole_MessageKind (295) 60
+start_MessageKind (296) 61
+hole_Message (297) 62
+start_Message (298) 63
+hole_SubMessages (299) 64
+start_SubMessages (300) 65
+hole_SubMessage (301) 66
+start_SubMessage (302) 67
+hole_Group (303) 68
+start_Group (304) 69
+hole_OPTMORE_Group (305) 70
+start_OPTMORE_Group (306) 71
+hole_ALT_Stringsym_SEP_commasym (307) 72
+start_ALT_Stringsym_SEP_commasym (308) 73
+hole_OPTMORE_Declaration (309) 74
+start_OPTMORE_Declaration (310) 75
+hole_MORE_Expression (311) 76
+start_MORE_Expression (312) 77
+hole_ALT_Expression_SEP_commasym (313) 78
+start_ALT_Expression_SEP_commasym (314) 79
+hole_OPTMORE_Statement (315) 80
+start_OPTMORE_Statement (316) 81
+hole_OPT_fatalsym (317) 82
+start_OPT_fatalsym (318) 83
+hole_ALT_SubMessage_SEP_commasym (319) 84
+start_ALT_SubMessage_SEP_commasym (320) 85
+hole_OPT_openparsym_Identsym_closeparsym (321) 86
+start_OPT_openparsym_Identsym_closeparsym (322) 87
+hole_OPT_groupsym (323) 88
+start_OPT_groupsym (324) 89
+
+
+Nonterminals, with rules where they appear
+
+$accept (70)
+    on left: 0
+egg (71)
+    on left: 1 42 43 45 47 49 51 53 55 57 59 61 63 65 67 69 71 73 75
+    77 79 81 83 85 87 89, on right: 0 43
+Uses (72)
+    on left: 2 44, on right: 1 45
+Strings (73)
+    on left: 3 46, on right: 2 47
+Declarations (74)
+    on left: 4 48, on right: 21 49
+Declaration (75)
+    on left: 5 50, on right: 27 51
+Expression (76)
+    on left: 6 7 8 52, on right: 28 29 30 31 53
+Params (77)
+    on left: 9 54, on right: 7 55
+Statements (78)
+    on left: 10 56, on right: 21 57
+Statement (79)
+    on left: 11 12 58, on right: 33 59
+MessageKind (80)
+    on left: 13 14 15 16 17 60, on right: 5 20 61
+Message (81)
+    on left: 18 62, on right: 11 63
+SubMessages (82)
+    on left: 19 64, on right: 18 65
+SubMessage (83)
+    on left: 20 66, on right: 36 37 67
+Group (84)
+    on left: 21 68, on right: 12 23 69
+OPTMORE_Group (85)
+    on left: 22 23 70, on right: 1 23 71
+ALT_Stringsym_SEP_commasym (86)
+    on left: 24 25 72, on right: 3 25 73
+OPTMORE_Declaration (87)
+    on left: 26 27 74, on right: 4 27 75
+MORE_Expression (88)
+    on left: 28 29 76, on right: 5 29 77
+ALT_Expression_SEP_commasym (89)
+    on left: 30 31 78, on right: 9 31 79
+OPTMORE_Statement (90)
+    on left: 32 33 80, on right: 10 33 81
+OPT_fatalsym (91)
+    on left: 34 35 82, on right: 18 21 83
+ALT_SubMessage_SEP_commasym (92)
+    on left: 36 37 84, on right: 19 37 85
+OPT_openparsym_Identsym_closeparsym (93)
+    on left: 38 39 86, on right: 21 87
+OPT_groupsym (94)
+    on left: 40 41 88, on right: 21 89
+
+
+State 0
+
+    0 $accept: . egg $end
+
+    usessym                                    shift, and go to state 1
+    hole_egg                                   shift, and go to state 2
+    start_egg                                  shift, and go to state 3
+    hole_Uses                                  shift, and go to state 4
+    start_Uses                                 shift, and go to state 5
+    start_Strings                              shift, and go to state 6
+    start_Declarations                         shift, and go to state 7
+    start_Declaration                          shift, and go to state 8
+    start_Expression                           shift, and go to state 9
+    start_Params                               shift, and go to state 10
+    start_Statements                           shift, and go to state 11
+    start_Statement                            shift, and go to state 12
+    start_MessageKind                          shift, and go to state 13
+    start_Message                              shift, and go to state 14
+    start_SubMessages                          shift, and go to state 15
+    start_SubMessage                           shift, and go to state 16
+    start_Group                                shift, and go to state 17
+    start_OPTMORE_Group                        shift, and go to state 18
+    start_ALT_Stringsym_SEP_commasym           shift, and go to state 19
+    start_OPTMORE_Declaration                  shift, and go to state 20
+    start_MORE_Expression                      shift, and go to state 21
+    start_ALT_Expression_SEP_commasym          shift, and go to state 22
+    start_OPTMORE_Statement                    shift, and go to state 23
+    start_OPT_fatalsym                         shift, and go to state 24
+    start_ALT_SubMessage_SEP_commasym          shift, and go to state 25
+    start_OPT_openparsym_Identsym_closeparsym  shift, and go to state 26
+    start_OPT_groupsym                         shift, and go to state 27
+
+    egg   go to state 28
+    Uses  go to state 29
+
+
+State 1
+
+    2 Uses: usessym . Strings semicolonsym
+
+    Stringsym                        shift, and go to state 30
+    hole_Strings                     shift, and go to state 31
+    hole_ALT_Stringsym_SEP_commasym  shift, and go to state 32
+
+    Strings                     go to state 33
+    ALT_Stringsym_SEP_commasym  go to state 34
+
+
+State 2
+
+   42 egg: hole_egg .
+
+    $default  reduce using rule 42 (egg)
+
+
+State 3
+
+   43 egg: start_egg . egg
+
+    usessym                                    shift, and go to state 1
+    hole_egg                                   shift, and go to state 2
+    start_egg                                  shift, and go to state 3
+    hole_Uses                                  shift, and go to state 4
+    start_Uses                                 shift, and go to state 5
+    start_Strings                              shift, and go to state 6
+    start_Declarations                         shift, and go to state 7
+    start_Declaration                          shift, and go to state 8
+    start_Expression                           shift, and go to state 9
+    start_Params                               shift, and go to state 10
+    start_Statements                           shift, and go to state 11
+    start_Statement                            shift, and go to state 12
+    start_MessageKind                          shift, and go to state 13
+    start_Message                              shift, and go to state 14
+    start_SubMessages                          shift, and go to state 15
+    start_SubMessage                           shift, and go to state 16
+    start_Group                                shift, and go to state 17
+    start_OPTMORE_Group                        shift, and go to state 18
+    start_ALT_Stringsym_SEP_commasym           shift, and go to state 19
+    start_OPTMORE_Declaration                  shift, and go to state 20
+    start_MORE_Expression                      shift, and go to state 21
+    start_ALT_Expression_SEP_commasym          shift, and go to state 22
+    start_OPTMORE_Statement                    shift, and go to state 23
+    start_OPT_fatalsym                         shift, and go to state 24
+    start_ALT_SubMessage_SEP_commasym          shift, and go to state 25
+    start_OPT_openparsym_Identsym_closeparsym  shift, and go to state 26
+    start_OPT_groupsym                         shift, and go to state 27
+
+    egg   go to state 35
+    Uses  go to state 29
+
+
+State 4
+
+   44 Uses: hole_Uses .
+
+    $default  reduce using rule 44 (Uses)
+
+
+State 5
+
+   45 egg: start_Uses . Uses
+
+    usessym    shift, and go to state 1
+    hole_Uses  shift, and go to state 4
+
+    Uses  go to state 36
+
+
+State 6
+
+   47 egg: start_Strings . Strings
+
+    Stringsym                        shift, and go to state 30
+    hole_Strings                     shift, and go to state 31
+    hole_ALT_Stringsym_SEP_commasym  shift, and go to state 32
+
+    Strings                     go to state 37
+    ALT_Stringsym_SEP_commasym  go to state 34
+
+
+State 7
+
+   49 egg: start_Declarations . Declarations
+
+    errorsym                  shift, and go to state 38
+    warningsym                shift, and go to state 39
+    disabledsym               shift, and go to state 40
+    keysym                    shift, and go to state 41
+    postsym                   shift, and go to state 42
+    hole_Declarations         shift, and go to state 43
+    hole_Declaration          shift, and go to state 44
+    hole_MessageKind          shift, and go to state 45
+    hole_OPTMORE_Declaration  shift, and go to state 46
+
+    $default  reduce using rule 26 (OPTMORE_Declaration)
+
+    Declarations         go to state 47
+    Declaration          go to state 48
+    MessageKind          go to state 49
+    OPTMORE_Declaration  go to state 50
+
+
+State 8
+
+   51 egg: start_Declaration . Declaration
+
+    errorsym          shift, and go to state 38
+    warningsym        shift, and go to state 39
+    disabledsym       shift, and go to state 40
+    keysym            shift, and go to state 41
+    postsym           shift, and go to state 42
+    hole_Declaration  shift, and go to state 44
+    hole_MessageKind  shift, and go to state 45
+
+    Declaration  go to state 51
+    MessageKind  go to state 49
+
+
+State 9
+
+   53 egg: start_Expression . Expression
+
+    Stringsym        shift, and go to state 52
+    Identsym         shift, and go to state 53
+    hole_Expression  shift, and go to state 54
+
+    Expression  go to state 55
+
+
+State 10
+
+   55 egg: start_Params . Params
+
+    Stringsym                         shift, and go to state 52
+    Identsym                          shift, and go to state 53
+    hole_Expression                   shift, and go to state 54
+    hole_Params                       shift, and go to state 56
+    hole_ALT_Expression_SEP_commasym  shift, and go to state 57
+
+    Expression                   go to state 58
+    Params                       go to state 59
+    ALT_Expression_SEP_commasym  go to state 60
+
+
+State 11
+
+   57 egg: start_Statements . Statements
+
+    fatalsym                shift, and go to state 61
+    hole_Statements         shift, and go to state 62
+    hole_Statement          shift, and go to state 63
+    hole_Message            shift, and go to state 64
+    hole_Group              shift, and go to state 65
+    hole_OPTMORE_Statement  shift, and go to state 66
+    hole_OPT_fatalsym       shift, and go to state 67
+
+    Identsym  reduce using rule 34 (OPT_fatalsym)
+    $default  reduce using rule 32 (OPTMORE_Statement)
+
+    Statements         go to state 68
+    Statement          go to state 69
+    Message            go to state 70
+    Group              go to state 71
+    OPTMORE_Statement  go to state 72
+    OPT_fatalsym       go to state 73
+
+
+State 12
+
+   59 egg: start_Statement . Statement
+
+    fatalsym           shift, and go to state 61
+    hole_Statement     shift, and go to state 63
+    hole_Message       shift, and go to state 64
+    hole_Group         shift, and go to state 65
+    hole_OPT_fatalsym  shift, and go to state 67
+
+    $default  reduce using rule 34 (OPT_fatalsym)
+
+    Statement     go to state 74
+    Message       go to state 70
+    Group         go to state 71
+    OPT_fatalsym  go to state 73
+
+
+State 13
+
+   61 egg: start_MessageKind . MessageKind
+
+    errorsym          shift, and go to state 38
+    warningsym        shift, and go to state 39
+    disabledsym       shift, and go to state 40
+    keysym            shift, and go to state 41
+    postsym           shift, and go to state 42
+    hole_MessageKind  shift, and go to state 45
+
+    MessageKind  go to state 75
+
+
+State 14
+
+   63 egg: start_Message . Message
+
+    fatalsym           shift, and go to state 61
+    hole_Message       shift, and go to state 64
+    hole_OPT_fatalsym  shift, and go to state 67
+
+    $default  reduce using rule 34 (OPT_fatalsym)
+
+    Message       go to state 76
+    OPT_fatalsym  go to state 77
+
+
+State 15
+
+   65 egg: start_SubMessages . SubMessages
+
+    errorsym                          shift, and go to state 38
+    warningsym                        shift, and go to state 39
+    disabledsym                       shift, and go to state 40
+    keysym                            shift, and go to state 41
+    postsym                           shift, and go to state 42
+    hole_MessageKind                  shift, and go to state 45
+    hole_SubMessages                  shift, and go to state 78
+    hole_SubMessage                   shift, and go to state 79
+    hole_ALT_SubMessage_SEP_commasym  shift, and go to state 80
+
+    MessageKind                  go to state 81
+    SubMessages                  go to state 82
+    SubMessage                   go to state 83
+    ALT_SubMessage_SEP_commasym  go to state 84
+
+
+State 16
+
+   67 egg: start_SubMessage . SubMessage
+
+    errorsym          shift, and go to state 38
+    warningsym        shift, and go to state 39
+    disabledsym       shift, and go to state 40
+    keysym            shift, and go to state 41
+    postsym           shift, and go to state 42
+    hole_MessageKind  shift, and go to state 45
+    hole_SubMessage   shift, and go to state 79
+
+    MessageKind  go to state 81
+    SubMessage   go to state 85
+
+
+State 17
+
+   69 egg: start_Group . Group
+
+    fatalsym           shift, and go to state 61
+    hole_Group         shift, and go to state 65
+    hole_OPT_fatalsym  shift, and go to state 67
+
+    $default  reduce using rule 34 (OPT_fatalsym)
+
+    Group         go to state 86
+    OPT_fatalsym  go to state 87
+
+
+State 18
+
+   71 egg: start_OPTMORE_Group . OPTMORE_Group
+
+    fatalsym            shift, and go to state 61
+    hole_Group          shift, and go to state 65
+    hole_OPTMORE_Group  shift, and go to state 88
+    hole_OPT_fatalsym   shift, and go to state 67
+
+    Identsym  reduce using rule 34 (OPT_fatalsym)
+    $default  reduce using rule 22 (OPTMORE_Group)
+
+    Group          go to state 89
+    OPTMORE_Group  go to state 90
+    OPT_fatalsym   go to state 87
+
+
+State 19
+
+   73 egg: start_ALT_Stringsym_SEP_commasym . ALT_Stringsym_SEP_commasym
+
+    Stringsym                        shift, and go to state 30
+    hole_ALT_Stringsym_SEP_commasym  shift, and go to state 32
+
+    ALT_Stringsym_SEP_commasym  go to state 91
+
+
+State 20
+
+   75 egg: start_OPTMORE_Declaration . OPTMORE_Declaration
+
+    errorsym                  shift, and go to state 38
+    warningsym                shift, and go to state 39
+    disabledsym               shift, and go to state 40
+    keysym                    shift, and go to state 41
+    postsym                   shift, and go to state 42
+    hole_Declaration          shift, and go to state 44
+    hole_MessageKind          shift, and go to state 45
+    hole_OPTMORE_Declaration  shift, and go to state 46
+
+    $default  reduce using rule 26 (OPTMORE_Declaration)
+
+    Declaration          go to state 48
+    MessageKind          go to state 49
+    OPTMORE_Declaration  go to state 92
+
+
+State 21
+
+   77 egg: start_MORE_Expression . MORE_Expression
+
+    Stringsym             shift, and go to state 52
+    Identsym              shift, and go to state 53
+    hole_Expression       shift, and go to state 54
+    hole_MORE_Expression  shift, and go to state 93
+
+    Expression       go to state 94
+    MORE_Expression  go to state 95
+
+
+State 22
+
+   79 egg: start_ALT_Expression_SEP_commasym . ALT_Expression_SEP_commasym
+
+    Stringsym                         shift, and go to state 52
+    Identsym                          shift, and go to state 53
+    hole_Expression                   shift, and go to state 54
+    hole_ALT_Expression_SEP_commasym  shift, and go to state 57
+
+    Expression                   go to state 58
+    ALT_Expression_SEP_commasym  go to state 96
+
+
+State 23
+
+   81 egg: start_OPTMORE_Statement . OPTMORE_Statement
+
+    fatalsym                shift, and go to state 61
+    hole_Statement          shift, and go to state 63
+    hole_Message            shift, and go to state 64
+    hole_Group              shift, and go to state 65
+    hole_OPTMORE_Statement  shift, and go to state 66
+    hole_OPT_fatalsym       shift, and go to state 67
+
+    Identsym  reduce using rule 34 (OPT_fatalsym)
+    $default  reduce using rule 32 (OPTMORE_Statement)
+
+    Statement          go to state 69
+    Message            go to state 70
+    Group              go to state 71
+    OPTMORE_Statement  go to state 97
+    OPT_fatalsym       go to state 73
+
+
+State 24
+
+   83 egg: start_OPT_fatalsym . OPT_fatalsym
+
+    fatalsym           shift, and go to state 61
+    hole_OPT_fatalsym  shift, and go to state 67
+
+    $default  reduce using rule 34 (OPT_fatalsym)
+
+    OPT_fatalsym  go to state 98
+
+
+State 25
+
+   85 egg: start_ALT_SubMessage_SEP_commasym . ALT_SubMessage_SEP_commasym
+
+    errorsym                          shift, and go to state 38
+    warningsym                        shift, and go to state 39
+    disabledsym                       shift, and go to state 40
+    keysym                            shift, and go to state 41
+    postsym                           shift, and go to state 42
+    hole_MessageKind                  shift, and go to state 45
+    hole_SubMessage                   shift, and go to state 79
+    hole_ALT_SubMessage_SEP_commasym  shift, and go to state 80
+
+    MessageKind                  go to state 81
+    SubMessage                   go to state 83
+    ALT_SubMessage_SEP_commasym  go to state 99
+
+
+State 26
+
+   87 egg: start_OPT_openparsym_Identsym_closeparsym . OPT_openparsym_Identsym_closeparsym
+
+    openparsym                                shift, and go to state 100
+    hole_OPT_openparsym_Identsym_closeparsym  shift, and go to state 101
+
+    $default  reduce using rule 38 (OPT_openparsym_Identsym_closeparsym)
+
+    OPT_openparsym_Identsym_closeparsym  go to state 102
+
+
+State 27
+
+   89 egg: start_OPT_groupsym . OPT_groupsym
+
+    groupsym           shift, and go to state 103
+    hole_OPT_groupsym  shift, and go to state 104
+
+    $default  reduce using rule 40 (OPT_groupsym)
+
+    OPT_groupsym  go to state 105
+
+
+State 28
+
+    0 $accept: egg . $end
+
+    $end  shift, and go to state 106
+
+
+State 29
+
+    1 egg: Uses . OPTMORE_Group
+
+    fatalsym            shift, and go to state 61
+    hole_Group          shift, and go to state 65
+    hole_OPTMORE_Group  shift, and go to state 88
+    hole_OPT_fatalsym   shift, and go to state 67
+
+    Identsym  reduce using rule 34 (OPT_fatalsym)
+    $default  reduce using rule 22 (OPTMORE_Group)
+
+    Group          go to state 89
+    OPTMORE_Group  go to state 107
+    OPT_fatalsym   go to state 87
+
+
+State 30
+
+   24 ALT_Stringsym_SEP_commasym: Stringsym .
+   25                           | Stringsym . commasym ALT_Stringsym_SEP_commasym
+
+    commasym  shift, and go to state 108
+
+    $default  reduce using rule 24 (ALT_Stringsym_SEP_commasym)
+
+
+State 31
+
+   46 Strings: hole_Strings .
+
+    $default  reduce using rule 46 (Strings)
+
+
+State 32
+
+   72 ALT_Stringsym_SEP_commasym: hole_ALT_Stringsym_SEP_commasym .
+
+    $default  reduce using rule 72 (ALT_Stringsym_SEP_commasym)
+
+
+State 33
+
+    2 Uses: usessym Strings . semicolonsym
+
+    semicolonsym  shift, and go to state 109
+
+
+State 34
+
+    3 Strings: ALT_Stringsym_SEP_commasym .
+
+    $default  reduce using rule 3 (Strings)
+
+
+State 35
+
+   43 egg: start_egg egg .
+
+    $default  reduce using rule 43 (egg)
+
+
+State 36
+
+   45 egg: start_Uses Uses .
+
+    $default  reduce using rule 45 (egg)
+
+
+State 37
+
+   47 egg: start_Strings Strings .
+
+    $default  reduce using rule 47 (egg)
+
+
+State 38
+
+   13 MessageKind: errorsym .
+
+    $default  reduce using rule 13 (MessageKind)
+
+
+State 39
+
+   14 MessageKind: warningsym .
+
+    $default  reduce using rule 14 (MessageKind)
+
+
+State 40
+
+   15 MessageKind: disabledsym .
+
+    $default  reduce using rule 15 (MessageKind)
+
+
+State 41
+
+   16 MessageKind: keysym .
+
+    $default  reduce using rule 16 (MessageKind)
+
+
+State 42
+
+   17 MessageKind: postsym .
+
+    $default  reduce using rule 17 (MessageKind)
+
+
+State 43
+
+   48 Declarations: hole_Declarations .
+
+    $default  reduce using rule 48 (Declarations)
+
+
+State 44
+
+   50 Declaration: hole_Declaration .
+
+    $default  reduce using rule 50 (Declaration)
+
+
+State 45
+
+   60 MessageKind: hole_MessageKind .
+
+    $default  reduce using rule 60 (MessageKind)
+
+
+State 46
+
+   74 OPTMORE_Declaration: hole_OPTMORE_Declaration .
+
+    $default  reduce using rule 74 (OPTMORE_Declaration)
+
+
+State 47
+
+   49 egg: start_Declarations Declarations .
+
+    $default  reduce using rule 49 (egg)
+
+
+State 48
+
+   27 OPTMORE_Declaration: Declaration . OPTMORE_Declaration
+
+    errorsym                  shift, and go to state 38
+    warningsym                shift, and go to state 39
+    disabledsym               shift, and go to state 40
+    keysym                    shift, and go to state 41
+    postsym                   shift, and go to state 42
+    hole_Declaration          shift, and go to state 44
+    hole_MessageKind          shift, and go to state 45
+    hole_OPTMORE_Declaration  shift, and go to state 46
+
+    $default  reduce using rule 26 (OPTMORE_Declaration)
+
+    Declaration          go to state 48
+    MessageKind          go to state 49
+    OPTMORE_Declaration  go to state 110
+
+
+State 49
+
+    5 Declaration: MessageKind . equalssym MORE_Expression semicolonsym
+
+    equalssym  shift, and go to state 111
+
+
+State 50
+
+    4 Declarations: OPTMORE_Declaration .
+
+    $default  reduce using rule 4 (Declarations)
+
+
+State 51
+
+   51 egg: start_Declaration Declaration .
+
+    $default  reduce using rule 51 (egg)
+
+
+State 52
+
+    6 Expression: Stringsym .
+
+    $default  reduce using rule 6 (Expression)
+
+
+State 53
+
+    7 Expression: Identsym . openparsym Params closeparsym
+    8           | Identsym .
+
+    openparsym  shift, and go to state 112
+
+    $default  reduce using rule 8 (Expression)
+
+
+State 54
+
+   52 Expression: hole_Expression .
+
+    $default  reduce using rule 52 (Expression)
+
+
+State 55
+
+   53 egg: start_Expression Expression .
+
+    $default  reduce using rule 53 (egg)
+
+
+State 56
+
+   54 Params: hole_Params .
+
+    $default  reduce using rule 54 (Params)
+
+
+State 57
+
+   78 ALT_Expression_SEP_commasym: hole_ALT_Expression_SEP_commasym .
+
+    $default  reduce using rule 78 (ALT_Expression_SEP_commasym)
+
+
+State 58
+
+   30 ALT_Expression_SEP_commasym: Expression .
+   31                            | Expression . commasym ALT_Expression_SEP_commasym
+
+    commasym  shift, and go to state 113
+
+    $default  reduce using rule 30 (ALT_Expression_SEP_commasym)
+
+
+State 59
+
+   55 egg: start_Params Params .
+
+    $default  reduce using rule 55 (egg)
+
+
+State 60
+
+    9 Params: ALT_Expression_SEP_commasym .
+
+    $default  reduce using rule 9 (Params)
+
+
+State 61
+
+   35 OPT_fatalsym: fatalsym .
+
+    $default  reduce using rule 35 (OPT_fatalsym)
+
+
+State 62
+
+   56 Statements: hole_Statements .
+
+    $default  reduce using rule 56 (Statements)
+
+
+State 63
+
+   58 Statement: hole_Statement .
+
+    $default  reduce using rule 58 (Statement)
+
+
+State 64
+
+   62 Message: hole_Message .
+
+    $default  reduce using rule 62 (Message)
+
+
+State 65
+
+   68 Group: hole_Group .
+
+    $default  reduce using rule 68 (Group)
+
+
+State 66
+
+   80 OPTMORE_Statement: hole_OPTMORE_Statement .
+
+    $default  reduce using rule 80 (OPTMORE_Statement)
+
+
+State 67
+
+   82 OPT_fatalsym: hole_OPT_fatalsym .
+
+    $default  reduce using rule 82 (OPT_fatalsym)
+
+
+State 68
+
+   57 egg: start_Statements Statements .
+
+    $default  reduce using rule 57 (egg)
+
+
+State 69
+
+   33 OPTMORE_Statement: Statement . OPTMORE_Statement
+
+    fatalsym                shift, and go to state 61
+    hole_Statement          shift, and go to state 63
+    hole_Message            shift, and go to state 64
+    hole_Group              shift, and go to state 65
+    hole_OPTMORE_Statement  shift, and go to state 66
+    hole_OPT_fatalsym       shift, and go to state 67
+
+    Identsym  reduce using rule 34 (OPT_fatalsym)
+    $default  reduce using rule 32 (OPTMORE_Statement)
+
+    Statement          go to state 69
+    Message            go to state 70
+    Group              go to state 71
+    OPTMORE_Statement  go to state 114
+    OPT_fatalsym       go to state 73
+
+
+State 70
+
+   11 Statement: Message .
+
+    $default  reduce using rule 11 (Statement)
+
+
+State 71
+
+   12 Statement: Group .
+
+    $default  reduce using rule 12 (Statement)
+
+
+State 72
+
+   10 Statements: OPTMORE_Statement .
+
+    $default  reduce using rule 10 (Statements)
+
+
+State 73
+
+   18 Message: OPT_fatalsym . Identsym SubMessages semicolonsym
+   21 Group: OPT_fatalsym . Identsym OPT_openparsym_Identsym_closeparsym OPT_groupsym openchainsym Declarations Statements closechainsym
+
+    Identsym  shift, and go to state 115
+
+
+State 74
+
+   59 egg: start_Statement Statement .
+
+    $default  reduce using rule 59 (egg)
+
+
+State 75
+
+   61 egg: start_MessageKind MessageKind .
+
+    $default  reduce using rule 61 (egg)
+
+
+State 76
+
+   63 egg: start_Message Message .
+
+    $default  reduce using rule 63 (egg)
+
+
+State 77
+
+   18 Message: OPT_fatalsym . Identsym SubMessages semicolonsym
+
+    Identsym  shift, and go to state 116
+
+
+State 78
+
+   64 SubMessages: hole_SubMessages .
+
+    $default  reduce using rule 64 (SubMessages)
+
+
+State 79
+
+   66 SubMessage: hole_SubMessage .
+
+    $default  reduce using rule 66 (SubMessage)
+
+
+State 80
+
+   84 ALT_SubMessage_SEP_commasym: hole_ALT_SubMessage_SEP_commasym .
+
+    $default  reduce using rule 84 (ALT_SubMessage_SEP_commasym)
+
+
+State 81
+
+   20 SubMessage: MessageKind . Stringsym
+
+    Stringsym  shift, and go to state 117
+
+
+State 82
+
+   65 egg: start_SubMessages SubMessages .
+
+    $default  reduce using rule 65 (egg)
+
+
+State 83
+
+   36 ALT_SubMessage_SEP_commasym: SubMessage .
+   37                            | SubMessage . commasym ALT_SubMessage_SEP_commasym
+
+    commasym  shift, and go to state 118
+
+    $default  reduce using rule 36 (ALT_SubMessage_SEP_commasym)
+
+
+State 84
+
+   19 SubMessages: ALT_SubMessage_SEP_commasym .
+
+    $default  reduce using rule 19 (SubMessages)
+
+
+State 85
+
+   67 egg: start_SubMessage SubMessage .
+
+    $default  reduce using rule 67 (egg)
+
+
+State 86
+
+   69 egg: start_Group Group .
+
+    $default  reduce using rule 69 (egg)
+
+
+State 87
+
+   21 Group: OPT_fatalsym . Identsym OPT_openparsym_Identsym_closeparsym OPT_groupsym openchainsym Declarations Statements closechainsym
+
+    Identsym  shift, and go to state 119
+
+
+State 88
+
+   70 OPTMORE_Group: hole_OPTMORE_Group .
+
+    $default  reduce using rule 70 (OPTMORE_Group)
+
+
+State 89
+
+   23 OPTMORE_Group: Group . OPTMORE_Group
+
+    fatalsym            shift, and go to state 61
+    hole_Group          shift, and go to state 65
+    hole_OPTMORE_Group  shift, and go to state 88
+    hole_OPT_fatalsym   shift, and go to state 67
+
+    Identsym  reduce using rule 34 (OPT_fatalsym)
+    $default  reduce using rule 22 (OPTMORE_Group)
+
+    Group          go to state 89
+    OPTMORE_Group  go to state 120
+    OPT_fatalsym   go to state 87
+
+
+State 90
+
+   71 egg: start_OPTMORE_Group OPTMORE_Group .
+
+    $default  reduce using rule 71 (egg)
+
+
+State 91
+
+   73 egg: start_ALT_Stringsym_SEP_commasym ALT_Stringsym_SEP_commasym .
+
+    $default  reduce using rule 73 (egg)
+
+
+State 92
+
+   75 egg: start_OPTMORE_Declaration OPTMORE_Declaration .
+
+    $default  reduce using rule 75 (egg)
+
+
+State 93
+
+   76 MORE_Expression: hole_MORE_Expression .
+
+    $default  reduce using rule 76 (MORE_Expression)
+
+
+State 94
+
+   28 MORE_Expression: Expression .
+   29                | Expression . MORE_Expression
+
+    Stringsym             shift, and go to state 52
+    Identsym              shift, and go to state 53
+    hole_Expression       shift, and go to state 54
+    hole_MORE_Expression  shift, and go to state 93
+
+    $default  reduce using rule 28 (MORE_Expression)
+
+    Expression       go to state 94
+    MORE_Expression  go to state 121
+
+
+State 95
+
+   77 egg: start_MORE_Expression MORE_Expression .
+
+    $default  reduce using rule 77 (egg)
+
+
+State 96
+
+   79 egg: start_ALT_Expression_SEP_commasym ALT_Expression_SEP_commasym .
+
+    $default  reduce using rule 79 (egg)
+
+
+State 97
+
+   81 egg: start_OPTMORE_Statement OPTMORE_Statement .
+
+    $default  reduce using rule 81 (egg)
+
+
+State 98
+
+   83 egg: start_OPT_fatalsym OPT_fatalsym .
+
+    $default  reduce using rule 83 (egg)
+
+
+State 99
+
+   85 egg: start_ALT_SubMessage_SEP_commasym ALT_SubMessage_SEP_commasym .
+
+    $default  reduce using rule 85 (egg)
+
+
+State 100
+
+   39 OPT_openparsym_Identsym_closeparsym: openparsym . Identsym closeparsym
+
+    Identsym  shift, and go to state 122
+
+
+State 101
+
+   86 OPT_openparsym_Identsym_closeparsym: hole_OPT_openparsym_Identsym_closeparsym .
+
+    $default  reduce using rule 86 (OPT_openparsym_Identsym_closeparsym)
+
+
+State 102
+
+   87 egg: start_OPT_openparsym_Identsym_closeparsym OPT_openparsym_Identsym_closeparsym .
+
+    $default  reduce using rule 87 (egg)
+
+
+State 103
+
+   41 OPT_groupsym: groupsym .
+
+    $default  reduce using rule 41 (OPT_groupsym)
+
+
+State 104
+
+   88 OPT_groupsym: hole_OPT_groupsym .
+
+    $default  reduce using rule 88 (OPT_groupsym)
+
+
+State 105
+
+   89 egg: start_OPT_groupsym OPT_groupsym .
+
+    $default  reduce using rule 89 (egg)
+
+
+State 106
+
+    0 $accept: egg $end .
+
+    $default  accept
+
+
+State 107
+
+    1 egg: Uses OPTMORE_Group .
+
+    $default  reduce using rule 1 (egg)
+
+
+State 108
+
+   25 ALT_Stringsym_SEP_commasym: Stringsym commasym . ALT_Stringsym_SEP_commasym
+
+    Stringsym                        shift, and go to state 30
+    hole_ALT_Stringsym_SEP_commasym  shift, and go to state 32
+
+    ALT_Stringsym_SEP_commasym  go to state 123
+
+
+State 109
+
+    2 Uses: usessym Strings semicolonsym .
+
+    $default  reduce using rule 2 (Uses)
+
+
+State 110
+
+   27 OPTMORE_Declaration: Declaration OPTMORE_Declaration .
+
+    $default  reduce using rule 27 (OPTMORE_Declaration)
+
+
+State 111
+
+    5 Declaration: MessageKind equalssym . MORE_Expression semicolonsym
+
+    Stringsym             shift, and go to state 52
+    Identsym              shift, and go to state 53
+    hole_Expression       shift, and go to state 54
+    hole_MORE_Expression  shift, and go to state 93
+
+    Expression       go to state 94
+    MORE_Expression  go to state 124
+
+
+State 112
+
+    7 Expression: Identsym openparsym . Params closeparsym
+
+    Stringsym                         shift, and go to state 52
+    Identsym                          shift, and go to state 53
+    hole_Expression                   shift, and go to state 54
+    hole_Params                       shift, and go to state 56
+    hole_ALT_Expression_SEP_commasym  shift, and go to state 57
+
+    Expression                   go to state 58
+    Params                       go to state 125
+    ALT_Expression_SEP_commasym  go to state 60
+
+
+State 113
+
+   31 ALT_Expression_SEP_commasym: Expression commasym . ALT_Expression_SEP_commasym
+
+    Stringsym                         shift, and go to state 52
+    Identsym                          shift, and go to state 53
+    hole_Expression                   shift, and go to state 54
+    hole_ALT_Expression_SEP_commasym  shift, and go to state 57
+
+    Expression                   go to state 58
+    ALT_Expression_SEP_commasym  go to state 126
+
+
+State 114
+
+   33 OPTMORE_Statement: Statement OPTMORE_Statement .
+
+    $default  reduce using rule 33 (OPTMORE_Statement)
+
+
+State 115
+
+   18 Message: OPT_fatalsym Identsym . SubMessages semicolonsym
+   21 Group: OPT_fatalsym Identsym . OPT_openparsym_Identsym_closeparsym OPT_groupsym openchainsym Declarations Statements closechainsym
+
+    errorsym                                  shift, and go to state 38
+    warningsym                                shift, and go to state 39
+    disabledsym                               shift, and go to state 40
+    keysym                                    shift, and go to state 41
+    postsym                                   shift, and go to state 42
+    openparsym                                shift, and go to state 100
+    hole_MessageKind                          shift, and go to state 45
+    hole_SubMessages                          shift, and go to state 78
+    hole_SubMessage                           shift, and go to state 79
+    hole_ALT_SubMessage_SEP_commasym          shift, and go to state 80
+    hole_OPT_openparsym_Identsym_closeparsym  shift, and go to state 101
+
+    $default  reduce using rule 38 (OPT_openparsym_Identsym_closeparsym)
+
+    MessageKind                          go to state 81
+    SubMessages                          go to state 127
+    SubMessage                           go to state 83
+    ALT_SubMessage_SEP_commasym          go to state 84
+    OPT_openparsym_Identsym_closeparsym  go to state 128
+
+
+State 116
+
+   18 Message: OPT_fatalsym Identsym . SubMessages semicolonsym
+
+    errorsym                          shift, and go to state 38
+    warningsym                        shift, and go to state 39
+    disabledsym                       shift, and go to state 40
+    keysym                            shift, and go to state 41
+    postsym                           shift, and go to state 42
+    hole_MessageKind                  shift, and go to state 45
+    hole_SubMessages                  shift, and go to state 78
+    hole_SubMessage                   shift, and go to state 79
+    hole_ALT_SubMessage_SEP_commasym  shift, and go to state 80
+
+    MessageKind                  go to state 81
+    SubMessages                  go to state 127
+    SubMessage                   go to state 83
+    ALT_SubMessage_SEP_commasym  go to state 84
+
+
+State 117
+
+   20 SubMessage: MessageKind Stringsym .
+
+    $default  reduce using rule 20 (SubMessage)
+
+
+State 118
+
+   37 ALT_SubMessage_SEP_commasym: SubMessage commasym . ALT_SubMessage_SEP_commasym
+
+    errorsym                          shift, and go to state 38
+    warningsym                        shift, and go to state 39
+    disabledsym                       shift, and go to state 40
+    keysym                            shift, and go to state 41
+    postsym                           shift, and go to state 42
+    hole_MessageKind                  shift, and go to state 45
+    hole_SubMessage                   shift, and go to state 79
+    hole_ALT_SubMessage_SEP_commasym  shift, and go to state 80
+
+    MessageKind                  go to state 81
+    SubMessage                   go to state 83
+    ALT_SubMessage_SEP_commasym  go to state 129
+
+
+State 119
+
+   21 Group: OPT_fatalsym Identsym . OPT_openparsym_Identsym_closeparsym OPT_groupsym openchainsym Declarations Statements closechainsym
+
+    openparsym                                shift, and go to state 100
+    hole_OPT_openparsym_Identsym_closeparsym  shift, and go to state 101
+
+    $default  reduce using rule 38 (OPT_openparsym_Identsym_closeparsym)
+
+    OPT_openparsym_Identsym_closeparsym  go to state 128
+
+
+State 120
+
+   23 OPTMORE_Group: Group OPTMORE_Group .
+
+    $default  reduce using rule 23 (OPTMORE_Group)
+
+
+State 121
+
+   29 MORE_Expression: Expression MORE_Expression .
+
+    $default  reduce using rule 29 (MORE_Expression)
+
+
+State 122
+
+   39 OPT_openparsym_Identsym_closeparsym: openparsym Identsym . closeparsym
+
+    closeparsym  shift, and go to state 130
+
+
+State 123
+
+   25 ALT_Stringsym_SEP_commasym: Stringsym commasym ALT_Stringsym_SEP_commasym .
+
+    $default  reduce using rule 25 (ALT_Stringsym_SEP_commasym)
+
+
+State 124
+
+    5 Declaration: MessageKind equalssym MORE_Expression . semicolonsym
+
+    semicolonsym  shift, and go to state 131
+
+
+State 125
+
+    7 Expression: Identsym openparsym Params . closeparsym
+
+    closeparsym  shift, and go to state 132
+
+
+State 126
+
+   31 ALT_Expression_SEP_commasym: Expression commasym ALT_Expression_SEP_commasym .
+
+    $default  reduce using rule 31 (ALT_Expression_SEP_commasym)
+
+
+State 127
+
+   18 Message: OPT_fatalsym Identsym SubMessages . semicolonsym
+
+    semicolonsym  shift, and go to state 133
+
+
+State 128
+
+   21 Group: OPT_fatalsym Identsym OPT_openparsym_Identsym_closeparsym . OPT_groupsym openchainsym Declarations Statements closechainsym
+
+    groupsym           shift, and go to state 103
+    hole_OPT_groupsym  shift, and go to state 104
+
+    $default  reduce using rule 40 (OPT_groupsym)
+
+    OPT_groupsym  go to state 134
+
+
+State 129
+
+   37 ALT_SubMessage_SEP_commasym: SubMessage commasym ALT_SubMessage_SEP_commasym .
+
+    $default  reduce using rule 37 (ALT_SubMessage_SEP_commasym)
+
+
+State 130
+
+   39 OPT_openparsym_Identsym_closeparsym: openparsym Identsym closeparsym .
+
+    $default  reduce using rule 39 (OPT_openparsym_Identsym_closeparsym)
+
+
+State 131
+
+    5 Declaration: MessageKind equalssym MORE_Expression semicolonsym .
+
+    $default  reduce using rule 5 (Declaration)
+
+
+State 132
+
+    7 Expression: Identsym openparsym Params closeparsym .
+
+    $default  reduce using rule 7 (Expression)
+
+
+State 133
+
+   18 Message: OPT_fatalsym Identsym SubMessages semicolonsym .
+
+    $default  reduce using rule 18 (Message)
+
+
+State 134
+
+   21 Group: OPT_fatalsym Identsym OPT_openparsym_Identsym_closeparsym OPT_groupsym . openchainsym Declarations Statements closechainsym
+
+    openchainsym  shift, and go to state 135
+
+
+State 135
+
+   21 Group: OPT_fatalsym Identsym OPT_openparsym_Identsym_closeparsym OPT_groupsym openchainsym . Declarations Statements closechainsym
+
+    errorsym                  shift, and go to state 38
+    warningsym                shift, and go to state 39
+    disabledsym               shift, and go to state 40
+    keysym                    shift, and go to state 41
+    postsym                   shift, and go to state 42
+    hole_Declarations         shift, and go to state 43
+    hole_Declaration          shift, and go to state 44
+    hole_MessageKind          shift, and go to state 45
+    hole_OPTMORE_Declaration  shift, and go to state 46
+
+    $default  reduce using rule 26 (OPTMORE_Declaration)
+
+    Declarations         go to state 136
+    Declaration          go to state 48
+    MessageKind          go to state 49
+    OPTMORE_Declaration  go to state 50
+
+
+State 136
+
+   21 Group: OPT_fatalsym Identsym OPT_openparsym_Identsym_closeparsym OPT_groupsym openchainsym Declarations . Statements closechainsym
+
+    fatalsym                shift, and go to state 61
+    hole_Statements         shift, and go to state 62
+    hole_Statement          shift, and go to state 63
+    hole_Message            shift, and go to state 64
+    hole_Group              shift, and go to state 65
+    hole_OPTMORE_Statement  shift, and go to state 66
+    hole_OPT_fatalsym       shift, and go to state 67
+
+    Identsym  reduce using rule 34 (OPT_fatalsym)
+    $default  reduce using rule 32 (OPTMORE_Statement)
+
+    Statements         go to state 137
+    Statement          go to state 69
+    Message            go to state 70
+    Group              go to state 71
+    OPTMORE_Statement  go to state 72
+    OPT_fatalsym       go to state 73
+
+
+State 137
+
+   21 Group: OPT_fatalsym Identsym OPT_openparsym_Identsym_closeparsym OPT_groupsym openchainsym Declarations Statements . closechainsym
+
+    closechainsym  shift, and go to state 138
+
+
+State 138
+
+   21 Group: OPT_fatalsym Identsym OPT_openparsym_Identsym_closeparsym OPT_groupsym openchainsym Declarations Statements closechainsym .
+
+    $default  reduce using rule 21 (Group)

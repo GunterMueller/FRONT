@@ -1,0 +1,43 @@
+front_end.d \
+front_end.o: \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/front/front_end.c \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/Linux/include/front/hash.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/Linux/include/front/support.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/front/config.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/front/Linux.0/front.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/Linux/include/front/basic_types.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/Linux/include/front/hash.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/Linux/include/front/front_list.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/Linux/include/front/basic_types.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/Linux/include/front/SymTab.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/Linux/include/front/scan_support.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/Linux/include/front/error.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/Linux/include/front/old_error.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/Linux/include/front/scan_support.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/Linux/include/front/print_support.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/Linux/include/front/SymTab.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/front/Linux.0/front_parse.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/front/Linux.0/front.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/front/Linux.0/front_defs.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/front/Linux.0/Types.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/front/Linux.0/Types_parse.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/front/Linux.0/Types_defs.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/front/GenTypes.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/front/Linux.0/Types.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/front/Linux.0/grammar.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/front/Linux.0/grammar_parse.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/front/Linux.0/grammar_defs.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/front/Linux.0/grammar.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/Linux/include/pictures/Pictures.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/Linux/include/pictures/Pictures_parse.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/Linux/include/pictures/Pictures.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/Linux/include/pictures/Pictures_defs.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/front/Linux.0/Lalr.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/front/Linux.0/Lalr_parse.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/front/Linux.0/Lalr.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/front/Linux.0/Lalr_defs.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/front/GenLalr.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/front/front_end.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/front/Linux.0/frontPrint.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/front/Linux.0/front_lalr.h \
+ /home/gunter/GM_LANGUAGES/COMPILER/FRONT/front-20161220/Linux/include/front/parse_support.h

@@ -1,0 +1,205 @@
+/*
+ * Copyright (C) 2000-2005 Philips Electronics N.V.
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * 
+ */
+Front         ::= (([ "USE" IdentList ] 
+                   [ "NAMESPACE" NameSpaceList ]  
+                  )) \<
+                  [ NonTerminals ] ;
+ 
+NonTerminals    = { NonTerminal }+ ;
+
+NonTerminal   ::= [ "ROOT" ] [ "DUMP" ] [ ScanInfo ] Ident [ Super ] [ "MEMO" ] [ "ENUM" ] Defines Rhs ";" ;
+ 
+Super           = SuperKind Ident ;
+ 
+SuperKind       = (( "<"
+                  | ":"
+                  )) ;
+ 
+Rhs           ::= { "SCOPE" | "OPENSCOPE" | "CLOSESCOPE" }
+                  ((  SymbolSeq [ Choices ]
+                  |< SymbolSeq Alternator { Symbol }
+                  ))
+                  [ Checks ] ;
+
+Checks        ::= "CHECKS" (({ Check }+|)) ;
+Check           = "IF" Expr "THEN" [ "WARNING" ] { Simple_Expr }+ ;
+ 
+Choices         = "<" ChoiceList ">" SymbolSeq ;
+ 
+ChoiceList      = Alternative // '|' ;
+ 
+Alternative   ::= (( Ident [ "MEMO" ]  Defines Rhs
+                  | SymbolSeq
+                  )) ;
+ 
+SymbolSeq     ::= { Symbol | Field } ;
+ 
+Symbol        ::= [ Ident ":" ] \< 
+                  SimpleSymbol \<
+                  [ "COMPARE" Ident ] ;
+
+SimpleSymbol  ::= < (( Ident 
+                    |< String [ "NAME" Ident ]
+                    |< Char
+                    |< Keyword
+                    )) 
+		    OptType
+                  |< "\\" (( String |< Keyword ))
+                  |< (( "((" Alternatives "))"
+                     |< "["  Alternatives "]"
+                     |< "{"  Alternatives "}" ["+" | "*"]
+                     ))
+                  |< Defining 
+                  |< Applied
+                  |< "EMPTY"
+		  > ;
+
+Alternatives  ::= SymbolSeq // "|" ;
+ 
+OptType         = [ "TYPE" Type ] ;
+ 
+Defining        = Overloading Defining_id [ "NAMESPACE" Ident ] [ ScopeExpr ] ;
+
+Applied         = "APPLIED" Ident NameOrField [ ScopeExpr ] [ "WARNING" ] ;
+
+NameOrField   ::= (("NAME" | "FIELD")) Ident ;
+
+ScopeExpr        = "SCOPE" Expr ;
+
+Overloading     = < "DEFINING"
+                  | "REDEFINING"
+                  | "OVERLOADING"
+                  > ;
+
+Defining_id   ::= < IdSym | "(" Expr ")" > ;
+
+Field         ::= Ident ":" Type Assign Expr [ "TRAVERSE" ] ;
+
+Type          ::= Ident [ "(" TypeList ")" ] ;
+ 
+Expr          ::= Simple_Expr // Oper ;
+
+Simple_Expr   ::= < Ident
+                  | Simple_Expr "." Ident
+                  | Int
+                  | Bool
+                  | String
+                  | Keyword
+                  | Char
+                  | "NIL"
+                  | Simple_Expr "(" ExprList ")"
+                  | Oper Simple_Expr
+                  > ;
+
+ScanInfo      ::= "SCAN" OptType [ "COMMENT" ] [ "SHOREST" ] ;
+
+Oper            = < Operator | "=" | "~" > ;
+
+NameSpaceList   = NameSpace // "," ;
+ 
+ExprList        = Expr // "," ;
+ 
+IdentList       = Ident // "," ;
+ 
+TypeList        = Type // "," ;
+ 
+Alternator      = < "\\\\"
+                  | "//"
+                  > ;
+ 
+Defines         = < "::="
+                  | "="
+                  > ;
+ 
+NameSpace       = Ident ;
+ 
+Assign          = < "="
+                  | ":="
+                  > ;
+
+
+openpar = "(" ;
+
+closepar = ")" ;
+
+openbrk = "[" ;
+
+closebrk = "]" ;
+
+openchain = "{" ;
+
+closechain = "}" ;
+
+semicolon = ";" ;
+
+colon = ":" ;
+
+dot = "." ;
+
+plus = "+" ;
+
+lessthan = "<" ;
+
+greaterthan = ">" ;
+
+defines = "::=" ;
+
+equals = "=" ;
+
+comma = "," ;
+
+alternate_right = "//" ;
+
+alternate_left = "\\\\" ;
+
+ident ::= { "_" } "A..Z,a..z" { "0..9,A..Z,_,a..z" } ;
+
+oper ::= "!,#..&,*,+,-../,:..@,^,`,|" ;
+
+Operator ::= oper { oper | "\\" } ;
+
+Ident ::= < ident | "\\" Operator > ;
+
+Keyword ::= < "\"" ident "\"" | "\'" ident "\'" > ;
+
+Int ::= { "0..9" }+ ;
+
+Bool = < "FALSE" | "TRUE" > ;
+
+Char ::= < "\"" "NUL..!,#..DEL" "\""
+         | "\'" "NUL..&,(..DEL" "\'" 
+         | "!,#..&,*,,,-,/..<,>..@,^..`,~" 
+	 > ;
+%% */
+
+comment ::= < "/*" { "NUL..DEL" } "*/" 
+            | "(*" { "NUL..DEL" } "*)" 
+	    | "%%" { "NUL..DEL" } "LF,FF,CR"
+	    > ;
+
+String ::= < "\"" { "NUL..!,#..DEL" }+ "\"" 
+           | "\'" { "NUL..&,(..DEL" }+ "\'" 
+	   > ;
+
+verticalbar ::= < "\\|" \| "|" \| "|<" \| "|>" > ;
+
+layout ::= < "\\" \| "\\<" \| "\\>" > ;
+
+separator ::= < { "HT,SP" }+ | { "LF,FF,CR" }+ > ;
+
